@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Products from "./pages/Products";
 import SearchResultsPage from "./pages/SearchResults";
 
 function App() {
@@ -21,7 +22,9 @@ function App() {
         />
         <Route
           path="/products"
-          element={<Home toggleDarkMode={toggleDarkMode} darkMode={darkMode} />}
+          element={
+            <Products toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+          }
         />
         {/* adding search results route if needed in future, currently imported but unused in original code except for import */}
         <Route path="/search" element={<SearchResultsPage />} />
