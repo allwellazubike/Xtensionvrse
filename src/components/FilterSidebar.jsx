@@ -10,7 +10,7 @@ const FilterSidebar = ({ isOpen, onClose }) => {
       )}
 
       <aside
-  className={`
+        className={`
     fixed md:sticky top-0 md:top-20 z-50 md:z-auto h-dvh md:h-[calc(100vh-5rem)] 
     w-80 md:w-64 bg-white dark:bg-[#2d1b22] md:bg-white md:dark:bg-[#2d1b22]
     border-r border-gray-100 dark:border-gray-800 overflow-y-auto 
@@ -18,40 +18,40 @@ const FilterSidebar = ({ isOpen, onClose }) => {
     ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
     left-0
   `}
->
-  <div className="p-6 md:px-6 md:py-8">
-    {/* Mobile Header */}
-    <div className="flex items-center justify-between mb-6 md:hidden">
-      <h3 className="text-lg font-bold text-[#181113] dark:text-white">
-        Filters
-      </h3>
-      <button
-        onClick={onClose}
-        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-        aria-label="Close filters"
       >
-        <span className="material-symbols-outlined text-[#181113] dark:text-white">
-          close
-        </span>
-      </button>
-    </div>
+        <div className="p-6 md:px-6 md:py-8">
+          {/* Mobile Header */}
+          <div className="flex items-center justify-between mb-6 md:hidden">
+            <h3 className="text-lg font-bold text-[#181113] dark:text-white">
+              Filters
+            </h3>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+              aria-label="Close filters"
+            >
+              <span className="material-symbols-outlined text-[#181113] dark:text-white">
+                close
+              </span>
+            </button>
+          </div>
 
-    {/* Desktop Header */}
-    <div className="hidden md:flex items-center justify-between mb-6">
-      <h3 className="text-lg font-bold text-[#181113] dark:text-white">
-        Filters
-      </h3>
-      <button 
-        className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
-        aria-label="Clear all filters"
-      >
-        Clear All
-      </button>
-    </div>
+          {/* Desktop Header */}
+          <div className="hidden md:flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-[#181113] dark:text-white">
+              Filters
+            </h3>
+            <button
+              className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+              aria-label="Clear all filters"
+            >
+              Clear All
+            </button>
+          </div>
 
-    {/* Filter sections remain the same */}
-    {/* ... */}
-    {/* Filter Section: Categories */}
+          {/* Filter sections remain the same */}
+          {/* ... */}
+          {/* Filter Section: Categories */}
           <div className="mb-8">
             <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
               Categories
@@ -133,7 +133,7 @@ const FilterSidebar = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">
-                  $
+                  ₦
                 </span>
                 <input
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-sm text-[#181113] dark:text-white focus:ring-primary/50 focus:border-primary outline-none"
@@ -144,7 +144,7 @@ const FilterSidebar = ({ isOpen, onClose }) => {
               <span className="text-slate-400">-</span>
               <div className="relative flex-1">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">
-                  $
+                  ₦
                 </span>
                 <input
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-sm text-[#181113] dark:text-white focus:ring-primary/50 focus:border-primary outline-none"
@@ -154,8 +154,8 @@ const FilterSidebar = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
-  </div>
-</aside>
+        </div>
+      </aside>
     </>
   );
 };

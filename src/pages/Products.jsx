@@ -3,83 +3,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterSidebar from "../components/FilterSidebar";
 
+import { Link } from "react-router-dom";
+import { products } from "../data/products";
+
 const Products = ({ toggleDarkMode, darkMode }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-  // Mock Data for Products
-  const products = [
-    {
-      id: 1,
-      name: 'X-pression Ultra Braid - Pre-Stretched 52"',
-      price: 5.99,
-      originalPrice: 7.99,
-      rating: 4.8,
-      reviews: 120,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBTwVaCFoLOZskb4LadSGQ3UCSE53wtTG_FGI5u1VouRuOdwWniBsLwsXCC57QkadOwQo_dCa74i-Q_Pxn6JG965-QiEyzZ6PzzShnmRYK7Y36idkWpEaDXKaHNEN3CyCLZA9pi9JGOZu7FY_hq8A50gcKJF3rrtF4zzBDMcI9dskyeldQ7dd0VseM-BbZiOEvCVwpuM5WwyAhRS-cBg3Lx8B7RDdYfl7ffTaVfRD8nOtQWJACSG08wSEoL1sSp3Y3QDGInfdeg2sk",
-      alt: "Long blonde ombre braiding hair extension",
-      sale: true,
-      badge: "Sale",
-    },
-    {
-      id: 2,
-      name: "Water Wave Passion Twist Hair - 18 Inch",
-      price: 12.0,
-      rating: 4.9,
-      reviews: 85,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAIS39bzkyMW4Hm5sN0vSI_ThJ1N0grqf-perAp4wMlplkj4GqwRnKO6Fq5jDh_uEyrDvEw5tBOVBZ56BOaXSmGDK1lW4Ni8JnR0MAule33oDRCv2Fdayc0bDNpR4rSzi5TYZZfrGFPM2gYBL6J9pt-HV2CNO_2QuUNWC1iCE5wZefiMPYQpK5uDtrilcoJzGYBA66zHCDNYleNLlG4EWZ_UcS_3y5XTBP2TyIY_c0aldOM7Jo6Bqr-YkoMBS3kmTB2dnVt-QYNfGU",
-      alt: "Dark curly passion twist hair extension",
-      sale: false,
-    },
-    {
-      id: 3,
-      name: "Ombre Kanekalon Jumbo Braid - Blue/Purple",
-      price: 8.5,
-      rating: 5.0,
-      reviews: 42,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuC2BuAkTxe_XcIZRYpB2CJZozHYcxJASflPrtPmjJ9n6EIXeTdvhkNGiV_nLgOXhRCGSQ9ILqrMKwElBpPHKrDk4P1dvsVIIc_UoBotCxSAqRG0TDozGeMKBAMHlUjVriLHzpGDsAgT_udoIpvxXdTC8vxXXvmZW3dQwbSdrfuYws3rWktpYF80Fe-VJbhUslOE6hdrx6TNLLWWOPhvPm4feKEImCnSL58-SyiX028ttOgduaWsfP-wPO6cVoveEZLFCYhx960Qq38",
-      alt: "Blue and purple colorful braids",
-      sale: false,
-    },
-    {
-      id: 4,
-      name: "Silky Straight Bulk - Human Hair Blend",
-      price: 32.99,
-      rating: 4.6,
-      reviews: 15,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuDYrCY20k-7uwzcrgOw1dub2TQzGB3D_RPPkyRWu0nPwq6mHD7WLlcEJHIGLGBMbVK0VuQG8n9FhxbB-OKQ2qVQBDlMsihNa-NeyDWeW9L2d0fmlMCNlhYpP-TcebCEBB1RQ07sVwGFzHl3YYihrueWhLJYIszpNvHrCSrFBfD3f7iGLbxperybOqH6Oef7HTFC_LpxPoXc8jBS0Nx5tXqIAIGkMi51x4Tkci0VdaUqWKTLH1mcpLpPmcAGXTHTVFolqFVHBjF131Y",
-      alt: "Straight silky black hair extension",
-      sale: false,
-    },
-    {
-      id: 5,
-      name: "Nu Faux Locs - 24 Inch Crochet",
-      price: 10.99,
-      rating: 4.9,
-      reviews: 203,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAEyOzRic8-Kdlxzue-p3GWpUGPHTRPHAPLMd5-Vg7SLS54hzWFabp_MZ4P8t5wXgzOloS_nOSCeLnRXhSitI0i3yj-LmzJGyDQEQwVF8j7LM4q3xGkx5usU0V1GojZgzpQ8-ncqRa1BLFvkmGRKZ-hgwSmA3auF7BNtL4RiSP_Ogqo4nWwEbZ0VBkn_SbH5-BEqDCDZTGk-Budmrd4o84I7VoKgkIUz5OktFoEjPCxEZe18m4-uphBt0MkPjP0i4Yq8tDyjbZkKXE",
-      alt: "Faux locs crochet hair extension",
-      sale: false,
-    },
-    {
-      id: 6,
-      name: "French Curl Braiding Hair - Loose Wavy",
-      price: 9.99,
-      rating: 4.7,
-      reviews: 55,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuDPdjXSirvg7Zvc1Keey65UZTHSOWErDl_G8SJyWV6_Ql0xYOa_VuJU9aj8udUZPjyOjxIAKwqGW_AQTcwUMBgLOSj6j3eLFbP5YFEOLh73xeiRLhFYJ083NFFkH9INmFvC56s8Qnwefb6uaa6rNmpyBocEIjgs0iKcEeWOt9mzhUOGL6K2b1xOSu3Z_1zf2EdKKQtrxK9T8i92LeD5dylp1S7YicDIrI93Ue45h-g-DuAtygQ8gixQ0SsbMdQfLBt22OmcnaZhA20",
-      alt: "French curl braiding hair texture",
-      sale: false,
-      badge: "Bestseller",
-      badgeColor: "bg-primary",
-    },
-  ];
-
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
@@ -174,7 +102,8 @@ const Products = ({ toggleDarkMode, darkMode }) => {
             {/* Product Grid */}
             <div className="px-4 md:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {products.map((product) => (
-                <div
+                <Link
+                  to={`/product/${product.id}`}
                   key={product.id}
                   className="group flex flex-col bg-white dark:bg-[#2d1b22] rounded-2xl overflow-hidden border border-transparent hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
                 >
@@ -241,12 +170,12 @@ const Products = ({ toggleDarkMode, darkMode }) => {
 
                     <div className="mt-auto pt-2 flex items-center justify-between">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-extrabold text-[#181113] dark:text-white">
-                          ${product.price.toFixed(2)}
+                        <span className="text-base font-extrabold text-[#181113] dark:text-white">
+                          ₦{product.price.toLocaleString()}
                         </span>
                         {product.originalPrice && (
-                          <span className="text-sm text-slate-400 line-through decoration-slate-400">
-                            ${product.originalPrice}
+                          <span className="text-xs text-slate-400 line-through decoration-slate-400">
+                            ₦{product.originalPrice.toLocaleString()}
                           </span>
                         )}
                       </div>
@@ -259,7 +188,7 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                       </button>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
 
