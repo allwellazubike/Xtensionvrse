@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
@@ -7,6 +8,7 @@ import Products from "./components/Products";
 import PromoBanner from "./components/PromoBanner";
 import Newsletter from "./components/NewsLetter";
 import Footer from "./components/Footer";
+import SearchResultsPage from "./pages/SearchResults";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -17,7 +19,11 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
+    <> 
+    <Routes>
+      <Route path="/products" element={<SearchResultsPage />} />
+
+      <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="relative flex min-h-screen w-full flex-col group/design-root bg-background-light dark:bg-background-dark text-[#181113] dark:text-white antialiased overflow-x-hidden">
         <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
 
@@ -33,6 +39,10 @@ function App() {
         <Footer />
       </div>
     </div>
+
+    </Routes>
+    
+    </>
   );
 }
 

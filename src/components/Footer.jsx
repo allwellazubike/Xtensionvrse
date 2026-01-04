@@ -40,7 +40,7 @@ const Footer = () => {
           </div>
           
           {/* Social Links */}
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <h4 className="font-bold text-[#181113] dark:text-white">Stay Connected</h4>
             <div className="flex gap-4">
               <a 
@@ -49,7 +49,7 @@ const Footer = () => {
               >
                 <span className="font-bold text-lg">Ig</span>
               </a>
-              {/* <a 
+              <a 
                 className="size-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary hover:text-white transition-colors" 
                 href="#"
               >
@@ -60,9 +60,9 @@ const Footer = () => {
                 href="#"
               >
                 <span className="font-bold text-lg">Fb</span>
-              </a> */}
+              </a>
             </div>
-          </div>
+          </div> */}
         </div>
         
         {/* Bottom Bar */}
