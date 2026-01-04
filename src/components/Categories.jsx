@@ -1,3 +1,5 @@
+import Link from 'react-router-dom';
+
 const Categories = () => {
   const categories = [
     {
@@ -33,15 +35,15 @@ const Categories = () => {
         <h2 className="text-[#181113] dark:text-white text-2xl md:text-3xl font-bold tracking-tight">
           Shop by Texture
         </h2>
-        <a 
-          href="#" 
+        <Link 
+          to="#" 
           className="text-primary text-sm font-bold flex items-center hover:gap-2 transition-all group"
         >
           View All 
           <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
             arrow_forward
           </span>
-        </a>
+        </Link>
       </div>
 
       {/* Categories Grid */}
