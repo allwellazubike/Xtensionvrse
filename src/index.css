@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Enable dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Define your custom theme */
+@theme {
+  --color-primary: #ee2b6c;
+  --color-background-light: #f8f6f6;
+  --color-background-dark: #221016;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --radius-default: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-display);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
