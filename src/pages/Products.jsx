@@ -44,9 +44,9 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                     Discover the softest, longest-lasting textures for your next
                     protective style. Tangle-free and lightweight.
                   </p>
-                  <button className="px-6 py-3 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-gray-100 transition-colors">
+                  {/* <button className="px-6 py-3 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-gray-100 transition-colors">
                     Shop Collection
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

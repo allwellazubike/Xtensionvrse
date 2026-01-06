@@ -11,7 +11,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
         <div className="flex items-center justify-between gap-4">
           {/* Logo & Links */}
           <div className="flex items-center gap-8">
-            <a className="flex items-center gap-3 text-primary" href="#">
+            <Link className="flex items-center gap-3 text-primary" to="/">
               <div className="size-8 flex items-center justify-center rounded-full bg-primary/10">
                 <span className="material-symbols-outlined text-primary text-[24px]">
                   all_inclusive
@@ -20,7 +20,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
               <h2 className="text-[#181113] dark:text-white text-xl font-extrabold tracking-tight">
                 Xtensionsvrse
               </h2>
-            </a>
+            </Link>
 
             <nav className="hidden lg:flex items-center gap-8">
               <a

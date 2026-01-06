@@ -1,4 +1,7 @@
+import { Link, useNavigate } from 'react-router-dom'
+  
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <div className="@container">
       <div className="flex flex-col-reverse md:flex-row gap-8 items-center bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-12 shadow-sm border border-gray-100 dark:border-gray-800">
@@ -22,7 +25,7 @@ const Hero = () => {
           
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2">
-            <button className="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white text-base font-bold shadow-lg shadow-primary/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+            <button onClick={ () => { navigate("/products") } } className="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white text-base font-bold shadow-lg shadow-primary/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
               Shop Collection
             </button>
             
