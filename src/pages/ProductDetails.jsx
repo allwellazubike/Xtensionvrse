@@ -1,14 +1,17 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { products } from "../data/products";
+import { useCart } from "../context/CartContext";
 
 const ProductDetails = ({ toggleDarkMode, darkMode }) => {
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
   const [selectedImage, setSelectedImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     if (product) {
@@ -285,7 +288,10 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                         </span>
                       </button>
                     </div>
-                    <button className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]">
+                    <button
+                        onClick={() => addToCart(product, quantity)}
+                        className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
+                    >
                       <span className="material-symbols-outlined">
                         shopping_bag
                       </span>

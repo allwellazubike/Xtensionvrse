@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterSidebar from "../components/FilterSidebar";
+import { useCart } from "../context/CartContext";
 
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
 
 const Products = ({ toggleDarkMode, darkMode }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { addToCart } = useCart();
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
@@ -144,7 +146,8 @@ const Products = ({ toggleDarkMode, darkMode }) => {
 
                     {/* Quick Add Button (Desktop Hover) */}
                     <div className="absolute inset-x-4 bottom-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hidden md:block">
-                      <button className="w-full py-3 bg-white text-slate-900 font-bold text-sm rounded-xl shadow-lg hover:bg-primary hover:text-white flex items-center justify-center gap-2">
+                      <button 
+                      className="w-full py-3 bg-white text-slate-900 font-bold text-sm rounded-xl shadow-lg hover:bg-primary hover:text-white flex items-center justify-center gap-2">
                         <span className="material-symbols-outlined text-[18px]">
                           add_shopping_cart
                         </span>

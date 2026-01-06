@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
-import SearchResultsPage from "./pages/SearchResults";
+import SearchResultsPage from "./pages/SearchResults";  
 
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -26,6 +27,12 @@ function App() {
           path="/products"
           element={
             <Products toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <Cart toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
           }
         />
         <Route
