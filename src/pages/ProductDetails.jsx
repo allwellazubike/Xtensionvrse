@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { products } from "../data/products";
 import { useCart } from "../context/CartContext";
+import ProductCard from "../components/ProductCard";
 
 const ProductDetails = ({ toggleDarkMode, darkMode }) => {
   const { id } = useParams();
@@ -11,6 +12,8 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
   const [selectedImage, setSelectedImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+
+  console.log(products);
 
   useEffect(() => {
     if (product) {
@@ -46,6 +49,8 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
         {/* Main Content */}
         <main className="flex-1 w-full flex justify-center py-6 px-4 md:px-10 lg:px-40">
           <div className="w-full max-w-[1280px]">
+            {/* Breadcrumbs */}
+
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               {/* Left Column: Image Gallery */}
               <div className="lg:col-span-7 flex flex-col gap-4">
@@ -516,7 +521,16 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
               <h3 className="text-xl font-bold text-[#181113] dark:text-white mb-6">
                 You might also like
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex gap-4">
+                {products.slice(0, 4).map((product) => (
+                  // STEP 4: Pass EACH product as props
+                  <ProductCard
+                    productz={product} // ← THIS passes ALL product data!
+                  />
+                ))}
+              </div>
+
+              {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {similarProducts.map((p) => (
                   <Link
                     to={`/product/${p.id}`}
@@ -543,7 +557,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                     </div>
                   </Link>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </main>

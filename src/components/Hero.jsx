@@ -29,9 +29,9 @@ const Hero = () => {
               Shop Collection
             </button>
             
-            <button className="h-12 px-8 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-[#181113] dark:text-white text-base font-bold transition-all">
+            {/* <button className="h-12 px-8 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-[#181113] dark:text-white text-base font-bold transition-all">
               View Lookbook
-            </button>
+            </button> */}
           </div>
         </div>
 

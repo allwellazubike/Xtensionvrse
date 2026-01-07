@@ -1,12 +1,26 @@
+<<<<<<< HEAD
 function ProductCard(props) {
+=======
+import React from "react";
+import { useNavigate } from "react-router-dom";
+const ProductCard = (props) => {
+
+  const navigate = useNavigate();
+>>>>>>> debug
   return (
     <>
       {/* Product Card 1 */}
-      <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
-        <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+      <div onClick={() => navigate(`/product/${props.productz.id}`)} className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
+        <div className="relative aspect-4/5 overflow-hidden bg-gray-100">
+        {props.productz.sale ? (
+          <div className="absolute top-3 left-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded-md z-10">
+            Sale
+          </div>
+        ) : (
           <div className="absolute top-3 left-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded-md z-10">
             New
           </div>
+        )}
           <button className="absolute top-3 right-3 bg-white/80 dark:bg-black/50 p-1.5 rounded-full text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-white transition-all z-10">
             <span
               className="material-symbols-outlined"
@@ -18,20 +32,13 @@ function ProductCard(props) {
           <div
             className="w-full h-full bg-center bg-cover transition-transform duration-700 group-hover:scale-110"
             style={{
-              backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4N5G78zWCi6kscOa36TYdyFpFLh-t9WPOhrRvtFbMu2u4A_zmUNubM_qmNSvHwp6syj2RNpVp7G8C39DFtGUv4FmaK1c945oLnWNLC4kpTKdGXLfGdJl7aPjRnU_VafNXZxm3x__y4gBs8BcsrwattL-ltG0PV2yR_wtVNdy6008aSRJnaxTEr8XHOY6LY3s7ef5g_W2gX6iWNuoDHNJj6W8aox8TIMZtV8US_nWcH7KAAP5lVn6wm2pgBPOJk9kL_1WD-LdcmIk")`,
+              backgroundImage: `url(${props.productz.image})`,
             }}
           />
-
-          {/* Quick Add Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <button className="w-full bg-white dark:bg-gray-800 text-[#181113] dark:text-white py-3 rounded-lg font-bold text-sm shadow-lg hover:bg-primary hover:text-white transition-colors">
-              Quick Add
-            </button>
-          </div>
         </div>
         <div className="p-4 flex flex-col gap-2">
           <h3 className="text-base font-semibold text-[#181113] dark:text-white line-clamp-1">
-            X-pression Ultra Braid 82"
+            {props.productz.name}
           </h3>
           <div className="flex items-center gap-1 text-yellow-400 text-sm">
             <span
@@ -41,25 +48,30 @@ function ProductCard(props) {
               star
             </span>
             <span className="text-gray-500 dark:text-gray-400 text-xs">
-              (4.8)
+              {props.productz.rating}
             </span>
           </div>
           <div className="flex items-center justify-between mt-1">
             <span className="text-lg font-bold text-[#181113] dark:text-white">
-              ₦5.99
+              ₦{props.productz.price}
             </span>
-            <div className="flex gap-1">
+            {/* <div className="flex gap-1">
               <div className="size-3 rounded-full bg-black border border-gray-300"></div>
               <div className="size-3 rounded-full bg-[#8B4513]"></div>
               <div className="size-3 rounded-full bg-primary"></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       {/* Product Card 2 */}
+<<<<<<< HEAD
       <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
         <div className="relative aspect-4/5 overflow-hidden bg-gray-100">
+=======
+      {/* <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
+        <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+>>>>>>> debug
           <div className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
             Best Seller
           </div>
@@ -108,10 +120,10 @@ function ProductCard(props) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Product Card 3 */}
-      <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
+      {/* <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
         <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
           <button className="absolute top-3 right-3 bg-white/80 dark:bg-black/50 p-1.5 rounded-full text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-white transition-all z-10">
             <span
@@ -157,10 +169,10 @@ function ProductCard(props) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Product Card 4 */}
-      <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
+      {/* <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
         <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
           <button className="absolute top-3 right-3 bg-white/80 dark:bg-black/50 p-1.5 rounded-full text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-white transition-all z-10">
             <span
@@ -206,7 +218,7 @@ function ProductCard(props) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
