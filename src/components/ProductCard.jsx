@@ -1,4 +1,4 @@
-const ProductCard = () => {
+function ProductCard(props) {
   return (
     <>
       {/* Product Card 1 */}
@@ -59,7 +59,7 @@ const ProductCard = () => {
 
       {/* Product Card 2 */}
       <div className="flex flex-col group bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800">
-        <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+        <div className="relative aspect-4/5 overflow-hidden bg-gray-100">
           <div className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
             Best Seller
           </div>

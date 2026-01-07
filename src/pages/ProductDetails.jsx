@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../components/Header";
@@ -47,36 +46,11 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
         {/* Main Content */}
         <main className="flex-1 w-full flex justify-center py-6 px-4 md:px-10 lg:px-40">
           <div className="w-full max-w-[1280px]">
-            {/* Breadcrumbs */}
-            {/* <div className="flex flex-wrap gap-2 py-4 mb-4">
-              <Link
-                to="/"
-                className="text-[#89616f] hover:text-primary transition-colors text-sm font-medium leading-normal"
-              >
-                Home
-              </Link>
-              <span className="text-[#89616f] text-sm font-medium leading-normal">
-                /
-              </span>
-              <Link
-                to="/products"
-                className="text-[#89616f] hover:text-primary transition-colors text-sm font-medium leading-normal"
-              >
-                Products
-              </Link>
-              <span className="text-[#89616f] text-sm font-medium leading-normal">
-                /
-              </span>
-              <span className="text-[#181113] dark:text-white text-sm font-medium leading-normal">
-                {product.name}
-              </span>
-            </div> */}
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               {/* Left Column: Image Gallery */}
               <div className="lg:col-span-7 flex flex-col gap-4">
                 {/* Main Image */}
-                <div className="w-full aspect-[3/4] md:aspect-[4/3] lg:aspect-[3/4] rounded-xl overflow-hidden bg-gray-100 relative group">
+                <div className="w-full aspect-3/4 md:aspect-4/3 lg:aspect-3/4 rounded-xl overflow-hidden bg-gray-100 relative group">
                   {product.badge && (
                     <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-black/60 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wide shadow-sm">
                       {product.badge}
@@ -289,8 +263,8 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                       </button>
                     </div>
                     <button
-                        onClick={() => addToCart(product, quantity)}
-                        className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
+                      onClick={() => addToCart(product, quantity)}
+                      className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
                     >
                       <span className="material-symbols-outlined">
                         shopping_bag
