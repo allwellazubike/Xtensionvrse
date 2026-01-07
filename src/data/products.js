@@ -9,7 +9,7 @@ export const products = [
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuBTwVaCFoLOZskb4LadSGQ3UCSE53wtTG_FGI5u1VouRuOdwWniBsLwsXCC57QkadOwQo_dCa74i-Q_Pxn6JG965-QiEyzZ6PzzShnmRYK7Y36idkWpEaDXKaHNEN3CyCLZA9pi9JGOZu7FY_hq8A50gcKJF3rrtF4zzBDMcI9dskyeldQ7dd0VseM-BbZiOEvCVwpuM5WwyAhRS-cBg3Lx8B7RDdYfl7ffTaVfRD8nOtQWJACSG08wSEoL1sSp3Y3QDGInfdeg2sk",
     alt: "Long blonde ombre braiding hair extension",
-    sale: true,
+    sale: false,
     badge: "Sale",
     description:
       "Our X-pression Ultra Braid is made from premium Kanekalon fiber, offering a soft, human-hair-like texture. It's pre-feathered and pre-stretched to save you prep time. Lightweight and tangle-free for effortless braiding.",

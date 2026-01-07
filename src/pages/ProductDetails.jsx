@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { products } from "../data/products";
 import { useCart } from "../context/CartContext";
+import ProductCard from "../components/ProductCard";
 
 const ProductDetails = ({ toggleDarkMode, darkMode }) => {
   const { id } = useParams();
@@ -12,6 +12,8 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
   const [selectedImage, setSelectedImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+
+  console.log(products);
 
   useEffect(() => {
     if (product) {
@@ -48,29 +50,6 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
         <main className="flex-1 w-full flex justify-center py-6 px-4 md:px-10 lg:px-40">
           <div className="w-full max-w-[1280px]">
             {/* Breadcrumbs */}
-            {/* <div className="flex flex-wrap gap-2 py-4 mb-4">
-              <Link
-                to="/"
-                className="text-[#89616f] hover:text-primary transition-colors text-sm font-medium leading-normal"
-              >
-                Home
-              </Link>
-              <span className="text-[#89616f] text-sm font-medium leading-normal">
-                /
-              </span>
-              <Link
-                to="/products"
-                className="text-[#89616f] hover:text-primary transition-colors text-sm font-medium leading-normal"
-              >
-                Products
-              </Link>
-              <span className="text-[#89616f] text-sm font-medium leading-normal">
-                /
-              </span>
-              <span className="text-[#181113] dark:text-white text-sm font-medium leading-normal">
-                {product.name}
-              </span>
-            </div> */}
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               {/* Left Column: Image Gallery */}
@@ -289,8 +268,8 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                       </button>
                     </div>
                     <button
-                        onClick={() => addToCart(product, quantity)}
-                        className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
+                      onClick={() => addToCart(product, quantity)}
+                      className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
                     >
                       <span className="material-symbols-outlined">
                         shopping_bag
@@ -542,7 +521,16 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
               <h3 className="text-xl font-bold text-[#181113] dark:text-white mb-6">
                 You might also like
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex gap-4">
+                {products.slice(0, 4).map((product) => (
+                  // STEP 4: Pass EACH product as props
+                  <ProductCard
+                    productz={product} // ← THIS passes ALL product data!
+                  />
+                ))}
+              </div>
+
+              {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {similarProducts.map((p) => (
                   <Link
                     to={`/product/${p.id}`}
@@ -569,7 +557,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                     </div>
                   </Link>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </main>
