@@ -523,13 +523,19 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
               </h3>
               <div className="flex gap-4">
                 {products.slice(0, 4).map((product) => (
-                  // STEP 4: Pass EACH product as props
+                  // STEP 4: Pass each product as props
+                  <Link
+                    to={`/product/${product.id}`}
+                    key={product.id}
+                    className="flex flex-col gap-3 group cursor-pointer"
+                  >
                   <ProductCard
                     productz={product} // ← THIS passes ALL product data!
                   />
+                  </Link>
                 ))}
               </div>
-
+ 
               {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {similarProducts.map((p) => (
                   <Link

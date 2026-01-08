@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import Icon from "./ui/Icon";
 
 const Header = ({ toggleDarkMode, darkMode }) => {
   const { getCartCount, cart } = useCart();
@@ -12,11 +13,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
           {/* Logo & Links */}
           <div className="flex items-center gap-8">
             <Link className="flex items-center gap-3 text-primary" to="/">
-              <div className="size-8 flex items-center justify-center rounded-full bg-primary/10">
-                <span className="material-symbols-outlined text-primary text-[24px]">
-                  all_inclusive
-                </span>
-              </div>
+              <Icon />
               <h2 className="text-[#181113] dark:text-white text-xl font-extrabold tracking-tight">
                 Xtensionsvrse
               </h2>
