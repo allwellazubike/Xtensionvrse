@@ -188,12 +188,12 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                     </div>
                     <div className="flex items-end gap-3">
                       <span className="text-3xl font-bold text-primary">
-                        ${product.price.toFixed(2)}
+                        ₦{product.price.toFixed(2)}
                       </span>
                       {product.originalPrice && (
                         <>
                           <span className="text-lg text-[#89616f] line-through mb-1">
-                            ${product.originalPrice}
+                            ₦{product.originalPrice}
                           </span>
                           <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-md mb-2">
                             Save 25%
