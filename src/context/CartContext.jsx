@@ -30,6 +30,8 @@ export const CartProvider = ({ children }) => {
         return [...prevCart, { ...product, quantity }];
       }
     });
+    
+    alert("added to cart")
   };
 
   const removeFromCart = (productId) => {

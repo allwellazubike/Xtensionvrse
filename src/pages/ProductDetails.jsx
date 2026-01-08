@@ -521,7 +521,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
               <h3 className="text-xl font-bold text-[#181113] dark:text-white mb-6">
                 You might also like
               </h3>
-              <div className="flex gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {products.slice(0, 4).map((product) => (
                   // STEP 4: Pass each product as props
                   <Link

@@ -51,7 +51,7 @@ const ProductCard = (props) => {
           </div>
           <div className="flex items-center justify-between mt-1">
             <span className="text-lg font-bold text-[#181113] dark:text-white">
-              ₦{props.productz.price}
+              ₦{props.productz.price.toLocaleString()}
             </span>
             {/* <div className="flex gap-1">
               <div className="size-3 rounded-full bg-black border border-gray-300"></div>

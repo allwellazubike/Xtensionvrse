@@ -58,10 +58,10 @@ const FilterSidebar = ({ isOpen, onClose }) => {
             </h4>
             <ul className="space-y-2">
               {[
-                { label: "All Textures", checked: true },
-                { label: "Pre-Stretched", checked: false },
-                { label: "Crochet Braids", checked: false },
-                { label: "Human Hair Blend", checked: false },
+                { label: "French Curls", checked: true },
+                { label: "Deep Twists", checked: false },
+                { label: "Italian Curls", checked: false },
+                { label: "Bone Straight", checked: false },
               ].map((item, index) => (
                 <li key={index}>
                   <label className="flex items-center gap-3 cursor-pointer group">
@@ -101,7 +101,7 @@ const FilterSidebar = ({ isOpen, onClose }) => {
           </div>
 
           {/* Filter Section: Color */}
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
               Color
             </h4>
@@ -123,7 +123,7 @@ const FilterSidebar = ({ isOpen, onClose }) => {
                 />
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Filter Section: Price */}
           <div className="mb-8">
