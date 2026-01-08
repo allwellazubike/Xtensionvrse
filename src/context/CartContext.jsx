@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
       }
     });
     
-    alert("added to cart")
+    // alert("added to cart")
   };
 
   const removeFromCart = (productId) => {

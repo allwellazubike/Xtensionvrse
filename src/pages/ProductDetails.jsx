@@ -13,6 +13,18 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
 
+  const [isAdded, setIsAdded] = React.useState(false);
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+    //  trigger the UI change
+    setIsAdded(true);
+// timer to revert the style after 2 seconds
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 1500);
+  };
+
   console.log(products);
 
   useEffect(() => {
@@ -193,7 +205,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                   <hr className="border-[#f4f0f2] dark:border-[#3a1d25]" />
 
                   {/* Color Selector */}
-                  <div>
+                  {/* <div>
                     <h3 className="text-sm font-bold uppercase tracking-wider text-[#89616f] mb-3">
                       Color:{" "}
                       <span className="text-[#181113] dark:text-white normal-case font-semibold">
@@ -218,7 +230,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                         className="w-12 h-12 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm flex items-center justify-center bg-gradient-to-b from-black to-[#FF69B4] hover:scale-105 transition-transform"
                       ></button>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Length Selector */}
                   <div>
@@ -267,7 +279,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                         </span>
                       </button>
                     </div>
-                    <button
+                    {/* <button
                       onClick={() => addToCart(product, quantity)}
                       className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
                     >
@@ -276,6 +288,31 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                       </span>
                       Add to Bag - ₦
                       {(product.price * quantity).toLocaleString()}
+                    </button> */}
+
+
+                    <button
+                      onClick={handleAddToCart}
+                      disabled={isAdded} // Optional: prevent double-clicks while processing
+                      className={`flex-1 font-bold rounded-xl h-12 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98] shadow-lg
+    ${
+      isAdded
+        ? "bg-green-500 text-white shadow-green-200" // "Added" Style
+        : "bg-primary hover:bg-rose-600 text-white shadow-rose-200" // Original Style
+    }`}
+                    >
+                      <span className="material-symbols-outlined">
+                        {isAdded ? "check_circle" : "shopping_bag"}
+                      </span>
+
+                      {isAdded ? (
+                        "Added to Bag!"
+                      ) : (
+                        <>
+                          Add to Bag - ₦
+                          {(product.price * quantity).toLocaleString()}
+                        </>
+                      )}
                     </button>
                   </div>
 
@@ -529,13 +566,13 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                     key={product.id}
                     className="flex flex-col gap-3 group cursor-pointer"
                   >
-                  <ProductCard
-                    productz={product} // ← THIS passes ALL product data!
-                  />
+                    <ProductCard
+                      productz={product} // ← THIS passes ALL product data!
+                    />
                   </Link>
                 ))}
               </div>
- 
+
               {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {similarProducts.map((p) => (
                   <Link
