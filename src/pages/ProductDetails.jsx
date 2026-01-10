@@ -25,7 +25,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
     }, 1500);
   };
 
-  console.log(products);
+  // console.log(products);
 
   useEffect(() => {
     if (product) {

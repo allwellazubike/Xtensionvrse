@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Features from "../components/Features";
@@ -9,6 +9,13 @@ import Newsletter from "../components/NewsLetter";
 import Footer from "../components/Footer";
 
 const Home = ({ toggleDarkMode, darkMode }) => {
+
+
+// fetch("http://localhost:3000/api/products")
+// .then((response) => response.json())
+// .then((data) => console.log(data))
+// .catch((error) => console.error(error));
+
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="relative flex min-h-screen w-full flex-col group/design-root bg-background-light dark:bg-background-dark text-[#181113] dark:text-white antialiased overflow-x-hidden">

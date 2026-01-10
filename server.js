@@ -1,22 +1,26 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
+import env from "dotenv";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
+env.config();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "Xtension",
-  password: "postgres@allwell",
-  port: 5432,
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
+  port: process.env.PG_PORT,
 });
-db.connect();
+db.connect(); 
 
-app.get("/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
     const result = await db.query("SELECT * FROM products");
 
     try {
