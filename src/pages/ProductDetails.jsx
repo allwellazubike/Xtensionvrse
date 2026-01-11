@@ -2,11 +2,36 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { products } from "../data/products";
+// import { products } from "../data/products";
 import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
+import axios from "axios";
 
 const ProductDetails = ({ toggleDarkMode, darkMode }) => {
+  const [products, setProducts] = useState([]);
+
+  //     useEffect(() => {
+  //   // fetch('http://localhost:3000/api/products')
+  //   //   .then(res => res.json())
+  //   //   .then(data => setProducts(data));
+  //     axios.get('http://localhost:3000/api/products')
+  //     .then(res => res.json())
+  //     .then(data => setProducts(data));
+  // }, []);
+
+  // API call
+  // convert to context so i cna use in other files
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/products")
+      .then((res) => {
+        setProducts(res.data); // products data in res
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  }, []);
+
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
   const [selectedImage, setSelectedImage] = useState(product?.image);
@@ -19,7 +44,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
     addToCart(product, quantity);
     //  trigger the UI change
     setIsAdded(true);
-// timer to revert the style after 2 seconds
+    // timer to revert the style after 2 seconds
     setTimeout(() => {
       setIsAdded(false);
     }, 1500);
@@ -188,7 +213,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                     </div>
                     <div className="flex items-end gap-3">
                       <span className="text-3xl font-bold text-primary">
-                        ₦{product.price.toFixed(2)}
+                        ₦{Number(product.price).toFixed(2)}
                       </span>
                       {product.originalPrice && (
                         <>
@@ -289,7 +314,6 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                       Add to Bag - ₦
                       {(product.price * quantity).toLocaleString()}
                     </button> */}
-
 
                     <button
                       onClick={handleAddToCart}

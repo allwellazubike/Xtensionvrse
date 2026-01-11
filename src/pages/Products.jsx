@@ -7,22 +7,18 @@ import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 // import { products } from "../data/products";
 
-
-
-
 const Products = ({ toggleDarkMode, darkMode }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
 
-
-      useEffect(() => {
-    fetch('http://localhost:3000/api/products')
-      .then(res => res.json())
-      .then(data => setProducts(data));
+  useEffect(() => {
+    fetch("http://localhost:3000/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
   }, []);
 
-  console.log(products);
+  // console.log(products);
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
@@ -116,15 +112,12 @@ const Products = ({ toggleDarkMode, darkMode }) => {
 
             {/* Product Grid */}
             <div className="px-4 md:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-
-
-{/* { useEffect(() => {
+              {/* { useEffect(() => {
     fetch('http://localhost:3000/api/products')
       .then(res => res.json())
       .then(data => console.log(data));
   }, [])
   } */}
-
 
               {products.map((product) => (
                 <Link
@@ -169,8 +162,7 @@ const Products = ({ toggleDarkMode, darkMode }) => {
 
                     {/* Quick Add Button (Desktop Hover) */}
                     <div className="absolute inset-x-4 bottom-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hidden md:block">
-                      <button 
-                      className="w-full py-3 bg-white text-slate-900 font-bold text-sm rounded-xl shadow-lg hover:bg-primary hover:text-white flex items-center justify-center gap-2">
+                      <button className="w-full py-3 bg-white text-slate-900 font-bold text-sm rounded-xl shadow-lg hover:bg-primary hover:text-white flex items-center justify-center gap-2">
                         <span className="material-symbols-outlined text-[18px]">
                           add_shopping_cart
                         </span>
@@ -216,9 +208,6 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                   </div>
                 </Link>
               ))}
-
-
-
             </div>
 
             {/* Load More */}

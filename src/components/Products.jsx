@@ -1,7 +1,14 @@
 import ProductCard from "./ProductCard";
-import { products } from "../data/products";
+import { useEffect, useState } from "react";
+// import { products } from "../data/products";
 
 const Products = () => {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3000/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
 
   const product = products;
   return (
@@ -15,11 +22,11 @@ const Products = () => {
         {/* <ProductCard /> */}
 
         {products.slice(0, 4).map((product) => (
-                    // product component props
-                    <ProductCard
-                      productz={product} // ← THIS passes ALL product data!
-                    />
-                  ))}
+          // product component props
+          <ProductCard
+            productz={product} // ← THIS passes ALL product data!
+          />
+        ))}
       </div>
     </section>
   );
