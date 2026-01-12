@@ -1,16 +1,10 @@
 import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
-// import { products } from "../data/products";
+import { useProducts } from "../context/ProductContext";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:3000/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
+  const { products } = useProducts();
 
-  const product = products;
   return (
     <section className="flex flex-col gap-6">
       <div className="flex items-center justify-between">

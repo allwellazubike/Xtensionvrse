@@ -3,22 +3,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterSidebar from "../components/FilterSidebar";
 import { useCart } from "../context/CartContext";
-
+import { useProducts } from "../context/ProductContext";
 import { Link } from "react-router-dom";
-// import { products } from "../data/products";
 
 const Products = ({ toggleDarkMode, darkMode }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { addToCart } = useCart();
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:3000/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
-
-  // console.log(products);
+  const { products } = useProducts();
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>

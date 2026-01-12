@@ -2,36 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-// import { products } from "../data/products";
 import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
-import axios from "axios";
+import { useProducts } from "../context/ProductContext"
 
 const ProductDetails = ({ toggleDarkMode, darkMode }) => {
-  const [products, setProducts] = useState([]);
 
-  //     useEffect(() => {
-  //   // fetch('http://localhost:3000/api/products')
-  //   //   .then(res => res.json())
-  //   //   .then(data => setProducts(data));
-  //     axios.get('http://localhost:3000/api/products')
-  //     .then(res => res.json())
-  //     .then(data => setProducts(data));
-  // }, []);
 
-  // API call
-  // convert to context so i cna use in other files
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/products")
-      .then((res) => {
-        setProducts(res.data); // products data in res
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, []);
-
+  const { products } = useProducts();
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
   const [selectedImage, setSelectedImage] = useState(product?.image);

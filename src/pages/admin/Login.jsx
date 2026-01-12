@@ -29,10 +29,10 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
         <div className="absolute bottom-10 left-10 right-10 text-white">
           <blockquote className="text-2xl font-semibold leading-relaxed">
-            "Empowering beauty through every strand."
+            "Strands That Perfectly Compliment You!!"
           </blockquote>
           <p className="mt-4 text-sm font-medium opacity-80">
-            Xtensionsverse Admin Portal v2.0
+            Xtensionsvrse Admin Portal v2.0
           </p>
         </div>
       </div>
@@ -49,7 +49,7 @@ const Login = () => {
                 </span>
               </div>
               <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                Xtensionsverse
+                Xtensionsvrse
               </span>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">

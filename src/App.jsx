@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
-import SearchResultsPage from "./pages/SearchResults";  
-import Login from './pages/admin/Login';
-import Access from './pages/admin/Access';
+import SearchResultsPage from "./pages/SearchResults";
+import Login from "./pages/admin/Login";
+import Access from "./pages/admin/Access";
+import AddProduct from "./pages/admin/AddProduct";
 
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
@@ -33,9 +34,7 @@ function App() {
         />
         <Route
           path="/cart"
-          element={
-            <Cart toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-          }
+          element={<Cart toggleDarkMode={toggleDarkMode} darkMode={darkMode} />}
         />
         <Route
           path="/product/:id"
@@ -48,12 +47,17 @@ function App() {
         />
         <Route
           path="/login"
-          element={<Login toggleDarkMode={toggleDarkMode} darkMode={darkMode} />}
+          element={
+            <Login toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+          }
         />
         <Route
           path="/access"
-          element={<Access toggleDarkMode={toggleDarkMode} darkMode={darkMode} />}
+          element={
+            <Access toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+          }
         />
+        <Route path="/admin/add-product" element={<AddProduct />} />
         {/* adding search results route if needed in future, currently imported but unused in original code except for import */}
         <Route path="/search" element={<SearchResultsPage />} />
       </Routes>
