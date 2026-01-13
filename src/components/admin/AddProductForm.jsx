@@ -2,6 +2,19 @@ import React, { useState } from "react";
 
 const AddProductForm = () => {
   const [isOnSale, setIsOnSale] = useState(false);
+  const [lengths, setLengths] = useState(['20"', '24"', '32"']);
+  const [newLength, setNewLength] = useState("");
+
+  const handleAddLength = () => {
+    if (newLength.trim()) {
+      setLengths([...lengths, newLength.trim()]);
+      setNewLength("");
+    }
+  };
+
+  const handleRemoveLength = (indexToRemove) => {
+    setLengths(lengths.filter((_, index) => index !== indexToRemove));
+  };
 
   return (
     <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
@@ -120,6 +133,7 @@ const AddProductForm = () => {
                 Enable to show the sale badge and discounted pricing.
               </span>
             </div>
+
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 className="sr-only peer"
@@ -130,6 +144,65 @@ const AddProductForm = () => {
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
+        <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary">style</span>
+          Variants
+        </h3>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-bold text-[#5d4a51] dark:text-white/80">
+              Available Lengths
+            </label>
+            <div className="flex flex-wrap gap-2 items-center">
+              {lengths.map((length, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1.5 rounded-xl bg-[#f4f0f2] dark:bg-white/10 text-[#5d4a51] dark:text-white text-sm font-medium border border-transparent hover:border-primary/30 transition-colors flex items-center gap-2"
+                >
+                  {length}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveLength(index)}
+                    className="text-[#89616f] hover:text-red-500 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">
+                      close
+                    </span>
+                  </button>
+                </span>
+              ))}
+              <div className="flex items-center gap-2 relative">
+                <input
+                  type="text"
+                  value={newLength}
+                  onChange={(e) => setNewLength(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddLength();
+                    }
+                  }}
+                  placeholder="Add length..."
+                  className="pl-3 pr-8 py-1.5 w-32 rounded-xl border border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddLength}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[#89616f] hover:text-primary transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    add_circle
+                  </span>
+                </button>
+              </div>
+            </div>
+            <p className="text-xs text-[#89616f] mt-1">
+              Type a length (e.g. 18") and press Enter to add.
+            </p>
           </div>
         </div>
       </div>

@@ -14,12 +14,15 @@ const AdminProducts = () => {
         <ProductTable />
 
         {/* Floating Add Button for Mobile/Tablet */}
-        <button
-          onClick={() => setIsDrawerOpen(true)}
-          className="fixed bottom-6 right-6 z-30 size-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 2xl:hidden transition-transform hover:scale-105"
-        >
-          <span className="material-symbols-outlined text-3xl">add</span>
-        </button>
+        {/* Floating Add Button for Mobile/Tablet */}
+        {!isDrawerOpen && (
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="fixed bottom-6 right-6 z-30 size-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 2xl:hidden transition-transform hover:scale-105"
+          >
+            <span className="material-symbols-outlined text-3xl">add</span>
+          </button>
+        )}
 
         <ProductDrawer
           isOpen={isDrawerOpen}
