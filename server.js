@@ -34,16 +34,6 @@ app.get("/api/products", async (req, res) => {
     }
     });
 
-
-
-        // const result = await db.query("SELECT * FROM products");
-    // if (error) {
-    //     console.error(err);
-    //     res.status(500).json({ error: "Database error" });
-    // } else {
-    //     res.json(result.rows);
-    //     }
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

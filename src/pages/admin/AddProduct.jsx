@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import AdminLayout from "../../components/admin/AdminLayout";
 import Header from "../../components/admin/Header";
+import AddProductForm from "../../components/admin/AddProductForm";
 
 const AddProduct = () => {
-  const [isOnSale, setIsOnSale] = useState(false);
-
   return (
     <AdminLayout>
       <Header />
