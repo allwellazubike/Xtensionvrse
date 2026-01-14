@@ -1,23 +1,191 @@
 import React, { useState } from "react";
 
 const AddProductForm = () => {
-  const [isOnSale, setIsOnSale] = useState(false);
-  const [lengths, setLengths] = useState(['20"', '24"', '32"']);
-  const [newLength, setNewLength] = useState("");
+  // Single object to store ALL form data
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    originalPrice: "",
+    badgeText: "",
+    badgeColor: "",
+    sale: false,
+    lengths: ['20"', '24"', '32"'],
+    weights: ["100g", "150g", "200g"],
+    specifications: ["100% Kanekalon Fiber", "Hot Water Setting"],
+    primaryImage: null,
+    galleryImages: [],
+  });
 
+  const [newLength, setNewLength] = useState("");
+  const [newWeight, setNewWeight] = useState("");
+  const [newSpec, setNewSpec] = useState("");
+
+  // Handle all text inputs
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  // Handle primary image
+  const handlePrimaryImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, primaryImage: file });
+      console.log("Primary image selected:", file.name);
+    }
+  };
+
+  // Handle gallery images
+  const handleGalleryImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData({
+      ...formData,
+      galleryImages: [...formData.galleryImages, ...files],
+    });
+    console.log("Gallery images added:", files.length);
+  };
+
+  // Remove gallery image
+  const handleRemoveGalleryImage = (indexToRemove) => {
+    setFormData({
+      ...formData,
+      galleryImages: formData.galleryImages.filter(
+        (_, index) => index !== indexToRemove
+      ),
+    });
+  };
+
+  // Length functions
   const handleAddLength = () => {
     if (newLength.trim()) {
-      setLengths([...lengths, newLength.trim()]);
+      setFormData({
+        ...formData,
+        lengths: [...formData.lengths, newLength.trim()],
+      });
       setNewLength("");
     }
   };
 
   const handleRemoveLength = (indexToRemove) => {
-    setLengths(lengths.filter((_, index) => index !== indexToRemove));
+    setFormData({
+      ...formData,
+      lengths: formData.lengths.filter((_, index) => index !== indexToRemove),
+    });
+  };
+
+  // Weight functions
+  const handleAddWeight = () => {
+    if (newWeight.trim()) {
+      setFormData({
+        ...formData,
+        weights: [...formData.weights, newWeight.trim()],
+      });
+      setNewWeight("");
+    }
+  };
+
+  const handleRemoveWeight = (indexToRemove) => {
+    setFormData({
+      ...formData,
+      weights: formData.weights.filter((_, index) => index !== indexToRemove),
+    });
+  };
+
+  // Specification functions
+  const handleAddSpec = () => {
+    if (newSpec.trim()) {
+      setFormData({
+        ...formData,
+        specifications: [...formData.specifications, newSpec.trim()],
+      });
+      setNewSpec("");
+    }
+  };
+
+  const handleRemoveSpec = (indexToRemove) => {
+    setFormData({
+      ...formData,
+      specifications: formData.specifications.filter(
+        (_, index) => index !== indexToRemove
+      ),
+    });
+  };
+
+  // SUBMIT FUNCTION - Send to backend
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Basic validation
+    if (!formData.name.trim()) {
+      alert("Please enter product name");
+      return;
+    }
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      alert("Please enter a valid price");
+      return;
+    }
+    if (!formData.primaryImage) {
+      alert("Please upload a primary image");
+      return;
+    }
+
+    // Create FormData to send files + text
+    const data = new FormData();
+
+    // Add all text fields
+    data.append("name", formData.name.trim());
+    data.append("description", formData.description.trim());
+    data.append("price", formData.price);
+    data.append("originalPrice", formData.originalPrice || "");
+    data.append("badgeText", formData.badgeText.trim());
+    data.append("badgeColor", formData.badgeColor);
+    data.append("sale", formData.sale);
+
+    // Convert arrays to JSON strings
+    data.append("lengths", JSON.stringify(formData.lengths));
+    data.append("weights", JSON.stringify(formData.weights));
+    data.append("specifications", JSON.stringify(formData.specifications));
+
+    // Add primary image
+    data.append("primaryImage", formData.primaryImage);
+
+    // Add gallery images
+    formData.galleryImages.forEach((image) => {
+      data.append("galleryImages", image);
+    });
+
+    try {
+      console.log("Submitting product...");
+      
+      const response = await fetch("http://localhost:5000/api/products/create", {
+        method: "POST",
+        body: data,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Product created successfully!");
+        console.log("Created product:", result);
+        // Optionally reset form
+        // setFormData({ ... initial state ... });
+      } else {
+        alert("Error: " + result.message);
+        console.error("Server error:", result);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to create product. Check console for details.");
+    }
   };
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+      {/* Basic Information */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
         <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">
@@ -34,7 +202,10 @@ const AddProductForm = () => {
               className="w-full border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white placeholder-[#89616f]/50 text-sm focus:border-primary focus:ring-primary py-3"
               placeholder='e.g. Silky Straight 24" Braid'
               type="text"
-              name="productName"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -46,11 +217,15 @@ const AddProductForm = () => {
                 className="w-full border-none bg-transparent text-[#181113] dark:text-white placeholder-[#89616f]/50 text-sm focus:ring-0 min-h-[160px] resize-y p-4 outline-none"
                 placeholder="Detailed product description..."
                 name="description"
+                value={formData.description}
+                onChange={handleInputChange}
               ></textarea>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Pricing & Status */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
         <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">sell</span>
@@ -63,13 +238,17 @@ const AddProductForm = () => {
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#89616f] font-medium">
-                $
+                ₦
               </span>
               <input
                 className="w-full border pl-8 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white placeholder-[#89616f]/50 text-sm focus:border-primary focus:ring-primary py-3"
                 placeholder="0.00"
                 type="number"
+                step="0.01"
                 name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+                required
               />
             </div>
           </div>
@@ -82,13 +261,16 @@ const AddProductForm = () => {
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#89616f] font-medium">
-                $
+                ₦
               </span>
               <input
                 className="w-full border pl-8 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white placeholder-[#89616f]/50 text-sm focus:border-primary focus:ring-primary py-3"
                 placeholder="0.00"
                 type="number"
+                step="0.01"
                 name="originalPrice"
+                value={formData.originalPrice}
+                onChange={handleInputChange}
               />
             </div>
           </div>
@@ -102,6 +284,8 @@ const AddProductForm = () => {
                 placeholder="e.g. Best Seller"
                 type="text"
                 name="badgeText"
+                value={formData.badgeText}
+                onChange={handleInputChange}
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -112,6 +296,8 @@ const AddProductForm = () => {
                 <select
                   name="badgeColor"
                   className="w-full border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary py-3 pl-4 pr-10"
+                  value={formData.badgeColor}
+                  onChange={handleInputChange}
                 >
                   <option value="">None</option>
                   <option value="bg-primary">Pink (Primary)</option>
@@ -133,32 +319,34 @@ const AddProductForm = () => {
                 Enable to show the sale badge and discounted pricing.
               </span>
             </div>
-
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 className="sr-only peer"
                 type="checkbox"
-                checked={isOnSale}
-                onChange={(e) => setIsOnSale(e.target.checked)}
-                name="isOnSale"
+                name="sale"
+                checked={formData.sale}
+                onChange={handleInputChange}
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
         </div>
       </div>
+
+      {/* Variants */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
         <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">style</span>
           Variants
         </h3>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
+          {/* Lengths */}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-bold text-[#5d4a51] dark:text-white/80">
               Available Lengths
             </label>
             <div className="flex flex-wrap gap-2 items-center">
-              {lengths.map((length, index) => (
+              {formData.lengths.map((length, index) => (
                 <span
                   key={index}
                   className="px-3 py-1.5 rounded-xl bg-[#f4f0f2] dark:bg-white/10 text-[#5d4a51] dark:text-white text-sm font-medium border border-transparent hover:border-primary/30 transition-colors flex items-center gap-2"
@@ -204,8 +392,63 @@ const AddProductForm = () => {
               Type a length (e.g. 18") and press Enter to add.
             </p>
           </div>
+
+          {/* Weights */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-bold text-[#5d4a51] dark:text-white/80">
+              Available Weights
+            </label>
+            <div className="flex flex-wrap gap-2 items-center">
+              {formData.weights.map((weight, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1.5 rounded-xl bg-[#f4f0f2] dark:bg-white/10 text-[#5d4a51] dark:text-white text-sm font-medium border border-transparent hover:border-primary/30 transition-colors flex items-center gap-2"
+                >
+                  {weight}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveWeight(index)}
+                    className="text-[#89616f] hover:text-red-500 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">
+                      close
+                    </span>
+                  </button>
+                </span>
+              ))}
+              <div className="flex items-center gap-2 relative">
+                <input
+                  type="text"
+                  value={newWeight}
+                  onChange={(e) => setNewWeight(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddWeight();
+                    }
+                  }}
+                  placeholder="Add weight..."
+                  className="pl-3 pr-8 py-1.5 w-32 rounded-xl border border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddWeight}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[#89616f] hover:text-primary transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    add_circle
+                  </span>
+                </button>
+              </div>
+            </div>
+            <p className="text-xs text-[#89616f] mt-1">
+              Type a weight (e.g. 120g) and press Enter to add.
+            </p>
+          </div>
         </div>
       </div>
+
+      {/* Media */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
         <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">
@@ -215,13 +458,15 @@ const AddProductForm = () => {
         </h3>
         <div className="mb-8">
           <label className="block text-sm font-bold text-[#5d4a51] dark:text-white/80 mb-2">
-            Primary Image
+            Primary Image <span className="text-red-500">*</span>
           </label>
           <div className="relative group cursor-pointer">
             <input
-              className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
               type="file"
-              name="primaryImage"
+              accept="image/*"
+              onChange={handlePrimaryImageChange}
+              className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+              required
             />
             <div className="border-2 border-dashed border-[#e6dbdf] dark:border-[#4a2e36] rounded-2xl p-10 flex flex-col items-center justify-center bg-[#fcfbfb] dark:bg-white/5 group-hover:bg-[#f4f0f2] dark:group-hover:bg-white/10 transition-colors text-center">
               <div className="size-14 bg-white dark:bg-white/10 rounded-full shadow-sm flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
@@ -230,69 +475,67 @@ const AddProductForm = () => {
                 </span>
               </div>
               <p className="text-[#181113] dark:text-white font-semibold text-base">
-                Click to upload or drag and drop
+                {formData.primaryImage
+                  ? `✓ ${formData.primaryImage.name}`
+                  : "Click to upload or drag and drop"}
               </p>
               <p className="text-[#89616f] dark:text-white/50 text-sm mt-1">
-                SVG, PNG, JPG or GIF (max. 800x400px)
+                PNG, JPG or WEBP (recommended 800x800px)
               </p>
             </div>
           </div>
         </div>
         <div>
           <label className="block text-sm font-bold text-[#5d4a51] dark:text-white/80 mb-3">
-            Product Gallery
+            Product Gallery{" "}
+            <span className="text-xs font-normal text-[#89616f]">
+              ({formData.galleryImages.length} selected)
+            </span>
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            <div className="aspect-square relative group rounded-xl overflow-hidden border border-[#e6dbdf] dark:border-[#4a2e36] shadow-sm">
+            {formData.galleryImages.map((image, index) => (
               <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuByRyWN4yodIiHzmbISB8wz03H-t4Yxp0RAHRvlCdP4JMZ14Rm8rmoDR2x7GD9Hmejhp6GkUKA3zQd8nJgh59NTozDpvXAKSkPb5VTqFYOHOIVGWWx8OQQeL2YupTpAExX6IjD619YVeGoD-8-HcowzTVlzVqkRXsG4UmO--Yi2f56VQjUX0qGFnzSgvrOayfc9DqVHvjKNGKZ9tCzNaeI9Kpchv4eMVAwRaksFi-BiklnwRSh4FBYDtNp6Njo42sg_ncCUifiDmVs')",
-                }}
-              ></div>
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <button
-                  className="bg-white text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors shadow-lg"
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-lg">
-                    delete
-                  </span>
-                </button>
+                key={index}
+                className="aspect-square relative group rounded-xl overflow-hidden border border-[#e6dbdf] dark:border-[#4a2e36] shadow-sm"
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url('${URL.createObjectURL(image)}')`,
+                  }}
+                ></div>
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <button
+                    onClick={() => handleRemoveGalleryImage(index)}
+                    className="bg-white text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors shadow-lg"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      delete
+                    </span>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="aspect-square relative group rounded-xl overflow-hidden border border-[#e6dbdf] dark:border-[#4a2e36] shadow-sm">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjRJiAl60yw_yGGG1aIAsP-KwJAowJ8a2e9-5-2vwAuY45wpLZUwtagaW6mXUAS7eNo53lkTsCqGn5YrZapxoZ7MivqedcrT9sWnrid6Lg8G8z63_twQasxskIWbY3laqZeioTPhuKScdl-TrDe0Loiqv0ubYlI_49-kNqpa6C_EFN1Ds-sbVpcSQDGFWs4Ojb9Z8mRs2wmF9b29KBztVUhmJWrUaRIru0_tF4msDgkW47XdJz6GMK0zAEpxJivAEKE92TBZnrGv4')",
-                }}
-              ></div>
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <button
-                  className="bg-white text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors shadow-lg"
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-lg">
-                    delete
-                  </span>
-                </button>
-              </div>
-            </div>
-            <button
-              className="aspect-square rounded-xl border-2 border-dashed border-[#e6dbdf] dark:border-[#4a2e36] flex flex-col items-center justify-center gap-1 text-[#89616f] hover:text-primary hover:border-primary hover:bg-primary/5 transition-colors bg-[#fcfbfb] dark:bg-white/5"
-              type="button"
-            >
+            ))}
+
+            <label className="aspect-square rounded-xl border-2 border-dashed border-[#e6dbdf] dark:border-[#4a2e36] flex flex-col items-center justify-center gap-1 text-[#89616f] hover:text-primary hover:border-primary hover:bg-primary/5 transition-colors bg-[#fcfbfb] dark:bg-white/5 cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleGalleryImagesChange}
+                className="hidden"
+              />
               <span className="material-symbols-outlined text-2xl">
                 add_photo_alternate
               </span>
               <span className="text-xs font-bold">Add</span>
-            </button>
+            </label>
           </div>
         </div>
       </div>
+
+      {/* Specifications */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
         <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">
@@ -301,74 +544,63 @@ const AddProductForm = () => {
           Specifications
         </h3>
         <div className="flex flex-col gap-3">
+          {formData.specifications.map((spec, index) => (
+            <div key={index} className="flex gap-3 items-center group">
+              <span className="material-symbols-outlined text-[#89616f]/50 cursor-move group-hover:text-primary transition-colors">
+                drag_indicator
+              </span>
+              <input
+                className="flex-1 border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary py-2.5"
+                type="text"
+                value={spec}
+                readOnly
+              />
+              <button
+                onClick={() => handleRemoveSpec(index)}
+                className="p-2 text-[#89616f] hover:text-red-500 hover:bg-red-50 dark:hover:bg-white/10 rounded-lg transition-colors"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+          ))}
+
           <div className="flex gap-3 items-center group">
-            <span className="material-symbols-outlined text-[#89616f]/50 cursor-move group-hover:text-primary transition-colors">
-              drag_indicator
-            </span>
-            <input
-              className="flex-1 border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary py-2.5"
-              type="text"
-              defaultValue="100% Kanekalon Fiber"
-              name="spec1"
-            />
-            <button
-              className="p-2 text-[#89616f] hover:text-red-500 hover:bg-red-50 dark:hover:bg-white/10 rounded-lg transition-colors"
-              type="button"
-            >
-              <span className="material-symbols-outlined text-lg">close</span>
-            </button>
-          </div>
-          <div className="flex gap-3 items-center group">
-            <span className="material-symbols-outlined text-[#89616f]/50 cursor-move group-hover:text-primary transition-colors">
-              drag_indicator
-            </span>
-            <input
-              className="flex-1 border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary py-2.5"
-              type="text"
-              defaultValue="Hot Water Setting"
-              name="spec2"
-            />
-            <button
-              className="p-2 text-[#89616f] hover:text-red-500 hover:bg-red-50 dark:hover:bg-white/10 rounded-lg transition-colors"
-              type="button"
-            >
-              <span className="material-symbols-outlined text-lg">close</span>
-            </button>
-          </div>
-          <div className="flex gap-3 items-center group">
-            <span className="material-symbols-outlined text-[#89616f]/50 cursor-move group-hover:text-primary transition-colors">
+            <span className="material-symbols-outlined text-[#89616f]/50">
               drag_indicator
             </span>
             <input
               className="flex-1 border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary py-2.5"
               placeholder="Add new specification..."
               type="text"
-              name="newSpec"
+              value={newSpec}
+              onChange={(e) => setNewSpec(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddSpec();
+                }
+              }}
             />
             <button
-              className="p-2 text-[#89616f] hover:text-red-500 hover:bg-red-50 dark:hover:bg-white/10 rounded-lg transition-colors"
-              type="button"
-            >
-              <span className="material-symbols-outlined text-lg">close</span>
-            </button>
-          </div>
-          <div className="mt-2">
-            <button
-              className="flex items-center gap-2 text-primary font-bold text-sm hover:text-primary/80 transition-colors px-1"
+              onClick={handleAddSpec}
+              className="p-2 text-primary hover:text-primary/80 hover:bg-primary/5 rounded-lg transition-colors"
               type="button"
             >
               <span className="material-symbols-outlined text-lg">
                 add_circle
               </span>
-              Add Another Specification
             </button>
           </div>
         </div>
       </div>
+
+      {/* Submit Buttons */}
       <div className="flex items-center justify-end gap-4 pt-4 mt-2">
         <button
           className="px-8 py-3 rounded-xl border border-[#e6dbdf] dark:border-[#4a2e36] font-bold text-[#5d4a51] dark:text-white hover:bg-white dark:hover:bg-white/5 shadow-sm transition-colors text-sm"
           type="button"
+          onClick={() => window.history.back()}
         >
           Cancel
         </button>
