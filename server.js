@@ -24,7 +24,7 @@ const db = new pg.Client({
 });
 db.connect();
 
-// cloudinary config 
+// cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -100,7 +100,9 @@ app.post(
 
       // Convert types for database
       const priceNumeric = parseFloat(price);
-      const originalPriceNumeric = originalPrice ? parseFloat(originalPrice) : null;
+      const originalPriceNumeric = originalPrice
+        ? parseFloat(originalPrice)
+        : null;
       const saleBoolean = sale === "true" || sale === true;
 
       // Parse JSON strings back to arrays
@@ -136,8 +138,8 @@ app.post(
         badgeText || null,
         badgeColor || null,
         description || null,
-        specsArray, // PostgreSQL handles TEXT[] array
-        galleryImageUrls, // PostgreSQL handles TEXT[] array
+        specsArray, // pg handles TEXT[] array
+        galleryImageUrls, // pg handles TEXT[] array
       ];
 
       const result = await db.query(query, values);
@@ -162,7 +164,6 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-
 // import express from "express";
 // import bodyParser from "body-parser";
 // import pg from "pg";
@@ -183,7 +184,7 @@ app.listen(port, () => {
 //   password: process.env.PG_PASSWORD,
 //   port: process.env.PG_PORT,
 // });
-// db.connect(); 
+// db.connect();
 
 // app.get("/api/products", async (req, res) => {
 //     const result = await db.query("SELECT * FROM products");

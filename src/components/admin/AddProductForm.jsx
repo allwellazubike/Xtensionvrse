@@ -161,7 +161,7 @@ const AddProductForm = () => {
     try {
       console.log("Submitting product...");
       
-      const response = await fetch("http://localhost:5000/api/products/create", {
+      const response = await fetch("http://localhost:3000/api/products/create", {
         method: "POST",
         body: data,
       });
