@@ -98,6 +98,10 @@ app.post(
         return res.status(400).json({ message: "Primary image is required" });
       }
 
+      // if (!stock || parseInt(stock) <= 0) {
+      //   return res.status(400).json({ message: "Stock must be greater than 0" });
+      // }
+
       // Convert types for database
       const priceNumeric = parseFloat(price);
       const originalPriceNumeric = originalPrice

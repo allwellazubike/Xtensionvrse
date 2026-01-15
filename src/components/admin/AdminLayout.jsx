@@ -17,7 +17,7 @@ const AdminLayout = ({ children }) => {
             <span className="material-symbols-outlined">menu</span>
           </button>
           <span className="font-bold text-[#181113] dark:text-white">
-            Admin Panel
+            Xtensionvrse
           </span>
         </div>
         {children}

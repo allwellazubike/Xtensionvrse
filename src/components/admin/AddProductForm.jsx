@@ -7,6 +7,7 @@ const AddProductForm = () => {
     description: "",
     price: "",
     originalPrice: "",
+    stock: "",
     badgeText: "",
     badgeColor: "",
     sale: false,
@@ -128,6 +129,10 @@ const AddProductForm = () => {
       alert("Please enter a valid price");
       return;
     }
+    if (!formData.stock || parseInt(formData.stock) <= 0) {
+      alert("Stock must be greater than 0");
+      return;
+    }
     if (!formData.primaryImage) {
       alert("Please upload a primary image");
       return;
@@ -140,6 +145,7 @@ const AddProductForm = () => {
     data.append("name", formData.name.trim());
     data.append("description", formData.description.trim());
     data.append("price", formData.price);
+    data.append("stock", formData.stock);
     data.append("originalPrice", formData.originalPrice || "");
     data.append("badgeText", formData.badgeText.trim());
     data.append("badgeColor", formData.badgeColor);
@@ -160,11 +166,14 @@ const AddProductForm = () => {
 
     try {
       console.log("Submitting product...");
-      
-      const response = await fetch("http://localhost:3000/api/products/create", {
-        method: "POST",
-        body: data,
-      });
+
+      const response = await fetch(
+        "http://localhost:3000/api/products/create",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
 
       const result = await response.json();
 
@@ -273,6 +282,21 @@ const AddProductForm = () => {
                 onChange={handleInputChange}
               />
             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-bold text-[#5d4a51] dark:text-white/80">
+              Stock Quantity
+            </label>
+            <input
+              className="w-full border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white placeholder-[#89616f]/50 text-sm focus:border-primary focus:ring-primary py-3"
+              placeholder="e.g. 50"
+              type="number"
+              min="1"
+              name="stock"
+              value={formData.stock}
+              onChange={handleInputChange}
+              required
+            />
           </div>
           <div className="md:col-span-2 border-t border-[#f4f0f2] dark:border-white/5 pt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-2">

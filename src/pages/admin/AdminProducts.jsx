@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminLayout from "../../components/admin/AdminLayout";
 import Header from "../../components/admin/Header";
 import ProductTable from "../../components/admin/ProductTable";
 import ProductDrawer from "../../components/admin/ProductDrawer";
+// import { useProducts } from "../../context/ProductContext";
 
 const AdminProducts = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // const { products } = useProducts();
+  // useEffect(() => {
+  //   if (products && products[1]) {
+  //     console.log("Second product ID:", products[1].name);
+  //   }
+  // }, [products]);
 
   return (
     <AdminLayout>
