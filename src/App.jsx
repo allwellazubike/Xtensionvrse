@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  
 
   // function to toggle dark mode
   const toggleDarkMode = () => {
