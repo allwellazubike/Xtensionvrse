@@ -250,7 +250,7 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                               key={idx}
                               className="px-6 py-2.5 rounded-lg border bg-white dark:bg-[#2a141b] text-[#181113] dark:text-white border-gray-200 dark:border-[#4d2630] font-medium text-sm hover:border-primary hover:text-primary transition-colors"
                             >
-                              {len.trim().replace(/"/g, "")} inch
+                              {len.trim().replace(/"/g, "")} inches
                             </button>
                           ))}
                       </div>
