@@ -58,7 +58,6 @@ function App() {
             <Access toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
           }
         />
-        {/* <Route path="/admin/add-product" element={<AddProduct />} /> */}
         <Route path="/admin/products" element={<AdminProducts />} />
         {/* adding search results route if needed in future, currently imported but unused in original code except for import */}
         <Route path="/search" element={<SearchResultsPage />} />
