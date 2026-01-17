@@ -92,7 +92,7 @@ const ProductTable = () => {
               <td className="px-6 py-4">
                 <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
                   <span className="size-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                  125 in stock
+                  {product.stock} in stock
                 </div>
               </td>
               <td className="px-6 py-4 text-sm font-medium text-[#181113] dark:text-white">

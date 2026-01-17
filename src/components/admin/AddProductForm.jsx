@@ -4,6 +4,7 @@ const AddProductForm = () => {
   // Single object to store ALL form data
   const [formData, setFormData] = useState({
     name: "",
+    category: "",
     description: "",
     price: "",
     originalPrice: "",
@@ -55,7 +56,7 @@ const AddProductForm = () => {
     setFormData({
       ...formData,
       galleryImages: formData.galleryImages.filter(
-        (_, index) => index !== indexToRemove
+        (_, index) => index !== indexToRemove,
       ),
     });
   };
@@ -111,7 +112,7 @@ const AddProductForm = () => {
     setFormData({
       ...formData,
       specifications: formData.specifications.filter(
-        (_, index) => index !== indexToRemove
+        (_, index) => index !== indexToRemove,
       ),
     });
   };
@@ -143,6 +144,7 @@ const AddProductForm = () => {
 
     // Add all text fields
     data.append("name", formData.name.trim());
+    data.append("category", formData.category);
     data.append("description", formData.description.trim());
     data.append("price", formData.price);
     data.append("stock", formData.stock);
@@ -172,7 +174,7 @@ const AddProductForm = () => {
         {
           method: "POST",
           body: data,
-        }
+        },
       );
 
       const result = await response.json();
@@ -216,6 +218,34 @@ const AddProductForm = () => {
               onChange={handleInputChange}
               required
             />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-bold text-[#5d4a51] dark:text-white/80">
+              Category
+            </label>
+            <div className="relative">
+              <select
+                name="category"
+                className="w-full border px-4 rounded-xl border-[#e6dbdf] dark:border-[#4a2e36] bg-[#fcfbfb] dark:bg-white/5 text-[#181113] dark:text-white text-sm focus:border-primary focus:ring-primary py-3 pl-4 pr-10 appearance-none"
+                value={formData.category}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                <option value="French Curls">French Curls</option>
+                <option value="Deep Twists">Deep Twists</option>
+                <option value="Italian Curls">Italian Curls</option>
+                <option value="Bone Straight">Bone Straight</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#89616f]">
+                <span className="material-symbols-outlined text-[20px]">
+                  expand_more
+                </span>
+              </div>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-sm font-bold text-[#5d4a51] dark:text-white/80">

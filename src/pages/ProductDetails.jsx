@@ -4,11 +4,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
-import { useProducts } from "../context/ProductContext"
+import { useProducts } from "../context/ProductContext";
 
 const ProductDetails = ({ toggleDarkMode, darkMode }) => {
-
-
   const { products } = useProducts();
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
@@ -236,25 +234,28 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                   </div> */}
 
                   {/* Length Selector */}
-                  <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#89616f] mb-3">
-                      Length
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      <button className="px-6 py-2.5 rounded-lg border bg-white dark:bg-[#2a141b] text-[#181113] dark:text-white border-gray-200 dark:border-[#4d2630] font-medium text-sm hover:border-primary hover:text-primary transition-colors">
-                        20 inch
-                      </button>
-                      <button className="px-6 py-2.5 rounded-lg border-2 border-primary bg-primary/5 text-primary font-bold text-sm shadow-sm">
-                        26 inch
-                      </button>
-                      <button className="px-6 py-2.5 rounded-lg border bg-white dark:bg-[#2a141b] text-[#181113] dark:text-white border-gray-200 dark:border-[#4d2630] font-medium text-sm hover:border-primary hover:text-primary transition-colors">
-                        30 inch
-                      </button>
-                      <button className="px-6 py-2.5 rounded-lg border bg-gray-50 dark:bg-[#1f0f14] text-gray-400 border-gray-100 dark:border-[#2d161d] font-medium text-sm cursor-not-allowed">
-                        52 inch
-                      </button>
+                  {/* Dynamic Length Selector */}
+                  {product.specs?.some((s) => s.startsWith("Length:")) && (
+                    <div>
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-[#89616f] mb-3">
+                        Length
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                        {product.specs
+                          .find((s) => s.startsWith("Length:"))
+                          .replace("Length:", "")
+                          .split(",")
+                          .map((len, idx) => (
+                            <button
+                              key={idx}
+                              className="px-6 py-2.5 rounded-lg border bg-white dark:bg-[#2a141b] text-[#181113] dark:text-white border-gray-200 dark:border-[#4d2630] font-medium text-sm hover:border-primary hover:text-primary transition-colors"
+                            >
+                              {len.trim().replace(/"/g, "")} inch
+                            </button>
+                          ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Quantity and CTA */}
                   <div className="flex gap-4 pt-2">

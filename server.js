@@ -74,6 +74,7 @@ app.post(
       // extract data from req
       const {
         name,
+        category,
         description,
         price,
         originalPrice,
@@ -100,7 +101,9 @@ app.post(
       }
 
       if (!stock || parseInt(stock) <= 0) {
-        return res.status(400).json({ message: "Stock must be greater than 0" });
+        return res
+          .status(400)
+          .json({ message: "Stock must be greater than 0" });
       }
 
       // Convert types for database
@@ -110,26 +113,33 @@ app.post(
         : null;
       const saleBoolean = sale === "true" || sale === true;
 
-      // Parse JSON strings back to arrays
+      // parse json strings back to arrays
       const lengthsArray = lengths ? JSON.parse(lengths) : [];
       const weightsArray = weights ? JSON.parse(weights) : [];
-      const specsArray = specifications ? JSON.parse(specifications) : [];
+      let specsArray = specifications ? JSON.parse(specifications) : [];
+
+      // Merge lengths and weights into specsArray
+      if (lengthsArray.length > 0) {
+        specsArray.push(`Length: ${lengthsArray.join(", ")}`);
+      }
+      if (weightsArray.length > 0) {
+        specsArray.push(`Weight: ${weightsArray.join(", ")}`);
+      }
       const stockNumeric = parseInt(stock);
-      // Get Cloudinary URLs for uploaded images
+      // get cloudinary urls for uploaded images
       const primaryImageUrl = req.files.primaryImage[0].path;
 
       const galleryImageUrls = req.files.galleryImages
         ? req.files.galleryImages.map((file) => file.path)
         : [];
 
-      // Generate alt text from product name
       const altText = `${name} - Hair Extension Product Image`;
 
-      // Insert into database
+      // insert into database
       const query = `
         INSERT INTO products 
-        (name, price, original_price, stock, image, alt, sale, badge, badge_color, description, specs, images)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        (name, price, original_price, stock, image, alt, sale, badge, badge_color, description, specs, images, category)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         RETURNING *
       `;
 
@@ -146,6 +156,7 @@ app.post(
         description || null,
         specsArray, // pg handles TEXT[] array
         galleryImageUrls, // pg handles TEXT[] array
+        category,
       ];
 
       const result = await db.query(query, values);
@@ -163,10 +174,9 @@ app.post(
         error: error.message,
       });
     }
-  }
+  },
 );
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
