@@ -11,11 +11,6 @@ import Footer from "../components/Footer";
 const Home = ({ toggleDarkMode, darkMode }) => {
 
 
-// fetch("http://localhost:3000/api/products")
-// .then((response) => response.json())
-// .then((data) => console.log(data))
-// .catch((error) => console.error(error));
-
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="relative flex min-h-screen w-full flex-col group/design-root bg-background-light dark:bg-background-dark text-[#181113] dark:text-white antialiased overflow-x-hidden">
