@@ -40,7 +40,7 @@ const Categories = () => {
           Shop by Texture
         </h2>
         <Link
-          to="/products"
+          to="/shop-by-texture"
           className="text-primary text-sm font-bold flex items-center hover:gap-2 transition-all group"
         >
           View All

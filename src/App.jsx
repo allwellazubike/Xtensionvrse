@@ -10,11 +10,11 @@ import AdminProducts from "./pages/admin/AdminProducts";
 
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import ShopByTexture from "./pages/ShopByTexture";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
-  
   // function to toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -37,6 +37,15 @@ function App() {
         <Route
           path="/cart"
           element={<Cart toggleDarkMode={toggleDarkMode} darkMode={darkMode} />}
+        />
+        <Route
+          path="/shop-by-texture"
+          element={
+            <ShopByTexture
+              toggleDarkMode={toggleDarkMode}
+              darkMode={darkMode}
+            />
+          }
         />
         <Route
           path="/product/:id"
