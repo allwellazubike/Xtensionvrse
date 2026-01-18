@@ -6,10 +6,34 @@ import { Link } from "react-router-dom";
 
 const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
   const { products } = useProducts();
-  const [activeCategory, setActiveCategory] = useState("Pre-stretched");
+  const [activeCategory, setActiveCategory] = useState("French Curls");
 
   // Categories from the provided design
   const categories = [
+    {
+      name: "French Curls",
+      image:
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuBPxBZA5ovXY2C01gFTSTm2c8nNVH1GqHGfmLOHegP9yobuCbYS-IC7QEbb7mNHlSq3wDRCKtnqOL5tNtU-_YzGQ-_0p4LXVJv16b2bgHrpffJmBWYp_ApqiwFeqmBDGGx-_EBG49vsCBjMfBZ3a02awunPxjtDQzVD8r4AuEQTlZzpEkO-l-qnZ20GTsDfWHd55FJuQm7NetmF3PwzvJCnM9ffNMY9bdBZSJB-qsY-i2nsFGh9dGqjEQzQcfJZ3eZdAaHNots17dw",
+      alt: "Close up of neat cornrow braids texture",
+    },
+    {
+      name: "Deep Twists",
+      image:
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuDE5XJwFspEd40ViNYqsXeoU60Snwkbhbxpb8o20xxg44ot0qNWOxCAP5oy8JzbHY6UYr54uvpdlonTT2aVguDmXsNPozDCEFaDQLqeNya4geHgunWVAC5WLGoWNkit09iS8E_ip-7P84IKW_NyvqnYoWy58Xsz6wZPmE8IflUI_U2lB_eS_CtG3p9AUpNauVfoLa2rTGv_PMhopE2yn2jxYF64nLAEE69W4nmu3i4RCBEz_G_MzMh9G93mzL3rDcHstj4LOUUdRJk",
+      alt: "Woman with long passion twists hair style",
+    },
+    {
+      name: "Italian Curls",
+      image:
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuDEYinIw4TiI9Y23fs2-bPPl8hcpofc4zAV8sMu0qdF0q7N52A3C0obzD3Im0MPJsg-I4q10aUxOyVQceB2kYc1xyNYIQRyULLIfuHdoKFtqEkq9mwGi1eAr92rtVo9bRdmoAZUA0g_tcwhuP4y7cqWcb5WRpB4CvJ__GGYEXrVBc3Uj-P7y1bc3U8kLHSN7NWTMbjww_wUQFblmXXc3PDZptNUeWa47ygL5B0_yRYPva_MFubGU2jSUpKk0RQAuslAB77xsRbkWDA",
+      alt: "Woman wearing faux locs looking to the side",
+    },
+    {
+      name: "Bone Straight",
+      image:
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuBCpWoyeAa1TFxXqeU2HK9EtAqGQ7uZZsGkAZGmRKTN1JdVwHH9_abdBWL39dcDiv0wwDp5fZPssWNsyCgd1wmmrfL_sGxecihj52Hbm6jUKpK1bC2CyNUZV6akQPOpaJqal57n9HJm7PqSQMEoJIt0OhZYYjFc35-EFvh_FTSlWwkf4QKpQIf0FjsW4K0oEVDfViHuYfF64P1kRKCSJ9RzXXqPjFouwCXaYXBkbTrbkmpMBX0qVGrcdUwrUo_j2tifF_8Ei8u4wqs",
+      alt: "Golden hair jewelry and accessories on dark surface",
+    },
     {
       name: "Pre-stretched",
       image:
@@ -17,28 +41,10 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
       alt: "Pre-stretched hair texture",
     },
     {
-      name: "Passion Twists",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuDE5XJwFspEd40ViNYqsXeoU60Snwkbhbxpb8o20xxg44ot0qNWOxCAP5oy8JzbHY6UYr54uvpdlonTT2aVguDmXsNPozDCEFaDQLqeNya4geHgunWVAC5WLGoWNkit09iS8E_ip-7P84IKW_NyvqnYoWy58Xsz6wZPmE8IflUI_U2lB_eS_CtG3p9AUpNauVfoLa2rTGv_PMhopE2yn2jxYF64nLAEE69W4nmu3i4RCBEz_G_MzMh9G93mzL3rDcHstj4LOUUdRJk",
-      alt: "Passion Twists texture",
-    },
-    {
       name: "Faux Locs",
       image:
         "https://lh3.googleusercontent.com/aida-public/AB6AXuDEYinIw4TiI9Y23fs2-bPPl8hcpofc4zAV8sMu0qdF0q7N52A3C0obzD3Im0MPJsg-I4q10aUxOyVQceB2kYc1xyNYIQRyULLIfuHdoKFtqEkq9mwGi1eAr92rtVo9bRdmoAZUA0g_tcwhuP4y7cqWcb5WRpB4CvJ__GGYEXrVBc3Uj-P7y1bc3U8kLHSN7NWTMbjww_wUQFblmXXc3PDZptNUeWa47ygL5B0_yRYPva_MFubGU2jSUpKk0RQAuslAB77xsRbkWDA",
       alt: "Faux Locs texture",
-    },
-    {
-      name: "Deep Wave",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBmg-yuymrhyooy-Y9ZGK113t_cIdDhGJMK59zV77CB8M2d9QwzkNeiL-Nn-Cl8-dmrayl0Ei7pywJUCOrBTXypSlvUWb8QCFGcVRGfNWkMuv7euzIBvehh9nqT6O-4xsc6WhRkGWmibpYxVHR242jomolVcbBip6_PAt5goOa5XrRsgJqkpUVMAqRnpVsZ_L_yMOZy5_TUtw_IUWd2eOFNSvm6pKV5x9M7tjx_DZfA5opeiUDgBaq2WK8ZaG1KPFOvmH1wxnmZpMQ",
-      alt: "Deep Wave/Curls texture",
-    },
-    {
-      name: "Sleek Straight",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCbmjWQvm6sTCWKZMez3uIV_PgfEKeq2YAdhV9xL9_0rL9SLjfPIKuT3K0xW1Tw0WzQPvSjAVgaLBp6AWb9idkD56xdk-OcvORw9FmZSUrehOvrYbvC6bshZfE1XRifTFYIU1yU493FcB-YYex55UWJEnuP9v4Lt6NIWoLcL4rNcHAXjyqGHdwSFSRGInE7LbOgeXgUGs-BMxUcoFYGYF8W8A4ufrGakSDLPaBYKEk_35Z-CXLlFZOO0EOLIKYTHIy05uJ5Omjsmok",
-      alt: "Straight hair texture",
     },
     {
       name: "Kinky Coils",
@@ -51,12 +57,11 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
   // Filter products based on active category
   // Comparison is case-insensitive and partial match to be more robust
   const filteredProducts = products.filter((product) => {
-    if (!product.category) return false;
-    // Simple normalization - assuming category strings
-    return (
-      product.category.toLowerCase().includes(activeCategory.toLowerCase()) ||
-      activeCategory.toLowerCase().includes(product.category.toLowerCase())
-    );
+    const search = activeCategory.toLowerCase();
+    const nameMatch = product.name?.toLowerCase().includes(search);
+    const categoryMatch = product.category?.toLowerCase().includes(search);
+
+    return nameMatch || categoryMatch;
   });
 
   return (
