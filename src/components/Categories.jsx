@@ -53,9 +53,10 @@ const Categories = () => {
       {/* Categories Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
         {categories.map((category) => (
-          <a
+          <Link
             key={category.id}
-            href="#"
+            to="/shop-by-texture"
+            state={{ category: category.name }}
             className="group flex flex-col gap-4 text-center items-center"
           >
             {/* Image Circle */}
@@ -76,7 +77,7 @@ const Categories = () => {
             <p className="text-[#181113] dark:text-white text-base font-bold group-hover:text-primary transition-colors">
               {category.name}
             </p>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useProducts } from "../context/ProductContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
   const { products } = useProducts();
-  const [activeCategory, setActiveCategory] = useState("French Curls");
+  const location = useLocation();
+  const [activeCategory, setActiveCategory] = useState(
+    location.state?.category || "French Curls",
+  );
 
   // Categories from the provided design
   const categories = [
