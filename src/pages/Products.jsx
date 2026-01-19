@@ -11,6 +11,110 @@ const Products = ({ toggleDarkMode, darkMode }) => {
   const { addToCart } = useCart();
   const { products } = useProducts();
 
+  // Filter & Sort State
+  const [sortOption, setSortOption] = useState("Recommended");
+  const [filters, setFilters] = useState({
+    categories: [],
+    lengths: [],
+    priceRange: { min: "", max: "" },
+  });
+
+  const categories = [
+    "French Curls",
+    "Deep Twists",
+    "Italian Curls",
+    "Bone Straight",
+    "Pre-stretched",
+    "Faux Locs",
+    "Kinky Coils",
+    "Kanekalon",
+    "Passion Twist",
+    "Spring Twist",
+  ];
+
+  // Logic to process products
+  const getProcessedProducts = () => {
+    if (!products) return [];
+
+    let result = [...products];
+
+    // 1. Filter by Categories
+    if (filters.categories && filters.categories.length > 0) {
+      result = result.filter((product) => {
+        return filters.categories.some(
+          (cat) =>
+            product.category?.toLowerCase().includes(cat.toLowerCase()) ||
+            product.name?.toLowerCase().includes(cat.toLowerCase()),
+        );
+      });
+    }
+
+    // 2. Filter by Length (assuming 'length' property or checking name/variant)
+    if (filters.lengths && filters.lengths.length > 0) {
+      result = result.filter((product) => {
+        // If product has a specific length attribute
+        if (product.length) {
+          return filters.lengths.includes(product.length);
+        }
+        // Fallback: check if name contains length? (e.g. "French Curls 20 inch")
+        return filters.lengths.some(
+          (l) => product.name?.includes(l) || product.description?.includes(l),
+        );
+      });
+    }
+
+    // 3. Filter by Price
+    if (filters.priceRange?.min) {
+      result = result.filter(
+        (product) => product.price >= Number(filters.priceRange.min),
+      );
+    }
+    if (filters.priceRange?.max) {
+      result = result.filter(
+        (product) => product.price <= Number(filters.priceRange.max),
+      );
+    }
+
+    // 4. Sorting
+    switch (sortOption) {
+      case "Price: Low to High":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "Price: High to Low":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "Newest Arrivals":
+        result.sort((a, b) => {
+          const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+          const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+          // If invalid date or missing, fallback to ID if possible
+          if (dateA.getTime() === dateB.getTime()) {
+            return b.id - a.id;
+          }
+          return dateB - dateA;
+        });
+        break;
+      case "Recommended":
+      default:
+        // Default sort (maybe by ID/popularity)
+        break;
+    }
+
+    return result;
+  };
+
+  const filteredProducts = getProcessedProducts();
+
+  const handleChipClick = (cat) => {
+    if (cat === "All") {
+      setFilters((prev) => ({ ...prev, categories: [] }));
+    } else {
+      // For chips, we typically want "Show ONLY this", but sidebar is multi-select.
+      // Let's reset other categories and select this one.
+      setFilters((prev) => ({ ...prev, categories: [cat] }));
+    }
+  };
+
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-[#181113] dark:text-white antialiased">
@@ -20,6 +124,10 @@ const Products = ({ toggleDarkMode, darkMode }) => {
           <FilterSidebar
             isOpen={mobileFiltersOpen}
             onClose={() => setMobileFiltersOpen(false)}
+            filters={filters}
+            setFilters={setFilters}
+            categories={categories}
+            onApply={() => setMobileFiltersOpen(false)}
           />
 
           <main className="flex-1 w-full min-w-0 pb-20">
@@ -54,22 +162,27 @@ const Products = ({ toggleDarkMode, darkMode }) => {
             {/* Mobile Categories (Chips) */}
             <div className="sticky top-16 z-30 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 md:px-6 lg:px-8 py-3 border-b border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-1">
-                <button className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold shadow-md shadow-primary/20">
+                <button
+                  onClick={() => handleChipClick("All")}
+                  className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold shadow-md transition-all ${filters.categories.length === 0 ? "bg-primary text-white shadow-primary/20" : "bg-white dark:bg-[#2d1b22] border border-gray-200 dark:border-gray-700 text-slate-700 dark:text-gray-200 hover:border-primary hover:text-primary"}`}
+                >
                   <span className="material-symbols-outlined text-[18px]">
                     grid_view
                   </span>
                   All
                 </button>
                 {[
+                  "French Curls",
+                  "Deep Twists",
+                  "Italian Curls",
+                  "Bone Straight",
                   "Pre-stretched",
-                  "Kanekalon",
-                  "Passion Twist",
                   "Locs",
-                  "Spring Twist",
                 ].map((cat) => (
                   <button
                     key={cat}
-                    className="shrink-0 px-4 py-2 rounded-full bg-white dark:bg-[#2d1b22] border border-gray-200 dark:border-gray-700 text-slate-700 dark:text-gray-200 text-sm font-medium hover:border-primary hover:text-primary transition-all"
+                    onClick={() => handleChipClick(cat)}
+                    className={`shrink-0 px-4 py-2 rounded-full border text-sm font-medium transition-all ${filters.categories.includes(cat) ? "bg-primary text-white border-primary" : "bg-white dark:bg-[#2d1b22] border-gray-200 dark:border-gray-700 text-slate-700 dark:text-gray-200 hover:border-primary hover:text-primary"}`}
                   >
                     {cat}
                   </button>
@@ -82,7 +195,7 @@ const Products = ({ toggleDarkMode, darkMode }) => {
               <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                 Showing{" "}
                 <span className="text-[#181113] dark:text-white font-bold">
-                  124
+                  {filteredProducts.length}
                 </span>{" "}
                 results
               </p>
@@ -91,19 +204,26 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                   Sort by:
                 </span>
                 <div className="relative group">
-                  <button className="flex items-center gap-2 text-sm font-bold text-[#181113] dark:text-white bg-white dark:bg-[#2d1b22] border border-gray-200 dark:border-gray-700 pl-3 pr-2 py-1.5 rounded-lg hover:border-primary/50 transition-colors">
-                    Recommended
-                    <span className="material-symbols-outlined text-[18px]">
-                      expand_more
-                    </span>
-                  </button>
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="appearance-none bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg text-sm font-bold pl-3 pr-8 py-1.5 focus:ring-primary focus:border-primary cursor-pointer"
+                  >
+                    <option>Recommended</option>
+                    <option>Newest Arrivals</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-[18px]">
+                    expand_more
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Product Grid */}
             <div className="px-4 md:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <Link
                   to={`/product/${product.id}`}
                   key={product.id}

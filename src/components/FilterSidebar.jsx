@@ -1,4 +1,77 @@
-const FilterSidebar = ({ isOpen, onClose }) => {
+const FilterSidebar = ({
+  isOpen,
+  onClose,
+  filters = { categories: [], lengths: [], priceRange: { min: "", max: "" } }, // Default structure
+  setFilters,
+  onApply,
+  categories = [
+    "French Curls",
+    "Deep Twists",
+    "Italian Curls",
+    "Bone Straight",
+    "Pre-stretched",
+    "Faux Locs",
+    "Kinky Coils",
+    "Kanekalon",
+    "Passion Twist",
+    "Spring Twist",
+  ],
+}) => {
+  const handleCategoryChange = (category) => {
+    if (!setFilters) return;
+    setFilters((prev) => {
+      const currentCategories = prev.categories || [];
+      const isSelected = currentCategories.includes(category);
+      let newCategories;
+
+      if (isSelected) {
+        newCategories = currentCategories.filter((c) => c !== category);
+      } else {
+        newCategories = [...currentCategories, category];
+      }
+
+      return { ...prev, categories: newCategories };
+    });
+  };
+
+  const handleLengthChange = (length) => {
+    if (!setFilters) return;
+    setFilters((prev) => {
+      const currentLengths = prev.lengths || [];
+      const isSelected = currentLengths.includes(length);
+      let newLengths;
+
+      if (isSelected) {
+        newLengths = currentLengths.filter((l) => l !== length);
+      } else {
+        newLengths = [...currentLengths, length];
+      }
+      return { ...prev, lengths: newLengths };
+    });
+  };
+
+  const handlePriceChange = (e, type) => {
+    if (!setFilters) return;
+    const value = e.target.value;
+    setFilters((prev) => ({
+      ...prev,
+      priceRange: {
+        ...(prev.priceRange || {}),
+        [type]: value,
+      },
+    }));
+  };
+
+  const clearAll = () => {
+    if (setFilters) {
+      setFilters({
+        categories: [],
+        lengths: [],
+        priceRange: { min: "", max: "" },
+      });
+    }
+  };
+
   return (
     <>
       {/* mobile overlay */}
@@ -42,6 +115,7 @@ const FilterSidebar = ({ isOpen, onClose }) => {
               Filters
             </h3>
             <button
+              onClick={clearAll}
               className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
               aria-label="Clear all filters"
             >
@@ -49,33 +123,33 @@ const FilterSidebar = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          {/* Filter sections remain the same */}
-          {/* ... */}
           {/* Filter Section: Categories */}
           <div className="mb-8">
             <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
               Categories
             </h4>
             <ul className="space-y-2">
-              {[
-                { label: "French Curls", checked: true },
-                { label: "Deep Twists", checked: false },
-                { label: "Italian Curls", checked: false },
-                { label: "Bone Straight", checked: false },
-              ].map((item, index) => (
-                <li key={index}>
-                  <label className="flex items-center gap-3 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      defaultChecked={item.checked}
-                      className="form-checkbox rounded text-primary border-gray-300 focus:ring-primary/50"
-                    />
-                    <span className="text-sm font-medium text-[#181113] dark:text-white group-hover:text-primary transition-colors">
-                      {item.label}
-                    </span>
-                  </label>
-                </li>
-              ))}
+              {categories.map((cat, index) => {
+                // Handle careful matching slightly robustly if needed, but strict string usually fine
+                const isChecked = filters.categories
+                  ? filters.categories.includes(cat)
+                  : false;
+                return (
+                  <li key={index}>
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleCategoryChange(cat)}
+                        className="form-checkbox rounded text-primary border-gray-300 focus:ring-primary/50"
+                      />
+                      <span className="text-sm font-medium text-[#181113] dark:text-white group-hover:text-primary transition-colors">
+                        {cat}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -85,45 +159,26 @@ const FilterSidebar = ({ isOpen, onClose }) => {
               Length
             </h4>
             <div className="flex flex-wrap gap-2">
-              {['12"', '20"', '42"', '58"', '82"'].map((length) => (
-                <button
-                  key={length}
-                  className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
-                    length === '20"'
-                      ? "border-primary bg-primary text-white"
-                      : "border-gray-200 dark:border-gray-700 bg-white dark:bg-[#2d1b22] text-[#181113] dark:text-white hover:border-primary hover:text-primary"
-                  }`}
-                >
-                  {length}
-                </button>
-              ))}
+              {['12"', '20"', '42"', '58"', '82"'].map((length) => {
+                const isSelected = filters.lengths
+                  ? filters.lengths.includes(length)
+                  : false;
+                return (
+                  <button
+                    key={length}
+                    onClick={() => handleLengthChange(length)}
+                    className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                      isSelected
+                        ? "border-primary bg-primary text-white"
+                        : "border-gray-200 dark:border-gray-700 bg-white dark:bg-[#2d1b22] text-[#181113] dark:text-white hover:border-primary hover:text-primary"
+                    }`}
+                  >
+                    {length}
+                  </button>
+                );
+              })}
             </div>
           </div>
-
-          {/* Filter Section: Color */}
-          {/* <div className="mb-8">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
-              Color
-            </h4>
-            <div className="grid grid-cols-5 gap-2">
-              {[
-                { color: "bg-black", title: "1B - Off Black" },
-                { color: "bg-[#4a3728]", title: "4 - Dark Brown" },
-                { color: "bg-[#8D4E2F]", title: "30 - Auburn" },
-                { color: "bg-[#5d1818]", title: "Burgundy" },
-                {
-                  color: "bg-gradient-to-br from-black to-[#8D4E2F]",
-                  title: "Ombre 1B/30",
-                },
-              ].map((item, index) => (
-                <button
-                  key={index}
-                  className={`size-8 rounded-full ${item.color} ring-2 ring-transparent hover:ring-primary transition-all`}
-                  title={item.title}
-                />
-              ))}
-            </div>
-          </div> */}
 
           {/* Filter Section: Price */}
           <div className="mb-8">
@@ -139,6 +194,8 @@ const FilterSidebar = ({ isOpen, onClose }) => {
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-sm text-[#181113] dark:text-white focus:ring-primary/50 focus:border-primary outline-none"
                   placeholder="Min"
                   type="number"
+                  value={filters.priceRange?.min || ""}
+                  onChange={(e) => handlePriceChange(e, "min")}
                 />
               </div>
               <span className="text-slate-400">-</span>
@@ -150,9 +207,29 @@ const FilterSidebar = ({ isOpen, onClose }) => {
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-sm text-[#181113] dark:text-white focus:ring-primary/50 focus:border-primary outline-none"
                   placeholder="Max"
                   type="number"
+                  value={filters.priceRange?.max || ""}
+                  onChange={(e) => handlePriceChange(e, "max")}
                 />
               </div>
             </div>
+          </div>
+
+          <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
+            <button
+              onClick={() => {
+                if (onApply) onApply();
+                onClose();
+              }}
+              className="w-full py-3 bg-[#181113] dark:bg-primary text-white rounded-xl font-bold text-sm shadow-lg hover:opacity-90 transition-all"
+            >
+              Apply Filters
+            </button>
+            <button
+              onClick={clearAll}
+              className="w-full py-3 mt-2 text-[#181113] dark:text-white font-bold text-sm hover:text-primary transition-all md:hidden"
+            >
+              Clear All
+            </button>
           </div>
         </div>
       </aside>

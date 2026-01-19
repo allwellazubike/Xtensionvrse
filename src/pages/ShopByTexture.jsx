@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useProducts } from "../context/ProductContext";
@@ -10,6 +10,58 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
   const [activeCategory, setActiveCategory] = useState(
     location.state?.category || "French Curls",
   );
+
+  // Custom Filter State
+  const [showPriceFilter, setShowPriceFilter] = useState(false);
+  const [showLengthFilter, setShowLengthFilter] = useState(false);
+  const [sortOption, setSortOption] = useState("Recommended");
+  const [filters, setFilters] = useState({
+    categories: [location.state?.category || "French Curls"],
+    lengths: [],
+    priceRange: { min: "", max: "" },
+  });
+
+  const priceRef = useRef(null);
+  const lengthRef = useRef(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (priceRef.current && !priceRef.current.contains(event.target)) {
+        setShowPriceFilter(false);
+      }
+      if (lengthRef.current && !lengthRef.current.contains(event.target)) {
+        setShowLengthFilter(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Sync activeCategory change to filters
+  const handleHeroCategoryClick = (catName) => {
+    setActiveCategory(catName);
+    setFilters((prev) => ({ ...prev, categories: [catName] }));
+  };
+
+  const handleLengthToggle = (len) => {
+    setFilters((prev) => {
+      const current = prev.lengths || [];
+      const exists = current.includes(len);
+      return {
+        ...prev,
+        lengths: exists ? current.filter((l) => l !== len) : [...current, len],
+      };
+    });
+  };
+
+  const handlePriceChange = (e, type) => {
+    const val = e.target.value;
+    setFilters((prev) => ({
+      ...prev,
+      priceRange: { ...prev.priceRange, [type]: val },
+    }));
+  };
 
   // Categories from the provided design
   const categories = [
@@ -57,20 +109,84 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
     },
   ];
 
-  // Filter products based on active category
-  // Comparison is case-insensitive and partial match to be more robust
-  const filteredProducts = products.filter((product) => {
-    const search = activeCategory.toLowerCase();
-    const nameMatch = product.name?.toLowerCase().includes(search);
-    const categoryMatch = product.category?.toLowerCase().includes(search);
+  // Logic to process products
+  const getProcessedProducts = () => {
+    if (!products) return [];
 
-    return nameMatch || categoryMatch;
-  });
+    let result = [...products];
+
+    // 1. Filter by Categories (from filters state)
+    if (filters.categories && filters.categories.length > 0) {
+      result = result.filter((product) => {
+        // match any of the selected categories
+        return filters.categories.some(
+          (cat) =>
+            product.category?.toLowerCase().includes(cat.toLowerCase()) ||
+            product.name?.toLowerCase().includes(cat.toLowerCase()),
+        );
+      });
+    }
+
+    // 2. Filter by Price
+    if (filters.priceRange?.min) {
+      result = result.filter(
+        (product) => product.price >= Number(filters.priceRange.min),
+      );
+    }
+    if (filters.priceRange?.max) {
+      result = result.filter(
+        (product) => product.price <= Number(filters.priceRange.max),
+      );
+    }
+
+    // 3. Filter by Length
+    if (filters.lengths && filters.lengths.length > 0) {
+      result = result.filter((product) => {
+        if (product.length) {
+          return filters.lengths.includes(product.length);
+        }
+        return filters.lengths.some(
+          (l) => product.name?.includes(l) || product.description?.includes(l),
+        );
+      });
+    }
+
+    // 4. Sorting
+    switch (sortOption) {
+      case "Price: Low to High":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "Price: High to Low":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "Newest Arrivals":
+        result.sort((a, b) => {
+          const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+          const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+          if (dateA.getTime() === dateB.getTime()) {
+            return b.id - a.id;
+          }
+          return dateB - dateA;
+        });
+        break;
+      case "Best Selling":
+      case "Recommended":
+      default:
+        // logic for best selling? maybe random or default ID order
+        break;
+    }
+
+    return result;
+  };
+
+  const filteredProducts = getProcessedProducts();
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="relative flex min-h-screen w-full flex-col group/design-root bg-background-light dark:bg-background-dark text-[#181113] dark:text-white antialiased overflow-x-hidden">
         <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+
+        {/* Filter Sidebar Component */}
 
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-10 py-8 md:py-12 space-y-12">
           {/* Hero Section of the page */}
@@ -99,7 +215,7 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
               {categories.map((cat) => (
                 <button
                   key={cat.name}
-                  onClick={() => setActiveCategory(cat.name)}
+                  onClick={() => handleHeroCategoryClick(cat.name)}
                   className="group flex flex-col items-center gap-3 transition-transform hover:-translate-y-1"
                 >
                   <div
@@ -134,29 +250,143 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-bold text-[#181113] dark:text-white">
-                  {activeCategory} Collection
+                  {/* Show generic title if multiple or none selected */}
+                  {filters.categories.length === 1
+                    ? filters.categories[0]
+                    : "All"}{" "}
+                  Collection
                 </h2>
                 <p className="text-sm text-gray-500 font-medium">
                   Showing {filteredProducts.length} product
                   {filteredProducts.length !== 1 ? "s" : ""}
                 </p>
               </div>
-              <div className="flex items-center gap-4">
-                <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors">
-                  <span className="material-symbols-outlined text-lg">
-                    tune
-                  </span>{" "}
-                  Filters
-                </button>
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Price Filter */}
+                <div className="relative" ref={priceRef}>
+                  <button
+                    onClick={() => setShowPriceFilter(!showPriceFilter)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold border transition-all ${
+                      filters.priceRange.min || filters.priceRange.max
+                        ? "border-primary text-primary bg-primary/5"
+                        : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary"
+                    }`}
+                  >
+                    Price
+                    <span className="material-symbols-outlined text-[18px]">
+                      {showPriceFilter ? "expand_less" : "expand_more"}
+                    </span>
+                  </button>
+
+                  {showPriceFilter && (
+                    <div className="absolute right-0 md:left-0 top-full mt-2 w-72 p-4 bg-white dark:bg-[#2d1b22] rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 z-50 animate-in fade-in zoom-in-95 duration-200">
+                      <h4 className="font-bold text-sm mb-3 text-[#181113] dark:text-white">
+                        Price Range
+                      </h4>
+                      <div className="flex items-center gap-2">
+                        <div className="relative flex-1">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                            ₦
+                          </span>
+                          <input
+                            type="number"
+                            placeholder="Min"
+                            value={filters.priceRange.min}
+                            onChange={(e) => handlePriceChange(e, "min")}
+                            className="w-full pl-6 pr-3 py-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-primary focus:border-primary"
+                          />
+                        </div>
+                        <span className="text-gray-400">-</span>
+                        <div className="relative flex-1">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                            ₦
+                          </span>
+                          <input
+                            type="number"
+                            placeholder="Max"
+                            value={filters.priceRange.max}
+                            onChange={(e) => handlePriceChange(e, "max")}
+                            className="w-full pl-6 pr-3 py-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-primary focus:border-primary"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Length Filter */}
+                <div className="relative" ref={lengthRef}>
+                  <button
+                    onClick={() => setShowLengthFilter(!showLengthFilter)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold border transition-all ${
+                      filters.lengths.length > 0
+                        ? "border-primary text-primary bg-primary/5"
+                        : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary"
+                    }`}
+                  >
+                    Length{" "}
+                    {filters.lengths.length > 0 &&
+                      `(${filters.lengths.length})`}
+                    <span className="material-symbols-outlined text-[18px]">
+                      {showLengthFilter ? "expand_less" : "expand_more"}
+                    </span>
+                  </button>
+
+                  {showLengthFilter && (
+                    <div className="absolute right-0 md:left-0 top-full mt-2 w-64 p-4 bg-white dark:bg-[#2d1b22] rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 z-50 animate-in fade-in zoom-in-95 duration-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-bold text-sm text-[#181113] dark:text-white">
+                          Select Length
+                        </h4>
+                        {filters.lengths.length > 0 && (
+                          <button
+                            onClick={() =>
+                              setFilters((prev) => ({ ...prev, lengths: [] }))
+                            }
+                            className="text-xs text-primary font-bold hover:underline"
+                          >
+                            Reset
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {['12"', '16"', '20"', '24"', '30"', '36"'].map(
+                          (len) => (
+                            <button
+                              key={len}
+                              onClick={() => handleLengthToggle(len)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                                filters.lengths.includes(len)
+                                  ? "bg-primary text-white border-primary"
+                                  : "bg-gray-50 dark:bg-black/20 border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-100"
+                              }`}
+                            >
+                              {len}
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Divider */}
+                <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2 hidden sm:block"></div>
+
+                {/* Sort Dropdown */}
                 <div className="relative group">
-                  <select className="appearance-none bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg text-sm font-bold px-4 py-2 pr-10 focus:ring-primary focus:border-primary cursor-pointer w-48">
-                    <option>Best Selling</option>
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="appearance-none bg-transparent font-bold text-sm text-[#181113] dark:text-white pr-8 py-2 cursor-pointer focus:outline-none hover:text-primary transition-colors"
+                  >
+                    <option>Recommended</option>
                     <option>Newest Arrivals</option>
                     <option>Price: Low to High</option>
                     <option>Price: High to Low</option>
                   </select>
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                    expand_more
+                  <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-[18px]">
+                    sort
                   </span>
                 </div>
               </div>
@@ -213,7 +443,7 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-extrabold text-[#181113] dark:text-white">
-                          ${product.price}
+                          ₦{product.price.toLocaleString()}
                         </span>
                         {/* Render simple color swatches if needed, or placeholder */}
                         <div className="flex -space-x-1">
@@ -226,7 +456,7 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
                 ))
               ) : (
                 <div className="col-span-1 md:col-span-4 text-center py-20 text-gray-500">
-                  <p>No products found in this category.</p>
+                  <p>No products found matching your fitlers.</p>
                 </div>
               )}
             </div>
@@ -270,6 +500,8 @@ const ShopByTexture = ({ toggleDarkMode, darkMode }) => {
             </div>
           </div>
         </main>
+
+        {/* Mobile Floating Filter Button (if user wants duplicate, but reusing the main one is cleaner) */}
 
         <Footer />
       </div>
