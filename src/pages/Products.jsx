@@ -103,13 +103,6 @@ const Products = ({ toggleDarkMode, darkMode }) => {
 
             {/* Product Grid */}
             <div className="px-4 md:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {/* { useEffect(() => {
-    fetch('http://localhost:3000/api/products')
-      .then(res => res.json())
-      .then(data => console.log(data));
-  }, [])
-  } */}
-
               {products.map((product) => (
                 <Link
                   to={`/product/${product.id}`}
