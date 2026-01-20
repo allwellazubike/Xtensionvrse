@@ -7,7 +7,7 @@ const SignUpForm = () => {
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  
+
   return (
     <div
       id="sign-up-form"
@@ -81,14 +81,15 @@ const SignUpForm = () => {
               className="block w-full pl-11 pr-11 py-3 bg-slate-50 dark:bg-[#2a2a2b] border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none placeholder:text-slate-400 dark:text-white"
               id="signup-password"
               placeholder="••••••••"
-              type="password"
+              type={showPassword ? "text" : "password"}
             />
             <button
+            onClick={handleShowPassword}
               className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               type="button"
             >
               <span className="material-symbols-outlined text-[20px]">
-                visibility
+                {showPassword ? "visibility_off" : "visibility"}
               </span>
             </button>
           </div>
