@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
+  const { stock } = item;
+
+  const quantity = item.quantity;
+  // console.log(stock)
   return (
     <div className="flex flex-col sm:flex-row gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-sm border border-transparent dark:border-gray-800">
       <div className="relative shrink-0">
@@ -47,11 +51,24 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
               className="w-8 p-0 text-center bg-transparent border-none text-sm font-bold text-[#181113] dark:text-white focus:ring-0"
               readOnly
               type="number"
-              value={item.quantity}
+              value={quantity}
             />
+
             <button
-              onClick={() => onUpdateQuantity(item.id, 1)}
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-white dark:hover:bg-gray-700 shadow-sm transition-all text-[#181113] dark:text-white cursor-pointer"
+              onClick={() => {
+                if (!stock || quantity < stock) {
+                  onUpdateQuantity(item.id, 1);
+                }
+              }}
+              disabled={stock && quantity >= stock}
+              className={`flex h-8 w-8 items-center justify-center rounded-md shadow-sm transition-all text-[#181113] dark:text-white ${
+                stock && quantity >= stock
+                  ? "opacity-30 cursor-not-allowed bg-transparent"
+                  : "hover:bg-white dark:hover:bg-gray-700 cursor-pointer"
+              }`}
+              title={
+                stock && quantity >= stock ? "Max stock reached" : "Add more"
+              }
             >
               <span className="material-symbols-outlined text-sm">add</span>
             </button>

@@ -23,14 +23,14 @@ export const CartProvider = ({ children }) => {
       if (existingItem) {
         return prevCart.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
+            ? { ...item, ...product, quantity: item.quantity + quantity }
+            : item,
         );
       } else {
         return [...prevCart, { ...product, quantity }];
       }
     });
-    
+
     // alert("added to cart")
   };
 

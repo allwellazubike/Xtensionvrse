@@ -205,34 +205,6 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                   </div>
                   <hr className="border-[#f4f0f2] dark:border-[#3a1d25]" />
 
-                  {/* Color Selector */}
-                  {/* <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#89616f] mb-3">
-                      Color:{" "}
-                      <span className="text-[#181113] dark:text-white normal-case font-semibold">
-                        Jet Black (1B)
-                      </span>
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      <button
-                        aria-label="Select Jet Black"
-                        className="w-12 h-12 rounded-full border-2 border-primary shadow-sm flex items-center justify-center ring-2 ring-offset-2 ring-primary bg-black"
-                      ></button>
-                      <button
-                        aria-label="Select Dark Brown"
-                        className="w-12 h-12 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm flex items-center justify-center bg-[#3B2F2F] hover:scale-105 transition-transform"
-                      ></button>
-                      <button
-                        aria-label="Select Ombre Brown"
-                        className="w-12 h-12 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm flex items-center justify-center bg-gradient-to-b from-black to-[#8B4513] hover:scale-105 transition-transform"
-                      ></button>
-                      <button
-                        aria-label="Select Ombre Pink"
-                        className="w-12 h-12 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm flex items-center justify-center bg-gradient-to-b from-black to-[#FF69B4] hover:scale-105 transition-transform"
-                      ></button>
-                    </div>
-                  </div> */}
-
                   {/* Length Selector */}
                   {/* Dynamic Length Selector */}
                   {product.specs?.some((s) => s.startsWith("Length:")) && (
