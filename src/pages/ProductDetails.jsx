@@ -276,11 +276,6 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                       </button>
                     </div>
 
-
-
-
-
-
                     <button
                       onClick={handleAddToCart}
                       disabled={isAdded} // Optional: prevent double-clicks while processing
