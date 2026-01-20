@@ -54,6 +54,10 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
 
+  const stock = product.stock;
+  // console.log(product.stock)
+  console.log(stock)
+
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-[#181113] dark:text-white antialiased font-display">
@@ -246,25 +250,36 @@ const ProductDetails = ({ toggleDarkMode, darkMode }) => {
                         value={quantity}
                         readOnly
                       />
+
                       <button
-                        className="w-10 h-full flex items-center justify-center text-[#181113] dark:text-white hover:text-primary"
-                        onClick={() => setQuantity(quantity + 1)}
+                        onClick={() => {
+                          console.log(stock)
+                          if (!stock || quantity < stock) {
+                            setQuantity(quantity + 1)
+                          }
+                        }}
+                        disabled={stock && quantity >= stock}
+                        className={`w-10 h-full flex items-center justify-center text-[#181113] dark:text-white hover:text-primary ${
+                          stock && quantity >= stock
+                            ? "opacity-30 cursor-not-allowed bg-transparent"
+                            : null
+                        }`}
+                        title={
+                          stock && quantity >= stock
+                            ? "Max stock reached"
+                            : "Add more"
+                        }
                       >
                         <span className="material-symbols-outlined text-sm">
                           add
                         </span>
                       </button>
                     </div>
-                    {/* <button
-                      onClick={() => addToCart(product, quantity)}
-                      className="flex-1 bg-primary hover:bg-rose-600 text-white font-bold rounded-xl h-12 flex items-center justify-center gap-2 shadow-lg shadow-rose-200 dark:shadow-rose-900/20 transition-all transform active:scale-[0.98]"
-                    >
-                      <span className="material-symbols-outlined">
-                        shopping_bag
-                      </span>
-                      Add to Bag - ₦
-                      {(product.price * quantity).toLocaleString()}
-                    </button> */}
+
+
+
+
+
 
                     <button
                       onClick={handleAddToCart}

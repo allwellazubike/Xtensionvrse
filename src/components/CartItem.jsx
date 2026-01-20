@@ -54,6 +54,10 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
               value={quantity}
             />
 
+
+
+            
+
             <button
               onClick={() => {
                 if (!stock || quantity < stock) {
