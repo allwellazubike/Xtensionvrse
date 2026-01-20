@@ -11,6 +11,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import ShopByTexture from "./pages/ShopByTexture";
+import Authentication from "./pages/Authentication";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -71,6 +72,7 @@ function App() {
         <Route path="/admin/products" element={<AdminProducts />} />
         {/* adding search results route if needed in future, currently imported but unused in original code except for import */}
         <Route path="/search" element={<SearchResultsPage />} />
+        <Route path="/auth" element={<Authentication />} />
       </Routes>
     </>
   );
