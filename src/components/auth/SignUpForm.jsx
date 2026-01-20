@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 
 const SignUpForm = () => {
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  
   return (
     <div
       id="sign-up-form"

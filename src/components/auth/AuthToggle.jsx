@@ -8,7 +8,7 @@ const AuthToggle = ({ isSignUp, setIsSignUp }) => {
           !isSignUp ? "translate-x-full left-0" : "translate-x-0 left-1"
         }`}
         style={{
-          left: isSignUp ? "4px" : "calc(50%)",
+          left: isSignUp ? "3px" : "calc(1.9%)",
         }}
       ></div>
       <button
