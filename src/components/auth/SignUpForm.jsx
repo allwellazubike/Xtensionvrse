@@ -23,6 +23,7 @@ const SignUpForm = () => {
       ...formData,
       [name]: value,
     };
+    
     setFormData(updatedFormData);
 
     if (name === "password" || name === "confirmPassword") {
