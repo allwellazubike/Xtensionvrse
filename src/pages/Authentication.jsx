@@ -24,7 +24,7 @@ const Authentication = () => {
             </div>
           </Link>
           <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Xtensionsverse
+            Xtensionsvrse
           </h2>
         </div>
 
