@@ -6,6 +6,7 @@ const SignUpForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
@@ -61,6 +62,7 @@ const SignUpForm = () => {
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
+
         <div className="space-y-1.5">
           <label
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"
@@ -85,6 +87,8 @@ const SignUpForm = () => {
             />
           </div>
         </div>
+
+
         <div className="space-y-1.5">
           <label
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"
@@ -109,6 +113,32 @@ const SignUpForm = () => {
             />
           </div>
         </div>
+
+        <div className="space-y-1.5">
+          <label
+            className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"
+            htmlFor="signup-email"
+          >
+            Phone Number
+          </label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+              <span className="material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-[20px]">
+                phone
+              </span>
+            </div>
+            <input
+              className="block w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#2a2a2b] border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none placeholder:text-slate-400 dark:text-white"
+              id="signup-phone"
+              placeholder="+234 812 345 6789"
+              type="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
         <div className="space-y-1.5">
           <label
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"

@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 
 const SignInForm = () => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  
+    const [formData, setFormData] = useState({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    });
+
+
   return (
     <div
       id="sign-in-form"
@@ -67,9 +82,10 @@ const SignInForm = () => {
               className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               type="button"
             >
-              <span className="material-symbols-outlined text-[20px]">
-                visibility
+              <span onClick={handleShowPassword} className="material-symbols-outlined text-[20px]">
+                v{isibility
               </span>
+
             </button>
           </div>
         </div>
