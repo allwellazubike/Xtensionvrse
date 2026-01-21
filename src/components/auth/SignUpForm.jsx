@@ -1,11 +1,50 @@
 import React, { useState } from "react";
 
 const SignUpForm = () => {
-
   const [showPassword, setShowPassword] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [error, setError] = useState("");
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const updatedFormData = {
+      ...formData,
+      [name]: value,
+    };
+    setFormData(updatedFormData);
+
+    if (name === "password" || name === "confirmPassword") {
+      if (
+        updatedFormData.confirmPassword &&
+        updatedFormData.password !== updatedFormData.confirmPassword
+      ) {
+        setError("Passwords do not match");
+      } else {
+        setError("");
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    setError("");
+    const { confirmPassword, ...dataToSubmit } = formData;
+    console.log(dataToSubmit);
   };
 
   return (
@@ -21,7 +60,7 @@ const SignUpForm = () => {
           Create your profile to unlock exclusive styles.
         </p>
       </div>
-      <form action="#" className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <label
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"
@@ -40,6 +79,9 @@ const SignUpForm = () => {
               id="name"
               placeholder="e.g. Maya Jenkins"
               type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -61,6 +103,9 @@ const SignUpForm = () => {
               id="signup-email"
               placeholder="maya@example.com"
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -82,9 +127,12 @@ const SignUpForm = () => {
               id="signup-password"
               placeholder="••••••••"
               type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
             />
             <button
-            onClick={handleShowPassword}
+              onClick={handleShowPassword}
               className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               type="button"
             >
@@ -112,8 +160,12 @@ const SignUpForm = () => {
               id="confirm-password"
               placeholder="••••••••"
               type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
             />
           </div>
+          {error && <p className="text-red-500 text-xs mt-1 ml-1">{error}</p>}
         </div>
         <div className="flex items-start pt-2">
           <div className="flex h-5 items-center">
@@ -147,7 +199,7 @@ const SignUpForm = () => {
         </div>
         <button
           className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-200 transform hover:-translate-y-0.5"
-          type="button"
+          type="submit"
         >
           <span className="absolute left-0 inset-y-0 flex items-center pl-3">
             <span className="material-symbols-outlined text-white/70 group-hover:text-white transition-colors text-[20px]">
