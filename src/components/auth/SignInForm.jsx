@@ -45,7 +45,8 @@ const SignInForm = () => {
         // .catch(error => console.error('Error:', error));
         
         // Reset form after submission
-        // setFormData({ email: "", password: "" });
+        setFormData({ email: "", password: "" });
+        console.log(formData)
     };
 
   return (
@@ -61,7 +62,7 @@ const SignInForm = () => {
           Sign in to access your orders and wishlist.
         </p>
       </div>
-      <form action="#" className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <label
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"
@@ -117,10 +118,11 @@ const SignInForm = () => {
               onChange={handleChange}
             />
             <button
+             onClick={handleShowPassword}
               className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               type="button"
             >
-              <span onClick={handleShowPassword} className="material-symbols-outlined text-[20px]">
+              <span  className="material-symbols-outlined text-[20px]">
                 {showPassword ? "visibility_off" : "visibility"}
               </span>
             </button>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,9 +9,9 @@ const SignUpForm = () => {
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
   });
 
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleShowPassword = () => {
@@ -19,34 +20,56 @@ const SignUpForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedFormData = {
-      ...formData,
-      [name]: value,
-    };
-    
-    setFormData(updatedFormData);
 
-    if (name === "password" || name === "confirmPassword") {
-      if (
-        updatedFormData.confirmPassword &&
-        updatedFormData.password !== updatedFormData.confirmPassword
-      ) {
+    if (name === "confirmPassword") {
+      setConfirmPassword(value);
+      if (formData.password && value !== formData.password) {
         setError("Passwords do not match");
       } else {
         setError("");
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+
+      if (name === "password") {
+        if (confirmPassword && value !== confirmPassword) {
+          setError("Passwords do not match");
+        } else {
+          setError("");
+        }
       }
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
     setError("");
-    const { confirmPassword, ...dataToSubmit } = formData;
-    console.log(dataToSubmit);
+    console.log(formData);
+
+    axios
+      .post("http://localhost:3000/api/user/create", formData)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    });
+
+    setConfirmPassword("")
   };
 
   return (
@@ -63,7 +86,6 @@ const SignUpForm = () => {
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-
         <div className="space-y-1.5">
           <label
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1"
@@ -88,7 +110,6 @@ const SignUpForm = () => {
             />
           </div>
         </div>
-
 
         <div className="space-y-1.5">
           <label
@@ -192,7 +213,7 @@ const SignUpForm = () => {
               placeholder="••••••••"
               type="password"
               name="confirmPassword"
-              value={formData.confirmPassword}
+              value={confirmPassword}
               onChange={handleChange}
             />
           </div>

@@ -58,6 +58,18 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
+// create user
+app.post("/api/user/create", async (req, res) => {
+try {
+  console.log("Received user creation request");
+  console.log("Body:", req.body);
+} catch (error) {
+  console.error(error);
+  res.status(500).json({ error: "Database error" });
+}
+});
+
+
 // create product
 app.post(
   "/api/products/create",
