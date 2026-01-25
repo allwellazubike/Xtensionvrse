@@ -188,7 +188,7 @@ app.post(
   },
 );
 
-// delete a product
+// delete product
 app.delete("/api/items/:id", async (req, res) => {
   const itemId = req.params.id;
   try {
