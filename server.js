@@ -60,15 +60,14 @@ app.get("/api/products", async (req, res) => {
 
 // create user
 app.post("/api/user/create", async (req, res) => {
-try {
-  console.log("Received user creation request");
-  console.log("Body:", req.body);
-} catch (error) {
-  console.error(error);
-  res.status(500).json({ error: "Database error" });
-}
+  try {
+    console.log("Received user creation request");
+    console.log("Body:", req.body);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Database error" });
+  }
 });
-
 
 // create product
 app.post(
@@ -190,14 +189,14 @@ app.post(
 );
 
 // delete a product
-app.delete('/api/items/:id', async (req, res) => {
+app.delete("/api/items/:id", async (req, res) => {
   const itemId = req.params.id;
   try {
     await db.query("DELETE FROM products WHERE id = $1", [itemId]);
-    res.redirect("/admin/products");
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Failed to delete product" });
+    res.status(500).  json({ error: "Failed to delete product" });
   }
 });
 
