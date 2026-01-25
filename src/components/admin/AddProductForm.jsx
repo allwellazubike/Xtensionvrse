@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const AddProductForm = () => {
+const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
   // Single object to store ALL form data
   const [formData, setFormData] = useState({
     name: "",
@@ -15,13 +15,62 @@ const AddProductForm = () => {
     lengths: ['20"', '24"', '32"'],
     weights: ["100g", "150g", "200g"],
     specifications: ["100% Kanekalon Fiber", "Hot Water Setting"],
-    primaryImage: null,
-    galleryImages: [],
+    primaryImage: null, // Can be File object or String (URL)
+    galleryImages: [], // Array of File objects or Strings (URLs)
   });
 
   const [newLength, setNewLength] = useState("");
   const [newWeight, setNewWeight] = useState("");
   const [newSpec, setNewSpec] = useState("");
+
+  // Populate form if editing
+  useEffect(() => {
+    if (initialProduct) {
+      // Parse specs back into arrays
+      const lengths = [];
+      const weights = [];
+      const specs = [];
+
+      if (initialProduct.specs && Array.isArray(initialProduct.specs)) {
+        initialProduct.specs.forEach((s) => {
+          if (typeof s === "string") {
+            if (s.startsWith("Length: ")) {
+              const l = s
+                .replace("Length: ", "")
+                .split(",")
+                .map((i) => i.trim());
+              lengths.push(...l);
+            } else if (s.startsWith("Weight: ")) {
+              const w = s
+                .replace("Weight: ", "")
+                .split(",")
+                .map((i) => i.trim());
+              weights.push(...w);
+            } else {
+              specs.push(s);
+            }
+          }
+        });
+      }
+
+      setFormData({
+        name: initialProduct.name || "",
+        category: initialProduct.category || "",
+        description: initialProduct.description || "",
+        price: initialProduct.price || "",
+        originalPrice: initialProduct.original_price || "",
+        stock: initialProduct.stock || "",
+        badgeText: initialProduct.badge || "",
+        badgeColor: initialProduct.badge_color || "",
+        sale: initialProduct.sale || false,
+        lengths: lengths.length > 0 ? lengths : [],
+        weights: weights.length > 0 ? weights : [],
+        specifications: specs.length > 0 ? specs : [],
+        primaryImage: initialProduct.image || null,
+        galleryImages: initialProduct.images || [],
+      });
+    }
+  }, [initialProduct]);
 
   // Handle all text inputs
   const handleInputChange = (e) => {
@@ -37,8 +86,11 @@ const AddProductForm = () => {
     const file = e.target.files[0];
     if (file) {
       setFormData({ ...formData, primaryImage: file });
-      console.log("Primary image selected:", file.name);
     }
+  };
+
+  const handleRemovePrimaryImage = () => {
+    setFormData({ ...formData, primaryImage: null });
   };
 
   // Handle gallery images
@@ -48,7 +100,6 @@ const AddProductForm = () => {
       ...formData,
       galleryImages: [...formData.galleryImages, ...files],
     });
-    console.log("Gallery images added:", files.length);
   };
 
   // Remove gallery image
@@ -117,7 +168,14 @@ const AddProductForm = () => {
     });
   };
 
-  // SUBMIT FUNCTION - Send to backend
+  // Helper to get image preview URL
+  const getPreviewUrl = (fileOrUrl) => {
+    if (!fileOrUrl) return "";
+    if (typeof fileOrUrl === "string") return fileOrUrl;
+    return URL.createObjectURL(fileOrUrl);
+  };
+
+  // SUBMIT FUNCTION
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -139,7 +197,7 @@ const AddProductForm = () => {
       return;
     }
 
-    // Create FormData to send files + text
+    // Create FormData
     const data = new FormData();
 
     // Add all text fields
@@ -159,43 +217,74 @@ const AddProductForm = () => {
     data.append("specifications", JSON.stringify(formData.specifications));
 
     // Add primary image
-    data.append("primaryImage", formData.primaryImage);
+    if (formData.primaryImage instanceof File) {
+      data.append("primaryImage", formData.primaryImage);
+    } else {
+      // It's a string (existing URL), send it so backend knows to keep it
+      data.append("primaryImage", formData.primaryImage);
+    }
 
     // Add gallery images
     formData.galleryImages.forEach((image) => {
-      data.append("galleryImages", image);
+      if (image instanceof File) {
+        data.append("galleryImages", image);
+      } else {
+        data.append("galleryImages", image); // Existing URL
+      }
     });
 
     try {
-      console.log("Submitting product...");
+      const isEdit = !!initialProduct;
+      const url = isEdit
+        ? `http://localhost:3000/api/products/${initialProduct.id}`
+        : "http://localhost:3000/api/products/create";
 
-      const response = await fetch(
-        "http://localhost:3000/api/products/create",
-        {
-          method: "POST",
-          body: data,
-        },
-      );
+      const method = isEdit ? "PUT" : "POST";
+
+      console.log(`Submitting product (${method})...`);
+
+      const response = await fetch(url, {
+        method: method,
+        body: data,
+      });
 
       const result = await response.json();
 
       if (response.ok) {
-        alert("Product created successfully!");
-        console.log("Created product:", result);
-        // Optionally reset form
-        // setFormData({ ... initial state ... });
+        alert(
+          isEdit
+            ? "Product updated successfully!"
+            : "Product created successfully!",
+        );
+        if (onSuccess) onSuccess();
       } else {
         alert("Error: " + result.message);
         console.error("Server error:", result);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Failed to create product. Check console for details.");
+      alert("Failed to save product. Check console for details.");
     }
   };
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+      {/* Header with Title and Cancel */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-[#181113] dark:text-white">
+          {initialProduct ? "Edit Product" : "Add New Product"}
+        </h2>
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        )}
+      </div>
+
       {/* Basic Information */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
         <h3 className="text-lg font-bold text-[#181113] dark:text-white mb-6 flex items-center gap-2">
@@ -442,9 +531,6 @@ const AddProductForm = () => {
                 </button>
               </div>
             </div>
-            <p className="text-xs text-[#89616f] mt-1">
-              Type a length (e.g. 18") and press Enter to add.
-            </p>
           </div>
 
           {/* Weights */}
@@ -495,9 +581,6 @@ const AddProductForm = () => {
                 </button>
               </div>
             </div>
-            <p className="text-xs text-[#89616f] mt-1">
-              Type a weight (e.g. 120g) and press Enter to add.
-            </p>
           </div>
         </div>
       </div>
@@ -514,30 +597,49 @@ const AddProductForm = () => {
           <label className="block text-sm font-bold text-[#5d4a51] dark:text-white/80 mb-2">
             Primary Image <span className="text-red-500">*</span>
           </label>
-          <div className="relative group cursor-pointer">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePrimaryImageChange}
-              className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
-              required
-            />
-            <div className="border-2 border-dashed border-[#e6dbdf] dark:border-[#4a2e36] rounded-2xl p-10 flex flex-col items-center justify-center bg-[#fcfbfb] dark:bg-white/5 group-hover:bg-[#f4f0f2] dark:group-hover:bg-white/10 transition-colors text-center">
-              <div className="size-14 bg-white dark:bg-white/10 rounded-full shadow-sm flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-3xl">
-                  cloud_upload
+
+          {formData.primaryImage ? (
+            <div className="relative w-full max-w-[200px] aspect-square rounded-2xl overflow-hidden border border-[#e6dbdf] dark:border-[#4a2e36] group">
+              <img
+                src={getPreviewUrl(formData.primaryImage)}
+                alt="Primary"
+                className="w-full h-full object-cover"
+              />
+              {/* Explicit specific delete button for primary image, always visible on mobile */}
+              <button
+                type="button"
+                onClick={handleRemovePrimaryImage}
+                className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white text-red-500 rounded-full shadow-md transition-all z-10"
+              >
+                <span className="material-symbols-outlined text-lg">
+                  delete
                 </span>
-              </div>
-              <p className="text-[#181113] dark:text-white font-semibold text-base">
-                {formData.primaryImage
-                  ? `✓ ${formData.primaryImage.name}`
-                  : "Click to upload or drag and drop"}
-              </p>
-              <p className="text-[#89616f] dark:text-white/50 text-sm mt-1">
-                PNG, JPG or WEBP (recommended 800x800px)
-              </p>
+              </button>
             </div>
-          </div>
+          ) : (
+            <div className="relative group cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePrimaryImageChange}
+                className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+                required={!formData.primaryImage}
+              />
+              <div className="border-2 border-dashed border-[#e6dbdf] dark:border-[#4a2e36] rounded-2xl p-10 flex flex-col items-center justify-center bg-[#fcfbfb] dark:bg-white/5 group-hover:bg-[#f4f0f2] dark:group-hover:bg-white/10 transition-colors text-center">
+                <div className="size-14 bg-white dark:bg-white/10 rounded-full shadow-sm flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-3xl">
+                    cloud_upload
+                  </span>
+                </div>
+                <p className="text-[#181113] dark:text-white font-semibold text-base">
+                  Click to upload or drag and drop
+                </p>
+                <p className="text-[#89616f] dark:text-white/50 text-sm mt-1">
+                  PNG, JPG or WEBP (recommended 800x800px)
+                </p>
+              </div>
+            </div>
+          )}
         </div>
         <div>
           <label className="block text-sm font-bold text-[#5d4a51] dark:text-white/80 mb-3">
@@ -555,13 +657,14 @@ const AddProductForm = () => {
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
-                    backgroundImage: `url('${URL.createObjectURL(image)}')`,
+                    backgroundImage: `url('${getPreviewUrl(image)}')`,
                   }}
                 ></div>
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                {/* Mobile-friendly: Always visible or on slight tap via active state. Using a visible scrim or just button. */}
+                <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
                   <button
                     onClick={() => handleRemoveGalleryImage(index)}
-                    className="bg-white text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors shadow-lg"
+                    className="bg-white/90 hover:bg-white text-red-500 p-2 rounded-full shadow-lg transform transition-transform hover:scale-105"
                     type="button"
                   >
                     <span className="material-symbols-outlined text-lg">
@@ -651,19 +754,21 @@ const AddProductForm = () => {
 
       {/* Submit Buttons */}
       <div className="flex items-center justify-end gap-4 pt-4 mt-2">
-        <button
-          className="px-8 py-3 rounded-xl border border-[#e6dbdf] dark:border-[#4a2e36] font-bold text-[#5d4a51] dark:text-white hover:bg-white dark:hover:bg-white/5 shadow-sm transition-colors text-sm"
-          type="button"
-          onClick={() => window.history.back()}
-        >
-          Cancel
-        </button>
+        {onCancel && (
+          <button
+            className="px-8 py-3 rounded-xl border border-[#e6dbdf] dark:border-[#4a2e36] font-bold text-[#5d4a51] dark:text-white hover:bg-white dark:hover:bg-white/5 shadow-sm transition-colors text-sm"
+            type="button"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+        )}
         <button
           className="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
           type="submit"
         >
           <span className="material-symbols-outlined text-lg">check</span>
-          Create Product
+          {initialProduct ? "Update Product" : "Create Product"}
         </button>
       </div>
     </form>

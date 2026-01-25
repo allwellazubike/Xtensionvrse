@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ConfirmDelete from "./ConfirmDelete";
 import axios from "axios";
 import { useProducts } from "../../context/ProductContext";
+import AddProductForm from "./AddProductForm";
 
 const ProductTable = () => {
   const { products } = useProducts();
@@ -45,6 +46,27 @@ const ProductTable = () => {
         setIsDeleteModalOpen(false);
       });
   };
+
+  const [editingProduct, setEditingProduct] = useState(null);
+
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+  };
+
+  if (editingProduct) {
+    return (
+      <div className="flex-1 overflow-y-auto">
+        <AddProductForm
+          initialProduct={editingProduct}
+          onCancel={() => setEditingProduct(null)}
+          onSuccess={() => {
+            setEditingProduct(null);
+            window.location.reload();
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col min-w-0 bg-white dark:bg-[#2d1b22] rounded-2xl border border-[#e6dbdf] dark:border-[#4a2e36] shadow-sm overflow-hidden">
@@ -132,6 +154,7 @@ const ProductTable = () => {
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
+                        onClick={() => handleEdit(product)}
                         className="p-1.5 text-[#89616f] hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
                         title="Edit"
                       >
