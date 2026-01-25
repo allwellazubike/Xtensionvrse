@@ -189,6 +189,18 @@ app.post(
   },
 );
 
+// delete a product
+app.delete('/api/items/:id', async (req, res) => {
+  const itemId = req.params.id;
+  try {
+    await db.query("DELETE FROM products WHERE id = $1", [itemId]);
+    res.redirect("/admin/products");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to delete product" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

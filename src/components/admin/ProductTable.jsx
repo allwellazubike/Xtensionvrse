@@ -1,4 +1,5 @@
 import React , { useEffect } from "react";
+import axios from "axios";
 import { useProducts } from "../../context/ProductContext";
 
 const ProductTable = () => {
@@ -10,6 +11,33 @@ const ProductTable = () => {
       console.log(products[1].name)
     }
   }, [products])
+
+//   function deleteProduct(id) {
+//     axios.delete(`http://localhost:3000/api/items/${id}`)
+//     .then((response) => {
+//       console.log(response.data);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+//   console.log(id);
+// }
+
+function deleteProduct(id) {
+  console.log("Attempting to delete:", id);
+  
+  axios.delete(`http://localhost:3000/api/items/${id}`)
+    .then(response => {
+      console.log("Success:", response.data);
+      alert("Deleted successfully!");
+      window.location.reload(); // refresh
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Delete failed!");
+    });
+}
+
 
   return (
     <div className="flex-1 flex flex-col min-w-0 bg-white dark:bg-[#2d1b22] rounded-2xl border border-[#e6dbdf] dark:border-[#4a2e36] shadow-sm overflow-hidden">
@@ -109,6 +137,8 @@ const ProductTable = () => {
                     </span>
                   </button>
                   <button
+
+                   onClick={() => deleteProduct(product.id)}
                     className="p-1.5 text-[#89616f] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     title="Delete"
                   >
