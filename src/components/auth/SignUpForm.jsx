@@ -51,7 +51,7 @@ const SignUpForm = () => {
       return;
     }
     setError("");
-    console.log(formData);
+    // console.log(formData);
 
     axios
       .post("http://localhost:3000/api/user/create", formData)

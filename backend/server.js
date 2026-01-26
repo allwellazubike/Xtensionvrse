@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import bcrypt from "bcrypt";
 import pg from "pg";
 import env from "dotenv";
 import cors from "cors";
@@ -11,6 +12,7 @@ const app = express();
 app.use(cors());
 env.config();
 const port = process.env.PORT || 3000;
+const saltRounds = 10;
 
 app.use(bodyParser.json());
 
@@ -43,6 +45,31 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage: storage });
 
+async function hashPassword(plainPassword) {
+  const hash = await bcrypt.hash(plainPassword, saltRounds);
+  return hash
+}
+
+// create user
+app.post("/api/user/create", async (req, res) => {
+  try {
+    const { password, email, name, phone } = req.body;
+    const hashedPassword = await hashPassword(password);
+    console.log(hashedPassword);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// try {
+
+//   console.log("Received user creation request");
+//   console.log("Body:", req.body);
+// } catch (error) {
+//   console.error(error);
+//   res.status(500).json({ error: "Database error" });
+// }
+
 // GET all products
 app.get("/api/products", async (req, res) => {
   try {
@@ -52,17 +79,6 @@ app.get("/api/products", async (req, res) => {
       return res.status(404).json({ error: "No products found" });
     }
     res.json(result.rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Database error" });
-  }
-});
-
-// create user
-app.post("/api/user/create", async (req, res) => {
-  try {
-    console.log("Received user creation request");
-    console.log("Body:", req.body);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Database error" });
