@@ -10,7 +10,7 @@ import cors from "cors";
 
 import productRoutes from "./routes/productRoutes.js";
 import db from "./config/db.js";
-import { verifyPassword } from "./controllers/hashController.js";
+import { verifyPassword, hashPassword } from "./controllers/hashController.js";
 
 const app = express();
 app.use(cors());
@@ -21,22 +21,6 @@ app.use(bodyParser.json());
 
 // Routes
 app.use("/api/products", productRoutes);
-
-async function hashPassword(plainPassword) {
-  const hash = await bcrypt.hash(plainPassword, saltRounds);
-  return hash;
-}
-// verifyPassword(plainPassword, hashedPasswordFromDB)
-
-// async function verifyPassword(plainPassword, hashedPasswordFromDB) {
-//   try {
-//     const isMatch = await bcrypt.compare(plainPassword, hashedPasswordFromDB);
-//     return isMatch;
-//   } catch (error) {
-//     console.error("Error verifying password:", error);
-//     return false;
-//   }
-// }
 
 // create user, push to new route
 app.post("/api/user/create", async (req, res) => {
