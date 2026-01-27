@@ -32,7 +32,7 @@ const ProductTable = () => {
     if (!productToDelete) return;
 
     axios
-      .delete(`http://localhost:3000/api/items/${productToDelete.id}`)
+      .delete(`http://localhost:3000/api/products/${productToDelete.id}`)
       .then((response) => {
         // console.log("Success:", response.data);
         // alert("Deleted successfully!"); // Optional: Modal UX usually doesn't need alert if it closes
