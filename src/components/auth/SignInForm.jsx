@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const SignInForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -34,15 +35,14 @@ const SignInForm = () => {
       
         console.log("Form submitted:", formData);
         
-        // send to an API
-        // fetch('/api/login', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(formData),
-        // })
-        // .then(response => response.json())
-        // .then(data => console.log(data))
-        // .catch(error => console.error('Error:', error));
+  axios
+      .post("http://localhost:3000/api/user/login", formData)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
         
         // Reset form after submission
         setFormData({ email: "", password: "" });
