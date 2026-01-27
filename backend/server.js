@@ -33,16 +33,11 @@ app.post("/api/user/create", async (req, res) => {
     const { password, email, name, phone } = req.body;
     const hashedPassword = await hashPassword(password);
     console.log(hashedPassword);
+    res.status(201).json({ message: "user created successfully" });
   } catch (error) {
     console.error(error);
   }
 });
-
-// Note on DELETE route:
-// The frontend calls /api/items/:id for deleting.
-// Our productRoutes mounts at /api/products, so the delete route there is /api/products/:id.
-// To support the legacy frontend call without breaking it immediately, we can add a redirect or alias.
-// Ideally, frontend should be updated. For now, let's keep the user creation route here.
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
