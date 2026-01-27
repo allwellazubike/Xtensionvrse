@@ -10,12 +10,12 @@ import cors from "cors";
 
 import productRoutes from "./routes/productRoutes.js";
 import db from "./config/db.js";
+import { verifyPassword } from "./controllers/hashController.js";
 
 const app = express();
 app.use(cors());
 env.config();
 const port = process.env.PORT || 3000;
-const saltRounds = 10;
 
 app.use(bodyParser.json());
 
@@ -26,16 +26,17 @@ async function hashPassword(plainPassword) {
   const hash = await bcrypt.hash(plainPassword, saltRounds);
   return hash;
 }
+// verifyPassword(plainPassword, hashedPasswordFromDB)
 
-async function verifyPassword(plainPassword, hashedPasswordFromDB) {
-  try {
-    const isMatch = await bcrypt.compare(plainPassword, hashedPasswordFromDB);
-    return isMatch;
-  } catch (error) {
-    console.error("Error verifying password:", error);
-    return false;
-  }
-}
+// async function verifyPassword(plainPassword, hashedPasswordFromDB) {
+//   try {
+//     const isMatch = await bcrypt.compare(plainPassword, hashedPasswordFromDB);
+//     return isMatch;
+//   } catch (error) {
+//     console.error("Error verifying password:", error);
+//     return false;
+//   }
+// }
 
 // create user, push to new route
 app.post("/api/user/create", async (req, res) => {
