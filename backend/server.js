@@ -59,13 +59,10 @@ app.post("/api/user/login", async (req, res) => {
   try {
       const {email, password} = req.body;
   const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
-  if (result === 0) {
-    console.log("available")
-  } else {
-    console.log(result[0])
-  }
-  } catch (error) {
-    
+
+  if (!result.rows[0]) return res.status(404).json({ error: "User not found" });
+  console.log(result.rows[0]);
+  } catch (error) { 
   }
 })
 
