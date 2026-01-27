@@ -33,7 +33,7 @@ const SignInForm = () => {
             return;
         }
       
-        console.log("Form submitted:", formData);
+        console.log("Form submitted");
         
   axios
       .post("http://localhost:3000/api/user/login", formData)
