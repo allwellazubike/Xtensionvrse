@@ -1,17 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import bcrypt from "bcrypt";
-// import pg from "pg"; // Moved to config/db.js
 import env from "dotenv";
 import cors from "cors";
-// import multer from "multer"; // Moved to config/storage.js
-// import { v2 as cloudinary } from "cloudinary"; // Moved to config/storage.js
-// import { CloudinaryStorage } from "multer-storage-cloudinary"; // Moved to config/storage.js
-
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import db from "./config/db.js";
-import { verifyPassword, hashPassword } from "./controllers/hashController.js";
 const app = express();
 app.use(cors());
 env.config();
