@@ -1,8 +1,21 @@
 import express from "express";
 import db from "../config/db.js";
+import expressSession from "express-session";
+import passport from "passport";
+import passportLocal from "passport-local";
+import { Strategy } from "passport-local";
 import { verifyPassword, hashPassword } from "../controllers/hashController.js";
 
 const router = express.Router();
+
+app.use(expressSession({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
+}));
 
 // create user
 router.post("/create", async (req, res) => {
