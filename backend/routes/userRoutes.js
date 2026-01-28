@@ -17,6 +17,9 @@ app.use(expressSession({
     }
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 // create user
 router.post("/create", async (req, res) => {
   try {
@@ -67,5 +70,37 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 });
+
+
+passport.use(new Strategy( async function verify(email, password, cb){
+    try {
+        const result = await db.query("SELECT * FROM users WHERE email = $1", [
+            email,
+          ]);
+          if (!result.rows[0])
+            return res.status(404).json({ error: "User not found" });
+    
+          const isValidPassword = await verifyPassword(
+            password,
+            result.rows[0].password_hash,
+          );
+          if (!isValidPassword) {
+            console.log("invalid credentials");
+            return res.status(401).json({ error: "Invalid credentials" });
+          }
+    
+          console.log("login success");
+          res.json({
+            message: "Login successful",
+            user: { name: result.rows[0].full_name },
+          });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Login failed" });
+    }
+})
+
+
+)
 
 export default router;
