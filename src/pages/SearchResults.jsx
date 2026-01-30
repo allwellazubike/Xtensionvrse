@@ -1,3 +1,5 @@
+import FilterSidebar from "../components/FilterSidebar";
+
 const SearchResults = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
@@ -9,5 +11,4 @@ const SearchResults = () => {
     </div>
   );
 };
-
 export default SearchResults;
