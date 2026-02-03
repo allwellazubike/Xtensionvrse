@@ -3,10 +3,24 @@ import db from "../config/db.js"; // Import the DB connection we made in Phase 1
 // getting all products
 export const getAllProducts = async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM products");
-    if (result.rows.length === 0) {
+    const { search } = req.query;
+    let query = "SELECT * FROM products";
+    let values = [];
+
+    if (search) {
+      query +=
+        " WHERE name ILIKE $1 OR description ILIKE $1 OR category ILIKE $1";
+      values = [`%${search}%`];
+    }
+
+    const result = await db.query(query, values);
+
+    // If searching, return empty array if no results found (200 OK)
+    // If NOT searching (getting all products), return 404 if DB is empty
+    if (result.rows.length === 0 && !search) {
       return res.status(404).json({ error: "No products found" });
     }
+
     res.json(result.rows);
   } catch (error) {
     console.error(error);
