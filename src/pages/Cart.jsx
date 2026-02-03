@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 import CartItem from "../components/CartItem";
+import CheckoutModal from "../components/CheckoutModal";
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
 
 const Cart = ({ toggleDarkMode, darkMode }) => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+
+  const handlePaymentSelect = (method) => {
+    console.log("Selected payment method:", method);
+    // Logic to proceed with selected method would go here
+    setIsCheckoutModalOpen(false);
+    alert(
+      `Proceeding with ${method === "paystack" ? "Paystack" : "Bank Transfer"}...`,
+    );
+  };
 
   const subtotal = getCartTotal();
   // Using a flat shipping rate for now, or free if "Fast Shipping" logic implies it?
@@ -112,7 +123,10 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
                         Apply
                       </button>
                     </div>
-                    <button className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-4 font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group">
+                    <button
+                      onClick={() => setIsCheckoutModalOpen(true)}
+                      className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-4 font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
+                    >
                       Checkout Securely
                       <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">
                         arrow_forward
@@ -184,6 +198,12 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
         </main>
 
         <Footer />
+
+        <CheckoutModal
+          isOpen={isCheckoutModalOpen}
+          onClose={() => setIsCheckoutModalOpen(false)}
+          onSelectPayment={handlePaymentSelect}
+        />
       </div>
     </div>
   );

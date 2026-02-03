@@ -38,7 +38,7 @@ const SearchResults = ({ toggleDarkMode, darkMode }) => {
     fetchSearchResults();
   }, [query]);
 
-  // Helper to render stars
+  // render stars
   const renderStars = (rating) => {
     const validRating = rating || 0;
     const stars = [];
