@@ -4,20 +4,22 @@ import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 import CartItem from "../components/CartItem";
 import CheckoutModal from "../components/CheckoutModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { products } from "../data/products";
 
 const Cart = ({ toggleDarkMode, darkMode }) => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handlePaymentSelect = (method) => {
-    console.log("Selected payment method:", method);
-    // Logic to proceed with selected method would go here
     setIsCheckoutModalOpen(false);
-    alert(
-      `Proceeding with ${method === "paystack" ? "Paystack" : "Bank Transfer"}...`,
-    );
+    if (method === "bank_transfer") {
+      const orderId = "XV-" + Math.floor(1000 + Math.random() * 9000);
+      navigate("/checkout/bank-transfer", { state: { total, orderId } });
+    } else {
+      alert("Paystack integration coming soon!");
+    }
   };
 
   const subtotal = getCartTotal();
