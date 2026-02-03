@@ -26,7 +26,7 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
 
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text).then(() => {
-      showToast(`${label} Copied!`);
+      showToast(`Copied!`);
     });
   };
 
