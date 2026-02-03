@@ -1,10 +1,19 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import Icon from "./ui/Icon";
 
 const Header = ({ toggleDarkMode, darkMode }) => {
   const { getCartCount, cart } = useCart();
   const cartCount = getCartCount();
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-[#181113]/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
@@ -62,6 +71,13 @@ const Header = ({ toggleDarkMode, darkMode }) => {
                 </span>
               </div>
               <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
                 className="w-full bg-[#f4f0f2] dark:bg-gray-800 border-none rounded-xl py-2.5 pl-10 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 placeholder:text-gray-400 text-[#181113] dark:text-white transition-all"
                 placeholder="Search styles..."
               />
