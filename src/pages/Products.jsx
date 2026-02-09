@@ -104,13 +104,12 @@ const Products = ({ toggleDarkMode, darkMode }) => {
   };
 
   const filteredProducts = getProcessedProducts();
-  
+
   const handleChipClick = (cat) => {
     if (cat === "All") {
       setFilters((prev) => ({ ...prev, categories: [] }));
     } else {
-      // For chips, we typically want "Show ONLY this", but sidebar is multi-select.
-      // Let's reset other categories and select this one.
+
       setFilters((prev) => ({ ...prev, categories: [cat] }));
     }
   };
