@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -11,7 +12,29 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
   };
 
   const [isPaid, setIsPaid] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    if (!orderId) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/api/orders/${orderId}`,
+        );
+        if (res.data.status === "confirmed") {
+          setIsConfirmed(true);
+          setIsPaid(true);
+          clearInterval(interval);
+        }
+      } catch (error) {
+        console.error("Polling error:", error);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [orderId]);
 
   const bankDetails = {
     bankName: "Kuda Microfinance Bank",
@@ -23,7 +46,7 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(""), 2000);
   };
-  
+
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text).then(() => {
       showToast(`Copied!`);
@@ -103,7 +126,27 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
           </div>
         </div>
 
-        {!isPaid ? (
+        {isConfirmed ? (
+          <div className="text-center py-6 animate-fade-in-up">
+            <div className="size-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="material-symbols-outlined text-4xl">
+                check_circle
+              </span>
+            </div>
+            <h2 className="text-2xl font-bold text-[#181113] dark:text-white mb-2">
+              Payment Confirmed!
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xs mx-auto">
+              Your payment has been verified and your order is being processed.
+            </p>
+            <Link
+              to="/"
+              className="inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        ) : !isPaid ? (
           <>
             <div className="text-center mb-6">
               <h1 className="text-2xl font-bold text-[#181113] dark:text-white mb-2">

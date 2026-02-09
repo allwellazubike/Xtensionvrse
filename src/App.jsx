@@ -7,6 +7,7 @@ import Login from "./pages/admin/Login";
 import Access from "./pages/admin/Access";
 // import AddProduct from "./pages/admin/AddProduct";
 import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
@@ -71,6 +72,7 @@ function App() {
           }
         />
         <Route path="/admin/products" element={<AdminProducts />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
         {/* adding search results route if needed in future, currently imported but unused in original code except for import */}
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/auth" element={<Authentication />} />

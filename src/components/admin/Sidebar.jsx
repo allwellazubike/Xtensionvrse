@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen, onClose }) => {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
   return (
     <>
       {/* Mobile Backdrop */}
@@ -51,22 +53,32 @@ const Sidebar = ({ isOpen, onClose }) => {
             </span>
           </Link>
           <Link
-            className="flex items-center gap-3 px-3 py-3 rounded-xl bg-primary/10 text-primary"
+            className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors group ${isActive("/admin/products") ? "bg-primary/10 text-primary" : "hover:bg-[#f4f0f2] dark:hover:bg-white/5"}`}
             to="/admin/products"
           >
-            <span className="material-symbols-outlined fill-1">
+            <span
+              className={`material-symbols-outlined ${isActive("/admin/products") ? "fill-1" : "text-[#89616f] dark:text-white/60 group-hover:text-primary"}`}
+            >
               inventory_2
             </span>
-            <span className="text-sm font-bold">Products</span>
+            <span
+              className={`text-sm ${isActive("/admin/products") ? "font-bold" : "font-medium text-[#181113] dark:text-white"}`}
+            >
+              Products
+            </span>
           </Link>
           <Link
-            className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[#f4f0f2] dark:hover:bg-white/5 transition-colors group"
+            className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors group ${isActive("/admin/orders") ? "bg-primary/10 text-primary" : "hover:bg-[#f4f0f2] dark:hover:bg-white/5"}`}
             to="/admin/orders"
           >
-            <span className="material-symbols-outlined text-[#89616f] dark:text-white/60 group-hover:text-primary">
+            <span
+              className={`material-symbols-outlined ${isActive("/admin/orders") ? "fill-1" : "text-[#89616f] dark:text-white/60 group-hover:text-primary"}`}
+            >
               shopping_bag
             </span>
-            <span className="text-[#181113] dark:text-white text-sm font-medium">
+            <span
+              className={`text-sm ${isActive("/admin/orders") ? "font-bold" : "font-medium text-[#181113] dark:text-white"}`}
+            >
               Orders
             </span>
           </Link>

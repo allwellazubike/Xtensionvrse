@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
@@ -12,11 +13,24 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handlePaymentSelect = (method) => {
+  const handlePaymentSelect = async (method) => {
     setIsCheckoutModalOpen(false);
     if (method === "bank_transfer") {
-      const orderId = "XV-" + Math.floor(1000 + Math.random() * 9000);
-      navigate("/checkout/bank-transfer", { state: { total, orderId } });
+      const orderIdAlias = "XV-" + Math.floor(1000 + Math.random() * 9000);
+      try {
+        await axios.post("http://localhost:3000/api/orders", {
+          items: cart,
+          totalAmount: total,
+          paymentMethod: "bank_transfer",
+          orderIdAlias: orderIdAlias,
+        });
+        navigate("/checkout/bank-transfer", {
+          state: { total, orderId: orderIdAlias },
+        });
+      } catch (error) {
+        console.error("Error creating order:", error);
+        alert("Failed to proceed to payment. Please try again.");
+      }
     } else {
       alert("Paystack integration coming soon!");
     }
