@@ -104,7 +104,6 @@ const Products = ({ toggleDarkMode, darkMode }) => {
   };
 
   const filteredProducts = getProcessedProducts();
-
   const handleChipClick = (cat) => {
     if (cat === "All") {
       setFilters((prev) => ({ ...prev, categories: [] }));
