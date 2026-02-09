@@ -16,14 +16,14 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
   const bankDetails = {
     bankName: "Kuda Microfinance Bank",
     accountNumber: "2012345678",
-    accountName: "Xtensionsverse Inc",
+    accountName: "Xtensionsvrse Inc",
   };
 
   const showToast = (message) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(""), 2000);
   };
-
+  
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text).then(() => {
       showToast(`Copied!`);
