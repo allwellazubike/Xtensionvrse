@@ -96,7 +96,7 @@ const Products = ({ toggleDarkMode, darkMode }) => {
         break;
       case "Recommended":
       default:
-        // Default sort
+        // default sort
         break;
     }
 
