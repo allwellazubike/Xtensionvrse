@@ -3,7 +3,7 @@ import env from "dotenv";
 
 env.config();
 
-// DB logic here
+// database configuration here 
 const db = new pg.Client({
   user: process.env.PG_USER,
   host: process.env.PG_HOST,
