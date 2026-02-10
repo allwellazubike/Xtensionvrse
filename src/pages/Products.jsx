@@ -75,7 +75,7 @@ const Products = ({ toggleDarkMode, darkMode }) => {
       );
     }
 
-    // 4. Sorting
+    // sorting
     switch (sortOption) {
       case "Price: Low to High":
         result.sort((a, b) => a.price - b.price);
@@ -96,7 +96,6 @@ const Products = ({ toggleDarkMode, darkMode }) => {
         break;
       case "Recommended":
       default:
-        // default sort
         break;
     }
 
