@@ -43,8 +43,6 @@ const CheckoutModal = ({ isOpen, onClose, onSelectPayment }) => {
                   Paystack Checkout
                 </h4>
                 <p className="text-sm text-gray-500">
-                  {/* Pay with Card, Bank Transfer, USSD
-                   */}
                   Instant Payment: Card, USSD, QR & Bank Transfer
                 </p>
               </div>
