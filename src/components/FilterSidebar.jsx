@@ -123,7 +123,7 @@ const FilterSidebar = ({
             </button>
           </div>
 
-          {/* Filter Section: Categories */}
+          {/* Filter Section (*/}
           <div className="mb-8">
             <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
               Categories
