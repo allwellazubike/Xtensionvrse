@@ -37,7 +37,7 @@ const Features = () => {
             </span>
           </div>
           
-          {/* Text */}
+          {/* text */}
           <div>
             <h3 className="font-bold text-[#181113] dark:text-white">
               {feature.title}
