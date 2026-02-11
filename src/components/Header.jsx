@@ -96,7 +96,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
               <Link
               to="/cart"
                className="flex items-center justify-center rounded-full size-10 hover:bg-gray-100 dark:hover:bg-gray-800 text-[#181113] dark:text-white transition-colors"
-               >
+               title="Account">
                 <span className="material-symbols-outlined">
                   account_circle
                 </span>
