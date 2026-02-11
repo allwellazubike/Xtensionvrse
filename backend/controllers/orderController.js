@@ -114,3 +114,17 @@ export const declineOrder = async (req, res) => {
     res.status(500).json({ error: "Failed to decline order" });
   }
 };
+
+// Get orders by User ID
+export const getOrdersByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const query =
+      "SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC";
+    const result = await db.query(query, [userId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    res.status(500).json({ error: "Failed to fetch user orders" });
+  }
+};

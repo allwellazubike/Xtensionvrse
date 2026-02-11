@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignInForm = () => {
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-    const handleShowPassword = () => {
+  const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  
+
   const [formData, setFormData] = useState({
-      email: "",
-      password: "",
-    });
+    email: "",
+    password: "",
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,32 +24,38 @@ const SignInForm = () => {
 
     setFormData(updatedFormData);
   };
-  
-      // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent page reload
-        
-        // You can add validation here
-        if (!formData.email || !formData.password) {
-            alert("Please fill in all fields");
-            return;
-        }
-      
-        console.log("Form submitted");
-        
-  axios
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent page reload
+
+    // You can add validation here
+    if (!formData.email || !formData.password) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    console.log("Form submitted");
+
+    axios
       .post("http://localhost:3000/api/user/login", formData)
       .then((response) => {
         console.log(response.data);
+        // Store user data and redirect
+        if (response.data.user) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          navigate("/dashboard");
+        }
       })
       .catch((error) => {
         console.error(error);
+        alert("Login failed. Please check your credentials.");
       });
-        
-        // Reset form after submission
-        setFormData({ email: "", password: "" });
-        console.log(formData)
-    };
+
+    // Reset form after submission
+    setFormData({ email: "", password: "" });
+    console.log(formData);
+  };
 
   return (
     <div
@@ -118,11 +126,11 @@ const SignInForm = () => {
               onChange={handleChange}
             />
             <button
-             onClick={handleShowPassword}
+              onClick={handleShowPassword}
               className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               type="button"
             >
-              <span  className="material-symbols-outlined text-[20px]">
+              <span className="material-symbols-outlined text-[20px]">
                 {showPassword ? "visibility_off" : "visibility"}
               </span>
             </button>

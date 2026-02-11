@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -57,9 +59,15 @@ const SignUpForm = () => {
       .post("http://localhost:3000/api/user/create", formData)
       .then((response) => {
         console.log(response.data);
+        // Store user data and redirect
+        if (response.data.user) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          navigate("/dashboard");
+        }
       })
       .catch((error) => {
         console.error(error);
+        alert("Registration failed. Please try again.");
       });
 
     setFormData({
@@ -69,7 +77,7 @@ const SignUpForm = () => {
       password: "",
     });
 
-    setConfirmPassword("")
+    setConfirmPassword("");
   };
 
   return (
