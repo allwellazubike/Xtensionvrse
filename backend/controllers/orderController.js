@@ -92,3 +92,25 @@ export const confirmOrder = async (req, res) => {
     res.status(500).json({ error: "Failed to confirm order" });
   }
 };
+
+// Decline an order (Admin action)
+export const declineOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query =
+      "UPDATE orders SET status = 'declined' WHERE id = $1 RETURNING *";
+    const result = await db.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json({
+      message: "Order declined successfully",
+      order: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error declining order:", error);
+    res.status(500).json({ error: "Failed to decline order" });
+  }
+};

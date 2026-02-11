@@ -2,10 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AdminLayout from "../../components/admin/AdminLayout";
+import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
+import ConfirmationModal from "../../components/admin/ConfirmationModal";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Modal states
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [confirmation, setConfirmation] = useState({
+    isOpen: false,
+    type: null, // "confirm" or "decline"
+    orderId: null,
+  });
 
   useEffect(() => {
     fetchOrders();
@@ -23,16 +33,46 @@ const AdminOrders = () => {
     }
   };
 
-  const confirmOrder = async (id) => {
-    if (!window.confirm("Are you sure you want to confirm this payment?"))
-      return;
+  const handleConfirmOrder = async () => {
     try {
-      await axios.put(`http://localhost:3000/api/orders/${id}/confirm`);
+      await axios.put(
+        `http://localhost:3000/api/orders/${confirmation.orderId}/confirm`,
+      );
       fetchOrders(); // Refresh list
+      closeConfirmation();
     } catch (error) {
       console.error("Error confirming order:", error);
       alert("Failed to confirm order");
     }
+  };
+
+  const handleDeclineOrder = async () => {
+    try {
+      await axios.put(
+        `http://localhost:3000/api/orders/${confirmation.orderId}/decline`,
+      );
+      fetchOrders(); // Refresh list
+      closeConfirmation();
+    } catch (error) {
+      console.error("Error declining order:", error);
+      alert("Failed to decline order");
+    }
+  };
+
+  const openConfirmation = (type, orderId) => {
+    setConfirmation({
+      isOpen: true,
+      type,
+      orderId,
+    });
+  };
+
+  const closeConfirmation = () => {
+    setConfirmation({
+      isOpen: false,
+      type: null,
+      orderId: null,
+    });
   };
 
   if (loading)
@@ -52,9 +92,6 @@ const AdminOrders = () => {
             <h1 className="text-3xl font-bold text-[#181113] dark:text-white">
               Manage Orders
             </h1>
-            <Link to="/" className="text-primary hover:underline font-bold">
-              Back to Home
-            </Link>
           </div>
 
           <div className="bg-white dark:bg-background-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
@@ -102,7 +139,9 @@ const AdminOrders = () => {
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             order.status === "confirmed"
                               ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+                              : order.status === "declined"
+                                ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+                                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
                           }`}
                         >
                           {order.status}
@@ -111,25 +150,42 @@ const AdminOrders = () => {
                       <td className="p-4 text-sm text-gray-500">
                         {new Date(order.created_at).toLocaleDateString()}
                       </td>
-                      <td className="p-4">
-                        {order.status === "pending" && (
-                          <button
-                            onClick={() => confirmOrder(order.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-sm transition-all flex items-center gap-2"
-                          >
-                            <span className="material-symbols-outlined text-sm">
-                              check
-                            </span>
-                            Confirm
-                          </button>
-                        )}
-                        {order.status === "confirmed" && (
-                          <span className="text-green-600 flex items-center gap-1 font-bold text-sm">
-                            <span className="material-symbols-outlined text-sm">
-                              check_circle
-                            </span>
-                            Paid
+                      <td className="p-4 flex gap-2">
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 p-2 rounded-lg transition-colors"
+                          title="View Details"
+                        >
+                          <span className="material-symbols-outlined text-sm">
+                            visibility
                           </span>
+                        </button>
+
+                        {order.status === "pending" && (
+                          <>
+                            <button
+                              onClick={() =>
+                                openConfirmation("confirm", order.id)
+                              }
+                              className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 p-2 rounded-lg transition-colors"
+                              title="Confirm Order"
+                            >
+                              <span className="material-symbols-outlined text-sm">
+                                check
+                              </span>
+                            </button>
+                            <button
+                              onClick={() =>
+                                openConfirmation("decline", order.id)
+                              }
+                              className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 p-2 rounded-lg transition-colors"
+                              title="Decline Order"
+                            >
+                              <span className="material-symbols-outlined text-sm">
+                                close
+                              </span>
+                            </button>
+                          </>
                         )}
                       </td>
                     </tr>
@@ -147,6 +203,34 @@ const AdminOrders = () => {
           </div>
         </div>
       </div>
+
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        order={selectedOrder}
+        isOpen={!!selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={confirmation.isOpen}
+        onClose={closeConfirmation}
+        onConfirm={
+          confirmation.type === "confirm"
+            ? handleConfirmOrder
+            : handleDeclineOrder
+        }
+        title={
+          confirmation.type === "confirm" ? "Confirm Order" : "Decline Order"
+        }
+        message={
+          confirmation.type === "confirm"
+            ? "Are you sure you want to confirm this order? This will mark it as paid."
+            : "Are you sure you want to decline this order? This action cannot be undone."
+        }
+        actionLabel={confirmation.type === "confirm" ? "Confirm" : "Decline"}
+        isDestructive={confirmation.type === "decline"}
+      />
     </AdminLayout>
   );
 };

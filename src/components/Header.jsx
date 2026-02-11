@@ -93,11 +93,14 @@ const Header = ({ toggleDarkMode, darkMode }) => {
                 </span>
               </button>
 
-              <button className="flex items-center justify-center rounded-full size-10 hover:bg-gray-100 dark:hover:bg-gray-800 text-[#181113] dark:text-white transition-colors">
+              <Link
+              to="/cart"
+               className="flex items-center justify-center rounded-full size-10 hover:bg-gray-100 dark:hover:bg-gray-800 text-[#181113] dark:text-white transition-colors"
+               >
                 <span className="material-symbols-outlined">
                   account_circle
                 </span>
-              </button>
+              </Link>
 
               <Link
                 to="/cart"
