@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import AuthToggle from "../components/auth/AuthToggle";
 import SignUpForm from "../components/auth/SignUpForm";
 import SignInForm from "../components/auth/SignInForm";
@@ -7,6 +7,15 @@ import AuthSocials from "../components/auth/AuthSocials";
 
 const Authentication = () => {
   const [isSignUp, setIsSignUp] = useState(true);
+  const location = useLocation();
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setIsSignUp(false); // Default to sign in if there's a message (usually from protected route)
+    }
+  }, [location.state]);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center p-4 lg:p-8 overflow-hidden bg-gradient-to-b from-pink-50 via-white to-white dark:from-surface-dark dark:to-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary/20 selection:text-primary">
@@ -27,6 +36,16 @@ const Authentication = () => {
             Xtensionsvrse
           </h2>
         </div>
+
+        {message && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+            role="alert"
+          >
+            <strong className="font-bold">Notice: </strong>
+            <span className="block sm:inline">{message}</span>
+          </div>
+        )}
 
         {/* Card */}
         <div className="bg-white dark:bg-[#232324] rounded-2xl shadow-soft p-6 sm:p-8 border border-slate-100 dark:border-white/5 backdrop-blur-sm">

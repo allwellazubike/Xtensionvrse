@@ -1,16 +1,23 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import env from "dotenv";
 import cors from "cors";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Adjust if frontend port differs
+    credentials: true,
+  }),
+);
 env.config();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // Routes
 app.use("/api/products", productRoutes);

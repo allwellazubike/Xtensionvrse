@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import SearchResultsPage from "./pages/SearchResults";
@@ -26,7 +27,7 @@ function App() {
   };
 
   return (
-    <>
+    <AuthProvider>
       <Routes>
         <Route
           path="/"
@@ -99,7 +100,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 

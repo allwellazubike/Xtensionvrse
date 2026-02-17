@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+  const [error, setError] = useState("");
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -26,35 +29,30 @@ const SignInForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload
+    setError("");
 
     // You can add validation here
     if (!formData.email || !formData.password) {
-      alert("Please fill in all fields");
+      setError("Please fill in all fields");
       return;
     }
 
-    console.log("Form submitted");
-
-    axios
-      .post("http://localhost:3000/api/user/login", formData)
-      .then((response) => {
-        console.log(response.data);
-        // Store user data and redirect
-        if (response.data.user) {
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-          navigate("/dashboard");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("Login failed. Please check your credentials.");
-      });
+    try {
+      await login(formData.email, formData.password);
+      const from = location.state?.from || "/dashboard";
+      navigate(from);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.message ||
+          "Login failed. Please check your credentials.",
+      );
+    }
 
     // Reset form after submission
     setFormData({ email: "", password: "" });
-    console.log(formData);
   };
 
   return (
