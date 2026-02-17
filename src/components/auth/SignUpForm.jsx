@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -46,29 +47,28 @@ const SignUpForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
     setError("");
-    // console.log(formData);
 
-    axios
-      .post("http://localhost:3000/api/user/create", formData)
-      .then((response) => {
-        console.log(response.data);
-        // Store user data and redirect
-        if (response.data.user) {
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-          navigate("/dashboard");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("Registration failed. Please try again.");
-      });
+    try {
+      await register(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.phone,
+      );
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again.",
+      );
+    }
 
     setFormData({
       name: "",

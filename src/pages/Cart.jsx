@@ -3,6 +3,7 @@ import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import CartItem from "../components/CartItem";
 import CheckoutModal from "../components/CheckoutModal";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +11,7 @@ import { products } from "../data/products";
 
 const Cart = ({ toggleDarkMode, darkMode }) => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { userInfo } = useAuth();
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -33,6 +35,16 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
       }
     } else {
       alert("Paystack integration coming soon!");
+    }
+  };
+
+  const handleCheckoutClick = () => {
+    if (!userInfo) {
+      navigate("/auth", {
+        state: { from: "/cart", message: "Sign In to checkout" },
+      });
+    } else {
+      setIsCheckoutModalOpen(true);
     }
   };
 
@@ -140,7 +152,7 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
                       </button>
                     </div>
                     <button
-                      onClick={() => setIsCheckoutModalOpen(true)}
+                      onClick={handleCheckoutClick}
                       className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-4 font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
                     >
                       Checkout Securely
