@@ -1,4 +1,3 @@
-```javascript
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
@@ -16,7 +15,7 @@ const Authentication = () => {
     if (location.state?.message) {
       showToast(location.state.message, "info");
       setIsSignUp(false); // Default to sign in if there's a message (usually from protected route)
-      
+
       // Clear the message from state so it doesn't persist on refresh/navigation
       window.history.replaceState({}, document.title);
     }
@@ -24,7 +23,7 @@ const Authentication = () => {
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center p-4 lg:p-8 overflow-hidden bg-gradient-to-b from-pink-50 via-white to-white dark:from-surface-dark dark:to-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary/20 selection:text-primary">
-      <div className="absolute inset-0 pointer-events-none bg-subtle-pattern opacity-30 dark:opacity-5"></div>
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#ee2b6c_0.5px,transparent_0.5px)] [background-size:20px_20px] opacity-30 dark:opacity-5"></div>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <main className="relative z-10 w-full max-w-[440px] flex flex-col gap-6 auth-card">
@@ -60,13 +59,6 @@ const Authentication = () => {
           </p>
         </div>
       </main>
-
-      <style jsx>{`
-        .bg-subtle-pattern {
-          background-image: radial-gradient(#ee2b6c 0.5px, transparent 0.5px);
-          background-size: 20px 20px;
-        }
-      `}</style>
     </div>
   );
 };
