@@ -2,10 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import env from "dotenv";
+env.config(); // Must be configured before importing routes that might depend on env variables
+
 import cors from "cors";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+
 const app = express();
 app.use(
   cors({
@@ -13,7 +16,6 @@ app.use(
     credentials: true,
   }),
 );
-env.config();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());

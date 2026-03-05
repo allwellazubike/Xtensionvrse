@@ -108,7 +108,6 @@ const Products = ({ toggleDarkMode, darkMode }) => {
     if (cat === "All") {
       setFilters((prev) => ({ ...prev, categories: [] }));
     } else {
-
       setFilters((prev) => ({ ...prev, categories: [cat] }));
     }
   };
@@ -225,19 +224,25 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                 <Link
                   to={`/product/${product.id}`}
                   key={product.id}
-                  className="group flex flex-col bg-white dark:bg-[#2d1b22] rounded-2xl overflow-hidden border border-transparent hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
+                  className="group relative flex flex-col bg-white dark:bg-[#221016] rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(238,43,108,0.15)] dark:hover:shadow-[0_20px_40px_-15px_rgba(238,43,108,0.15)] border border-gray-100 dark:border-gray-800"
                 >
                   {/* Image Area */}
-                  <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                    <div
-                      className="bg-cover bg-center w-full h-full transition-transform duration-500 group-hover:scale-110"
-                      style={{ backgroundImage: `url("${product.image}")` }}
-                      alt={product.alt}
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[#f8f6f6] dark:bg-gray-800">
+                    <img
+                      src={product.image}
+                      alt={product.alt || product.name}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
 
                     <div className="absolute top-3 right-3 z-10">
-                      <button className="size-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-slate-400 hover:text-primary hover:bg-white transition-colors shadow-sm">
-                        <span className="material-symbols-outlined text-[20px]">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="bg-white/70 dark:bg-black/50 backdrop-blur-md p-2 rounded-full text-gray-500 dark:text-gray-300 opacity-0 lg:opacity-100 lg:-translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 hover:text-primary hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-sm flex items-center justify-center"
+                      >
+                        <span className="material-symbols-outlined text-[18px] block">
                           favorite
                         </span>
                       </button>
@@ -246,9 +251,9 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                     {product.badge && (
                       <div className="absolute top-3 left-3 z-10">
                         <span
-                          className={`px-2 py-1 ${
-                            product.badgeColor || "bg-red-500"
-                          } text-white text-[10px] font-bold uppercase tracking-wider rounded`}
+                          className={`${
+                            product.badgeColor || "bg-red-500/90"
+                          } backdrop-blur-md text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-sm block`}
                         >
                           {product.badge}
                         </span>
@@ -256,15 +261,22 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                     )}
                     {product.sale && !product.badge && (
                       <div className="absolute top-3 left-3 z-10">
-                        <span className="px-2 py-1 bg-red-500 text-white text-[10px] font-bold uppercase tracking-wider rounded">
+                        <span className="bg-red-500/90 backdrop-blur-md text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-sm block">
                           Sale
                         </span>
                       </div>
                     )}
 
                     {/* Quick Add Button (Desktop Hover) */}
-                    <div className="absolute inset-x-4 bottom-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hidden md:block">
-                      <button className="w-full py-3 bg-white text-slate-900 font-bold text-sm rounded-xl shadow-lg hover:bg-primary hover:text-white flex items-center justify-center gap-2">
+                    <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10 hidden md:block">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (addToCart) addToCart(product);
+                        }}
+                        className="w-full bg-white/95 dark:bg-[#221016]/95 backdrop-blur-sm text-[#181113] dark:text-white py-2.5 rounded-xl font-bold text-sm shadow-lg hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-colors flex items-center justify-center gap-2"
+                      >
                         <span className="material-symbols-outlined text-[18px]">
                           add_shopping_cart
                         </span>
@@ -274,23 +286,28 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                   </div>
 
                   {/* Content Area */}
-                  <div className="p-4 flex flex-col flex-1">
-                    <div className="flex items-center gap-1 mb-1">
-                      <span className="material-symbols-outlined text-yellow-400 text-[14px] fill-1">
-                        star
-                      </span>
-                      <span className="text-xs font-medium text-slate-500">
+                  <div className="p-4 flex flex-col flex-1 gap-1.5">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-primary transition-colors">
+                      {product.name}
+                    </h3>
+
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <div className="flex items-center text-yellow-500">
+                        <span
+                          className="material-symbols-outlined text-[14px]"
+                          style={{ fontVariationSettings: "'FILL' 1" }}
+                        >
+                          star
+                        </span>
+                      </div>
+                      <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">
                         {product.rating} ({product.reviews})
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-[#181113] dark:text-white text-base leading-snug mb-1 line-clamp-2 group-hover:text-primary transition-colors">
-                      {product.name}
-                    </h3>
-
                     <div className="mt-auto pt-2 flex items-center justify-between">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-base font-extrabold text-[#181113] dark:text-white">
+                        <span className="text-lg font-bold text-[#181113] dark:text-white">
                           ₦{product.price.toLocaleString()}
                         </span>
                         {product.originalPrice && (
@@ -301,7 +318,14 @@ const Products = ({ toggleDarkMode, darkMode }) => {
                       </div>
 
                       {/* Mobile Cart Icon */}
-                      <button className="md:hidden size-8 rounded-full bg-gray-100 dark:bg-gray-800 text-[#181113] dark:text-white flex items-center justify-center">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (addToCart) addToCart(product);
+                        }}
+                        className="md:hidden size-8 rounded-full bg-primary/10 dark:bg-gray-800 text-primary dark:text-white flex items-center justify-center hover:bg-primary hover:text-white dark:hover:text-primary transition-colors"
+                      >
                         <span className="material-symbols-outlined text-[18px]">
                           add
                         </span>

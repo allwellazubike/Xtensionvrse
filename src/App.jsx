@@ -17,6 +17,7 @@ import ShopByTexture from "./pages/ShopByTexture";
 import Authentication from "./pages/Authentication";
 import BankTransfer from "./pages/BankTransfer";
 import UserDashboard from "./pages/UserDashboard";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -84,15 +85,7 @@ function App() {
           {/* adding search results route if needed in future, currently imported but unused in original code except for import */}
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/auth" element={<Authentication />} />
-          <Route
-            path="/dashboard"
-            element={
-              <UserDashboard
-                toggleDarkMode={toggleDarkMode}
-                darkMode={darkMode}
-              />
-            }
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="/checkout/bank-transfer"
             element={
