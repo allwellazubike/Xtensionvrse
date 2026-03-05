@@ -1,16 +1,106 @@
-# React + Vite
+# 🌺 Xtensionsvrse
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, open-source e-commerce platform dedicated to high-quality hair extensions, including Braids, Twists, and Locs. Built with a focus on modern design aesthetics, smooth animations, and a seamless shopping experience.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Modern & Premium UI/UX**: Designed with glassmorphism, responsive layouts, and smooth micro-animations.
+- **Secure Authentication**: Full user registration and login flow utilizing JWT (JSON Web Tokens) and Bcrypt password hashing.
+- **Product Catalog**: Browse, filter, and search through various categories of extensions.
+- **Shopping Cart**: Persistent cart management state.
+- **User Dashboard**: A personalized, protected routing space for authenticated shoppers.
+- **Dark Mode**: Integrated dark/light theme toggle for accessibility and style.
+- **Admin Panel**: Base routes set up for product and order management.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend
 
-## Expanding the ESLint configuration
+- React (bootstrapped with Vite)
+- Tailwind CSS (for styling and animations)
+- React Router (for client-side routing)
+- Axios (for API requests)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Backend
+
+- Node.js & Express.js
+- PostgreSQL
+- JWT & Bcrypt (Authentication)
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- PostgreSQL installed and running
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/xtensionsvrse.git
+cd xtensionsvrse
+```
+
+### 2. Frontend Setup
+
+Open a terminal in the root directory:
+
+```bash
+npm install
+npm run dev
+```
+
+The frontend will typically run on `http://localhost:5173`.
+
+### 3. Backend Setup
+
+Open a second terminal and navigate to the backend folder:
+
+```bash
+cd backend
+npm install
+```
+
+**Environment Variables**
+
+Create a `.env` file inside the `backend/` directory and add the following context (adjust parameters to match your local PostgreSQL setup):
+
+```env
+PG_USER="postgres"
+PG_HOST="localhost"
+PG_DATABASE="Xtension"
+PG_PASSWORD="your_db_password"
+PG_PORT="5432"
+
+CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
+
+JWT_SECRET="secret_key"
+```
+
+**Start the Server**
+
+```bash
+npm run dev
+# or
+nodemon server.js
+```
+
+The backend will run on `http://localhost:3000`.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Xtensionsvrse is an open-source project, and we'd love your help making it even better.
+
+Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) file for detailed guidelines on how to get started, report bugs, and submit pull requests.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
