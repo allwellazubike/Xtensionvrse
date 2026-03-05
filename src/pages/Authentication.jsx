@@ -7,11 +7,17 @@ import SignInForm from "../components/auth/SignInForm";
 import AuthSocials from "../components/auth/AuthSocials";
 
 const Authentication = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
   const location = useLocation();
+  const [isSignUp, setIsSignUp] = useState(
+    location.state?.isLogin !== undefined ? !location.state.isLogin : true,
+  );
   const { showToast } = useToast();
 
   useEffect(() => {
+    if (location.state?.isLogin !== undefined) {
+      setIsSignUp(!location.state.isLogin);
+    }
+
     if (location.state?.message) {
       showToast(location.state.message, "info");
       setIsSignUp(false); // Default to sign in if there's a message (usually from protected route)
