@@ -3,13 +3,32 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const { userInfo, logout } = useAuth();
+  const { userInfo, loading, logout } = useAuth();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!loading && !userInfo) {
+      navigate("/auth", { replace: true });
+    }
+  }, [userInfo, loading, navigate]);
 
   const handleLogout = async () => {
     await logout();
     navigate("/auth");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#221016]">
+        <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Prevent flash of content before redirect triggers
+  if (!userInfo) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#221016]">
