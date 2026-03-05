@@ -23,7 +23,6 @@ const AdminOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      // In real app, add auth headers
       const response = await axios.get("http://localhost:3000/api/orders");
       setOrders(response.data);
       setLoading(false);
