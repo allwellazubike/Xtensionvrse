@@ -25,6 +25,7 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
           totalAmount: total,
           paymentMethod: "bank_transfer",
           orderIdAlias: orderIdAlias,
+          userId: userInfo?.id || null, // Ensure user ID is saved with the order
         });
         navigate("/checkout/bank-transfer", {
           state: { total, orderId: orderIdAlias },
@@ -153,7 +154,7 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
                     </div>
                     <button
                       onClick={handleCheckoutClick}
-                      className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-4 font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
+                      className="w-full bg-primary hover:bg-primary/90 text-white rounded-full py-4 font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
                     >
                       Checkout Securely
                       <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">

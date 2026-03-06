@@ -217,7 +217,7 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
 
             <button
               onClick={handleConfirmTransfer}
-              className="w-full bg-primary hover:bg-primary/90 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-primary/30 transition-all active:scale-[0.98]"
+              className="w-full bg-primary hover:bg-primary/90 text-white py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-primary/30 transition-all active:scale-[0.98]"
             >
               I have made the transfer
             </button>

@@ -102,6 +102,9 @@ const AdminOrders = () => {
                       Order ID
                     </th>
                     <th className="p-4 font-bold text-sm text-gray-500 uppercase">
+                      Customer
+                    </th>
+                    <th className="p-4 font-bold text-sm text-gray-500 uppercase">
                       Amount
                     </th>
                     <th className="p-4 font-bold text-sm text-gray-500 uppercase">
@@ -126,6 +129,9 @@ const AdminOrders = () => {
                     >
                       <td className="p-4 font-mono font-medium">
                         {order.order_id_alias || `ORDER-${order.id}`}
+                      </td>
+                      <td className="p-4 font-medium text-gray-700 dark:text-gray-300">
+                        {order.user_name || "Guest"}
                       </td>
                       <td className="p-4 font-bold">
                         ₦{Number(order.total_amount).toLocaleString()}

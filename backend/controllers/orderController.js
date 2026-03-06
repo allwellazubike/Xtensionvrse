@@ -39,7 +39,12 @@ export const createOrder = async (req, res) => {
 // Get all orders (for Admin Dashboard)
 export const getAllOrders = async (req, res) => {
   try {
-    const query = "SELECT * FROM orders ORDER BY created_at DESC";
+    const query = `
+      SELECT orders.*, users.full_name as user_name 
+      FROM orders 
+      LEFT JOIN users ON orders.user_id = users.id 
+      ORDER BY orders.created_at DESC
+    `;
     const result = await db.query(query);
     res.json(result.rows);
   } catch (error) {
