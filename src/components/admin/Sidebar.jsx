@@ -42,13 +42,17 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
         <nav className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
           <Link
-            className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[#f4f0f2] dark:hover:bg-white/5 transition-colors group"
+            className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors group ${isActive("/admin/dashboard") || isActive("/admin/analytics") ? "bg-primary/10 text-primary" : "hover:bg-[#f4f0f2] dark:hover:bg-white/5"}`}
             to="/admin/dashboard"
           >
-            <span className="material-symbols-outlined text-[#89616f] dark:text-white/60 group-hover:text-primary">
+            <span
+              className={`material-symbols-outlined ${isActive("/admin/dashboard") || isActive("/admin/analytics") ? "fill-1" : "text-[#89616f] dark:text-white/60 group-hover:text-primary"}`}
+            >
               dashboard
             </span>
-            <span className="text-[#181113] dark:text-white text-sm font-medium">
+            <span
+              className={`text-sm ${isActive("/admin/dashboard") || isActive("/admin/analytics") ? "font-bold" : "font-medium text-[#181113] dark:text-white"}`}
+            >
               Dashboard
             </span>
           </Link>
@@ -91,17 +95,6 @@ const Sidebar = ({ isOpen, onClose }) => {
             </span>
             <span className="text-[#181113] dark:text-white text-sm font-medium">
               Customers
-            </span>
-          </Link>
-          <Link
-            className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[#f4f0f2] dark:hover:bg-white/5 transition-colors group"
-            to="/admin/analytics"
-          >
-            <span className="material-symbols-outlined text-[#89616f] dark:text-white/60 group-hover:text-primary">
-              analytics
-            </span>
-            <span className="text-[#181113] dark:text-white text-sm font-medium">
-              Analytics
             </span>
           </Link>
         </nav>
