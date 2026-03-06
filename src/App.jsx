@@ -10,6 +10,7 @@ import Access from "./pages/admin/Access";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminCustomers from "./pages/admin/AdminCustomers";
 
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
@@ -89,6 +90,7 @@ function App() {
           />
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/customers" element={<AdminCustomers />} />
 
           {/* adding search results route if needed in future */}
           <Route path="/search" element={<SearchResultsPage />} />

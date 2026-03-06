@@ -104,4 +104,19 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-export { authUser, registerUser, logoutUser, getUserProfile };
+// @desc    Get all users (Admin only ideally, but keeping simple for now)
+// @route   GET /api/user/all
+// @access  Private/Admin
+const getAllUsers = async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT id, full_name, email, phone, created_at FROM users ORDER BY created_at DESC",
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export { authUser, registerUser, logoutUser, getUserProfile, getAllUsers };
