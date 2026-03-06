@@ -45,8 +45,9 @@ const AdminCustomers = () => {
                 Manage your registered users and their details.
               </p>
             </div>
-            <div className="text-xs font-medium bg-primary/10 text-primary px-4 py-2 rounded-xl">
-              Total Users: <span className="font-bold">{customers.length}</span>
+            <div className="text-sm font-medium bg-primary/10 text-primary px-4 py-2 rounded-xl whitespace-nowrap">
+              Total Customers:{" "}
+              <span className="font-bold">{customers.length}</span>
             </div>
           </div>
 
