@@ -45,22 +45,34 @@ const AdminCustomers = () => {
                 Manage your registered users and their details.
               </p>
             </div>
-            <div className="text-sm font-medium bg-primary/10 text-primary px-4 py-2 rounded-xl whitespace-nowrap">
-              Total Customers:{" "}
-              <span className="font-bold">{customers.length}</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36] col-span-1">
+              <div className="flex items-center justify-between mb-4">
+                <div className="size-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined">group</span>
+                </div>
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-widest mb-1">
+                Total Customers
+              </p>
+              <h3 className="text-3xl font-bold text-[#181113] dark:text-white">
+                {customers.length}
+              </h3>
             </div>
           </div>
 
           <div className="bg-white dark:bg-[#2d1b22] rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36] overflow-hidden">
             <div className="p-4 border-b border-[#e6dbdf] dark:border-[#4a2e36] flex flex-wrap items-center justify-between gap-4">
-              <div className="relative w-full md:w-auto">
+              <div className="relative w-full">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400">
                   search
                 </span>
                 <input
                   type="text"
-                  placeholder="Search customers..."
-                  className="w-full md:w-64 pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-[#e6dbdf] dark:border-[#4a2e36] rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none dark:text-white"
+                  placeholder="Search customers by name or email..."
+                  className="w-full md:max-w-md pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-white/5 border border-[#e6dbdf] dark:border-[#4a2e36] rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none dark:text-white transition-all"
                 />
               </div>
             </div>
