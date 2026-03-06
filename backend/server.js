@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import env from "dotenv";
-env.config(); // Must be configured before importing routes that might depend on env variables
+env.config();
 
 import cors from "cors";
 import productRoutes from "./routes/productRoutes.js";
