@@ -68,9 +68,11 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
             <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <span className="text-xs text-gray-500 block">User ID</span>
-                  <span className="font-mono text-sm">
-                    {order.user_id || "Guest"}
+                  <span className="text-xs text-gray-500 block">
+                    Customer Name
+                  </span>
+                  <span className="font-mono text-sm font-medium">
+                    {order.user_name || "Guest"}
                   </span>
                 </div>
                 {/* Add more customer info here if available in future joins */}

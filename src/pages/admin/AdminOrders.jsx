@@ -158,7 +158,7 @@ const AdminOrders = () => {
                       <td className="p-4 flex gap-2">
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 p-2 rounded-lg transition-colors"
+                          className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 p-2 rounded-full transition-colors"
                           title="View Details"
                         >
                           <span className="material-symbols-outlined text-sm">
@@ -172,7 +172,7 @@ const AdminOrders = () => {
                               onClick={() =>
                                 openConfirmation("confirm", order.id)
                               }
-                              className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 p-2 rounded-lg transition-colors"
+                              className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 p-2 rounded-full transition-colors"
                               title="Confirm Order"
                             >
                               <span className="material-symbols-outlined text-sm">
@@ -183,7 +183,7 @@ const AdminOrders = () => {
                               onClick={() =>
                                 openConfirmation("decline", order.id)
                               }
-                              className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 p-2 rounded-lg transition-colors"
+                              className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 p-2 rounded-full transition-colors"
                               title="Decline Order"
                             >
                               <span className="material-symbols-outlined text-sm">

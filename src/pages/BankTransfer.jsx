@@ -13,6 +13,7 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
 
   const [isPaid, setIsPaid] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isDeclined, setIsDeclined] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
@@ -26,6 +27,9 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
         if (res.data.status === "confirmed") {
           setIsConfirmed(true);
           setIsPaid(true);
+          clearInterval(interval);
+        } else if (res.data.status === "declined") {
+          setIsDeclined(true);
           clearInterval(interval);
         }
       } catch (error) {
@@ -126,7 +130,36 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
           </div>
         </div>
 
-        {isConfirmed ? (
+        {isDeclined ? (
+          <div className="text-center py-6 animate-fade-in-up">
+            <div className="size-20 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="material-symbols-outlined text-4xl">cancel</span>
+            </div>
+            <h2 className="text-2xl font-bold text-[#181113] dark:text-white mb-2">
+              Order Declined
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-sm mx-auto">
+              Unfortunately, your payment could not be verified or your order
+              was rejected by the admin. Please contact support.
+            </p>
+            <a
+              href={generateWhatsAppLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-[#25D366] text-white px-8 py-3 rounded-full font-bold hover:bg-[#20bd5a] transition-colors shadow-lg shadow-green-500/20"
+            >
+              Contact Support
+            </a>
+            <div className="mt-4">
+              <Link
+                to="/"
+                className="text-gray-400 hover:text-[#181113] dark:hover:text-white text-sm font-semibold"
+              >
+                Return to Home
+              </Link>
+            </div>
+          </div>
+        ) : isConfirmed ? (
           <div className="text-center py-6 animate-fade-in-up">
             <div className="size-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="material-symbols-outlined text-4xl">
