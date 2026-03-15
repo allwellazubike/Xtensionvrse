@@ -11,7 +11,7 @@ const CheckoutModal = ({ isOpen, onClose, onSelectPayment }) => {
         onClick={onClose}
       ></div>
 
-      {/* Modal Content */}
+      {/* modal Content */}
       <div className="relative w-full max-w-md bg-white dark:bg-[#221016] rounded-3xl p-6 shadow-2xl transform transition-all scale-100 dark:text-white border border-gray-100 dark:border-gray-800">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
