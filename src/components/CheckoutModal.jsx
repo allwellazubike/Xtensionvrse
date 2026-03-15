@@ -13,7 +13,7 @@ const CheckoutModal = ({ isOpen, onClose, onSelectPayment }) => {
 
       {/* modal Content */}
       <div className="relative w-full max-w-md bg-white dark:bg-[#221016] rounded-3xl p-6 shadow-2xl transform transition-all scale-100 dark:text-white border border-gray-100 dark:border-gray-800">
-        {/* Header */}
+        {/* header */}
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-[#181113] dark:text-white">
             Choose Payment Method
