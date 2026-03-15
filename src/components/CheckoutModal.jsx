@@ -77,7 +77,7 @@ const CheckoutModal = ({ isOpen, onClose, onSelectPayment }) => {
           </button>
         </div>
 
-        {/* Footer info */}
+        {/* footer info */}
         <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
           <span className="material-symbols-outlined text-sm">lock</span>
           <span>Payments are secure and encrypted</span>
@@ -86,5 +86,5 @@ const CheckoutModal = ({ isOpen, onClose, onSelectPayment }) => {
     </div>
   );
 };
-
+// all endpoints confirmed
 export default CheckoutModal;
