@@ -30,7 +30,7 @@ const Features = () => {
           key={feature.id}
           className="flex items-center gap-4 p-4 rounded-xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors duration-300"
         >
-          {/* Icon */}
+          {/* icon */}
           <div className="size-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
             <span className={`material-symbols-outlined ${feature.iconColor}`}>
               {feature.icon}
