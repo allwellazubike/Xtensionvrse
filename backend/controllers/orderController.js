@@ -12,6 +12,7 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // orderid generator
     const orderIdAlias = `XV-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
 
     const query = `
