@@ -1,7 +1,7 @@
 import db from "../config/db.js";
 import crypto from "crypto";
 
-// Create a new order
+// create a new order
 export const createOrder = async (req, res) => {
   try {
     const { userId, items, totalAmount, paymentMethod } =
