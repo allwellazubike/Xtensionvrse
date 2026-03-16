@@ -1,15 +1,18 @@
 import db from "../config/db.js";
+import crypto from "crypto";
 
 // Create a new order
 export const createOrder = async (req, res) => {
   try {
-    const { userId, items, totalAmount, paymentMethod, orderIdAlias } =
+    const { userId, items, totalAmount, paymentMethod } =
       req.body;
 
     // Basic validation
     if (!totalAmount || !items) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+
+    const orderIdAlias = `XV-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
 
     const query = `
       INSERT INTO orders (user_id, items, total_amount, payment_method, order_id_alias, status)

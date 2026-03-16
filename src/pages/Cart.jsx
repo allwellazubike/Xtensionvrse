@@ -18,15 +18,14 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
   const handlePaymentSelect = async (method) => {
     setIsCheckoutModalOpen(false);
     if (method === "bank_transfer") {
-      const orderIdAlias = "XV-" + Math.floor(1000 + Math.random() * 9000);
       try {
-        await axios.post("http://localhost:3000/api/orders", {
+        const response = await axios.post("http://localhost:3000/api/orders", {
           items: cart,
           totalAmount: total,
           paymentMethod: "bank_transfer",
-          orderIdAlias: orderIdAlias,
           userId: userInfo?.id || null, // Ensure user ID is saved with the order
         });
+        const orderIdAlias = response.data.order.order_id_alias;
         navigate("/checkout/bank-transfer", {
           state: { total, orderId: orderIdAlias },
         });
