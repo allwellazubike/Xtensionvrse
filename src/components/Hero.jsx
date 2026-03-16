@@ -5,7 +5,7 @@ const Hero = () => {
   return (
     <div className="@container">
       <div className="flex flex-col-reverse md:flex-row gap-8 items-center bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-12 shadow-sm border border-gray-100 dark:border-gray-800">
-        {/* Left Content */}
+        {/* left content */}
         <div className="flex flex-col gap-6 md:w-1/2 items-start text-left">
           <div className="flex flex-col gap-4">
             <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
