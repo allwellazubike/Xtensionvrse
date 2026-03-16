@@ -7,7 +7,7 @@ export const createOrder = async (req, res) => {
     const { userId, items, totalAmount, paymentMethod } =
       req.body;
 
-    // Basic validation
+    // validation
     if (!totalAmount || !items) {
       return res.status(400).json({ error: "Missing required fields" });
     }
