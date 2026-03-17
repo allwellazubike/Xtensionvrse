@@ -12,7 +12,7 @@ const Hero = () => {
             <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
               New Collection Drop
             </span>
-            <CheckoutPage />
+
             
             <h1 className="text-[#181113] dark:text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
               Strands That Perfectly <span className="text-primary">Compliment</span> You!! {" "}
