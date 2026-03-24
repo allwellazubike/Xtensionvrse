@@ -3,19 +3,19 @@ import React from 'react';
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Jenkins",
+    name: "Kaka Nwa",
     text: "The quality of these braiding extensions is unmatched. They are so lightweight and the colors are stunning!",
     rating: 5,
   },
   {
     id: 2,
-    name: "Amanda T.",
+    name: "Ngozi C.",
     text: "I've tried many brands, but this one is truly tangle-free. My stylist was so impressed. Will buy again!",
     rating: 5,
   },
   {
     id: 3,
-    name: "Jessica B.",
+    name: "AG Baby.",
     text: "Absolutely love the texture and how long they last. They blend perfectly and look super natural.",
     rating: 5,
   }
