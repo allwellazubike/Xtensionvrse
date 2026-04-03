@@ -13,7 +13,7 @@ const AdminOrders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [confirmation, setConfirmation] = useState({
     isOpen: false,
-    type: null, // "confirm" or "decline"
+    type: null, // "confirm", "decline", or "ship"
     orderId: null,
   });
 
@@ -55,6 +55,19 @@ const AdminOrders = () => {
     } catch (error) {
       console.error("Error declining order:", error);
       alert("Failed to decline order");
+    }
+  };
+
+  const handleShipOrder = async () => {
+    try {
+      await axios.put(
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${confirmation.orderId}/ship`,
+      );
+      fetchOrders(); // Refresh list
+      closeConfirmation();
+    } catch (error) {
+      console.error("Error marking order as shipped:", error);
+      alert("Failed to mark order as shipped");
     }
   };
 
@@ -166,7 +179,7 @@ const AdminOrders = () => {
                           </span>
                         </button>
 
-                        {order.status === "pending" && (
+                        {(order.status === "pending" || order.status === "payment_pending") && (
                           <>
                             <button
                               onClick={() =>
@@ -191,6 +204,19 @@ const AdminOrders = () => {
                               </span>
                             </button>
                           </>
+                        )}
+                        {order.status === "confirmed" && (
+                          <button
+                            onClick={() =>
+                              openConfirmation("ship", order.id)
+                            }
+                            className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 p-2 rounded-full transition-colors"
+                            title="Mark as Shipped"
+                          >
+                            <span className="material-symbols-outlined text-sm">
+                              local_shipping
+                            </span>
+                          </button>
                         )}
                       </td>
                     </tr>
@@ -223,17 +249,27 @@ const AdminOrders = () => {
         onConfirm={
           confirmation.type === "confirm"
             ? handleConfirmOrder
-            : handleDeclineOrder
+            : confirmation.type === "ship"
+              ? handleShipOrder
+              : handleDeclineOrder
         }
         title={
-          confirmation.type === "confirm" ? "Confirm Order" : "Decline Order"
+          confirmation.type === "confirm" ? "Confirm Order" 
+          : confirmation.type === "ship" ? "Mark as Shipped"
+          : "Decline Order"
         }
         message={
           confirmation.type === "confirm"
             ? "Are you sure you want to confirm this order? This will mark it as paid."
-            : "Are you sure you want to decline this order? This action cannot be undone."
+            : confirmation.type === "ship"
+              ? "Are you sure you want to mark this order as shipped? This confirms the item is on its way to the customer."
+              : "Are you sure you want to decline this order? This action cannot be undone."
         }
-        actionLabel={confirmation.type === "confirm" ? "Confirm" : "Decline"}
+        actionLabel={
+          confirmation.type === "confirm" ? "Confirm" 
+          : confirmation.type === "ship" ? "Ship Order"
+          : "Decline"
+        }
         isDestructive={confirmation.type === "decline"}
       />
     </AdminLayout>

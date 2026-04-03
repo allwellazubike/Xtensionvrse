@@ -170,6 +170,57 @@ export const declineOrder = async (req, res) => {
   }
 };
 
+// Mark order as shipped (Admin action)
+export const markOrderAsShipped = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query =
+      "UPDATE orders SET status = 'shipped' WHERE id = $1 RETURNING *";
+    const result = await db.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json({
+      message: "Order marked as shipped successfully",
+      order: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error marking order as shipped:", error);
+    res.status(500).json({ error: "Failed to mark order as shipped" });
+  }
+};
+
+// Upload Bank Transfer Receipt
+export const uploadReceipt = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No receipt image provided" });
+    }
+
+    const receiptUrl = req.file.path; // Cloudinary URL created by Multer automatically
+
+    // Support both serial ID and order_id_alias (e.g., XV-1234)
+    const query = "UPDATE orders SET receipt_url = $1 WHERE id::text = $2 OR order_id_alias = $2 RETURNING *";
+    const result = await db.query(query, [receiptUrl, id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json({
+      message: "Receipt uploaded successfully",
+      order: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error uploading receipt:", error);
+    res.status(500).json({ error: "Failed to upload receipt" });
+  }
+};
+
 // Get orders by User ID
 export const getOrdersByUserId = async (req, res) => {
   try {

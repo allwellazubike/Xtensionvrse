@@ -13,8 +13,11 @@ import cors from "cors";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import { startCronJobs } from "./utils/cronJobs.js";
 
 const app = express();
+// Start background tasks
+startCronJobs();
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173", 

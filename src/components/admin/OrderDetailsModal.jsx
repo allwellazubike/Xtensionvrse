@@ -170,6 +170,22 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
               {order.payment_method?.replace("_", " ")}
             </div>
           </div>
+        {/* Payment Receipt */}
+          {order.receipt_url && (
+            <div>
+              <h3 className="text-sm font-bold text-[#181113] dark:text-white mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-lg">receipt</span>
+                Payment Proof
+              </h3>
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex justify-center">
+                <img 
+                  src={order.receipt_url} 
+                  alt="Payment Receipt" 
+                  className="max-h-96 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 object-contain"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}

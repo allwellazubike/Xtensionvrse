@@ -15,6 +15,8 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDeclined, setIsDeclined] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [receiptImage, setReceiptImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (!orderId) return;
@@ -57,16 +59,27 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
     });
   };
 
-  const handleConfirmTransfer = () => {
-    setIsPaid(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const generateWhatsAppLink = () => {
-    const message = window.encodeURIComponent(
-      `Hi! I just paid for Order ${orderId}. Here is my receipt.`,
-    );
-    return `https://wa.me/2341234567890?text=${message}`; // Replace with actual phone number
+  const handleUploadReceipt = async () => {
+    if (!receiptImage) return showToast("Please select a receipt image first");
+    
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("receiptImage", receiptImage);
+    
+    try {
+      await axios.put(
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${orderId}/receipt`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      setIsPaid(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error("Upload error:", error);
+      showToast("Failed to upload receipt. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -248,11 +261,58 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
               </p>
             </div>
 
+            {/* Receipt Upload Dropzone */}
+            <div className="mb-6">
+              <label className="block text-sm font-bold text-[#181113] dark:text-white mb-2">Upload Transfer Receipt</label>
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-6 text-center hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer relative">
+                <input
+                  key={receiptImage ? receiptImage.name : 'empty'}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setReceiptImage(e.target.files[0])}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  disabled={isUploading}
+                />
+                <div className="text-gray-500 flex flex-col items-center relative z-10 pointer-events-none">
+                  <span className="material-symbols-outlined text-4xl mb-2 text-gray-400">cloud_upload</span>
+                  {receiptImage ? (
+                    <>
+                      <span className="font-bold text-primary truncate max-w-full mb-1">{receiptImage.name}</span>
+                      <span className="text-xs font-semibold text-gray-400 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-full">Tap to select a different image</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-bold text-[#181113] dark:text-white">Click to upload</span>
+                      <span className="text-xs mt-1">JPEG, PNG, JPG (max. 5MB)</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              {receiptImage && !isUploading && (
+                <button 
+                  onClick={() => setReceiptImage(null)}
+                  className="mt-3 text-sm text-red-500 font-bold hover:text-red-600 flex items-center justify-center w-full transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm mr-1">close</span>
+                  Remove Image
+                </button>
+              )}
+            </div>
+
             <button
-              onClick={handleConfirmTransfer}
-              className="w-full bg-primary hover:bg-primary/90 text-white py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-primary/30 transition-all active:scale-[0.98]"
+              onClick={handleUploadReceipt}
+              disabled={isUploading || !receiptImage}
+              className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 text-white py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             >
-              I have made the transfer
+              {isUploading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Uploading Receipt...
+                </>
+              ) : (
+                "Submit Receipt"
+              )}
             </button>
           </>
         ) : (
@@ -266,20 +326,8 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
               Payment Verification
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xs mx-auto">
-              We are verifying your transfer. send us your payment receipt to
-              speed up the process.
+              We have securely received your payment receipt! Our team is verifying your transfer right now.
             </p>
-
-            <a
-              href={generateWhatsAppLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-green-500/20 transition-all transform hover:-translate-y-1 mb-4"
-            >
-              <i className="fa-brands fa-whatsapp text-xl"></i>{" "}
-              {/* Assuming FA is available, else use SVG or substitute */}
-              <span>Send Receipt via WhatsApp</span>
-            </a>
 
             <Link
               to="/"
