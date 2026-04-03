@@ -269,21 +269,6 @@ const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-      {/* Header with Title and Cancel */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-[#181113] dark:text-white">
-          {initialProduct ? "Edit Product" : "Add New Product"}
-        </h2>
-        {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
-        )}
-      </div>
 
       {/* Basic Information */}
       <div className="bg-white dark:bg-[#2d1b22] p-6 rounded-2xl shadow-sm border border-[#e6dbdf] dark:border-[#4a2e36]">
