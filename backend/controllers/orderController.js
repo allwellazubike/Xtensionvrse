@@ -2,6 +2,20 @@ import db from "../config/db.js";
 import crypto from "crypto";
 import { sendOrderConfirmationEmail, sendOrderShippedEmail } from "../utils/emailService.js";
 
+// Get dynamic avg shipping estimate (no hardcoded values)
+export const getShippingEstimate = async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT AVG(shipping_fee) as avg_fee FROM orders WHERE shipping_fee > 0"
+    );
+    const avgFee = Math.round(parseFloat(result.rows[0].avg_fee) || 4000);
+    res.json({ estimatedShipping: avgFee });
+  } catch (error) {
+    console.error("Error fetching shipping estimate:", error);
+    res.status(500).json({ error: "Failed to get estimate" });
+  }
+};
+
 // create a new order
 export const createOrder = async (req, res) => {
   try {

@@ -8,12 +8,14 @@ import {
   declineOrder,
   getOrdersByUserId,
   uploadReceipt,
-  markOrderAsShipped
+  markOrderAsShipped,
+  getShippingEstimate
 } from "../controllers/orderController.js";
 
 const router = express.Router();
 
 router.post("/", createOrder);
+router.get("/shipping-estimate", getShippingEstimate);
 router.get("/", getAllOrders); //integrate Auth middleware here
 router.get("/:id", getOrderById);
 router.put("/:id/confirm", confirmOrder); // integrate Admin Auth middleware here

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -16,7 +16,14 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
   const { userInfo } = useAuth();
   const { products } = useProducts();
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [estimatedShipping, setEstimatedShipping] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/orders/shipping-estimate")
+      .then(res => setEstimatedShipping(res.data.estimatedShipping))
+      .catch(() => setEstimatedShipping(null)); // silently fail
+  }, []);
 
   const handlePaymentSelect = async (method, shippingDetails) => {
     setIsCheckoutModalOpen(false);
@@ -60,12 +67,10 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
   };
 
   const subtotal = getCartTotal();
-  // Using a flat shipping rate for now, or free if "Fast Shipping" logic implies it?
-  // User asked for "Fast Shipping", standard ecommerce often charges.
-  // Let's set a standard shipping of 2500 Naira if cart > 0, else 0.
-  const shipping = subtotal > 0 ? 2500 : 0;
+  // Dynamic shipping estimate - fetched from the real backend average
+  const shipping = estimatedShipping;
   const tax = subtotal * 0.05; // 5% tax estimate
-  const total = subtotal + shipping + tax;
+  const total = subtotal + (shipping || 0) + tax;
 
   // Filter out products already in cart for recommendations
   const recommendedProducts = products
@@ -125,13 +130,25 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
                           ₦{subtotal.toLocaleString()}
                         </span>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm items-start">
                         <span className="text-gray-600 dark:text-gray-400">
-                          Shipping Estimate
+                          Shipping
                         </span>
-                        <span className="font-medium dark:text-white">
-                          ₦{shipping.toLocaleString()}
-                        </span>
+                        <div className="text-right">
+                          {shipping === null ? (
+                            <span className="text-gray-400 italic text-xs">Loading...</span>
+                          ) : (
+                            <>
+                              <span className="font-medium dark:text-white">
+                                ~₦{shipping.toLocaleString()}
+                              </span>
+                              <div className="flex items-center justify-end gap-1 mt-0.5">
+                                <span className="material-symbols-outlined text-amber-500 text-xs" style={{fontSize: '13px'}}>warning</span>
+                                <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold">Estimate. Final price set at checkout.</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">
