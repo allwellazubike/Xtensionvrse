@@ -1,8 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import env from "dotenv";
-env.config();
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.join(process.cwd(), "backend", ".env") });
 
 import cors from "cors";
 import productRoutes from "./routes/productRoutes.js";

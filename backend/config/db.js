@@ -1,8 +1,7 @@
 import pg from "pg";
 import env from "dotenv";
-
-env.config();
-
+import path from "path";
+env.config({ path: path.join(process.cwd(), "backend", ".env") });
 // database configuration here 
 const connectionString = process.env.DATABASE_URL;
 

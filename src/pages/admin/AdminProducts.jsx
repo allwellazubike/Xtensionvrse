@@ -7,25 +7,32 @@ import ProductDrawer from "../../components/admin/ProductDrawer";
 
 const AdminProducts = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState(null);
 
-  // const { products } = useProducts();
-  // useEffect(() => {
-  //   if (products && products[1]) {
-  //     console.log("Second product ID:", products[1].name);
-  //   }
-  // }, [products]);
+  const openDrawerForNew = () => {
+    setProductToEdit(null);
+    setIsDrawerOpen(true);
+  };
+
+  const openDrawerForEdit = (product) => {
+    setProductToEdit(product);
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setTimeout(() => setProductToEdit(null), 300); // Wait for transition
+  };
 
   return (
     <AdminLayout>
-      <Header />
+      <Header onAddClick={openDrawerForNew} />
       <div className="flex-1 overflow-hidden p-6 md:p-8 flex gap-6 relative">
-        <ProductTable />
+        <ProductTable onEdit={openDrawerForEdit} />
 
-        {/* Floating Add Button for Mobile/Tablet */}
-        {/* Floating Add Button for Mobile/Tablet */}
         {!isDrawerOpen && (
           <button
-            onClick={() => setIsDrawerOpen(true)}
+            onClick={openDrawerForNew}
             className="fixed bottom-6 right-6 z-30 size-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 2xl:hidden transition-transform hover:scale-105"
           >
             <span className="material-symbols-outlined text-3xl">add</span>
@@ -34,7 +41,9 @@ const AdminProducts = () => {
 
         <ProductDrawer
           isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
+          onClose={closeDrawer}
+          productToEdit={productToEdit}
+          onProductSaved={() => window.location.reload()}
         />
 
         {/* Helper to show drawer permanently on large screens matching HTML structure hidden 2xl:flex */}

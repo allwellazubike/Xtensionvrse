@@ -4,16 +4,8 @@ import axios from "axios";
 import { useProducts } from "../../context/ProductContext";
 import AddProductForm from "./AddProductForm";
 
-const ProductTable = () => {
+const ProductTable = ({ onEdit }) => {
   const { products } = useProducts();
-  // console.log(products[1].name)
-
-  useEffect(() => {
-    if (products.length > 0) {
-      console.log(products[1].name);
-    }
-  }, [products]);
-  // }
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
@@ -47,26 +39,9 @@ const ProductTable = () => {
       });
   };
 
-  const [editingProduct, setEditingProduct] = useState(null);
-
   const handleEdit = (product) => {
-    setEditingProduct(product);
+    if (onEdit) onEdit(product);
   };
-
-  if (editingProduct) {
-    return (
-      <div className="flex-1 overflow-y-auto">
-        <AddProductForm
-          initialProduct={editingProduct}
-          onCancel={() => setEditingProduct(null)}
-          onSuccess={() => {
-            setEditingProduct(null);
-            window.location.reload();
-          }}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="flex-1 flex flex-col min-w-0 bg-white dark:bg-[#2d1b22] rounded-2xl border border-[#e6dbdf] dark:border-[#4a2e36] shadow-sm overflow-hidden">
