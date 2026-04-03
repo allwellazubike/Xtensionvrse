@@ -2,8 +2,12 @@ import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import env from "dotenv";
+import path from "path";
+import { fileURLToPath } from 'url';
 
-env.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+env.config({ path: path.join(__dirname, "..", ".env") });
 
 // cloudinary config
 cloudinary.config({

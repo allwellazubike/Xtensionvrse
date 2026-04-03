@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   // Single object to store ALL form data
   const [formData, setFormData] = useState({
     name: "",
@@ -233,6 +234,7 @@ const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
       }
     });
 
+    setIsSubmitting(true);
     try {
       const isEdit = !!initialProduct;
       const url = isEdit
@@ -264,6 +266,8 @@ const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Failed to save product. Check console for details.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -749,11 +753,16 @@ const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
           </button>
         )}
         <button
-          className="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
+          className="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
+          disabled={isSubmitting}
         >
-          <span className="material-symbols-outlined text-lg">check</span>
-          {initialProduct ? "Update Product" : "Create Product"}
+          {isSubmitting ? (
+            <div className="size-5 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
+          ) : (
+            <span className="material-symbols-outlined text-lg">check</span>
+          )}
+          {isSubmitting ? "Saving..." : initialProduct ? "Update Product" : "Create Product"}
         </button>
       </div>
     </form>
