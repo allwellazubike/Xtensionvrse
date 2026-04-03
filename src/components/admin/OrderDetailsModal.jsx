@@ -59,23 +59,36 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Customer Info */}
+          {/* Customer & Shipping Info */}
           <div>
             <h3 className="text-sm font-bold text-[#181113] dark:text-white mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-lg">person</span>
-              Customer Information
+              <span className="material-symbols-outlined text-lg">local_shipping</span>
+              Shipping Information
             </h3>
             <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
                 <div>
-                  <span className="text-xs text-gray-500 block">
-                    Customer Name
-                  </span>
-                  <span className="font-mono text-sm font-medium">
-                    {order.user_name || "Guest"}
-                  </span>
+                  <span className="text-xs text-gray-500 block uppercase font-bold tracking-wider mb-1">Customer Name</span>
+                  <span className="text-sm font-medium text-[#181113] dark:text-white">{order.customer_name || order.user_name || "Guest"}</span>
                 </div>
-                {/* Add more customer info here if available in future joins */}
+                <div>
+                  <span className="text-xs text-gray-500 block uppercase font-bold tracking-wider mb-1">Contact Phone</span>
+                  <span className="text-sm font-medium text-[#181113] dark:text-white">{order.customer_phone || "N/A"}</span>
+                </div>
+                <div className="sm:col-span-2">
+                  <span className="text-xs text-gray-500 block uppercase font-bold tracking-wider mb-1">Email Address</span>
+                  <span className="text-sm font-medium text-[#181113] dark:text-white">{order.customer_email || "N/A"}</span>
+                </div>
+                <div className="sm:col-span-2">
+                  <span className="text-xs text-gray-500 block uppercase font-bold tracking-wider mb-1">Delivery Address</span>
+                  <span className="text-sm font-medium text-[#181113] dark:text-white block">{order.shipping_address || "No address provided."}</span>
+                  <span className="text-sm font-bold text-primary mt-1 block">{order.shipping_state ? `${order.shipping_state} State` : ""}</span>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+                <span className="text-sm font-bold text-gray-500">Shipping Fee Applied:</span>
+                <span className="text-sm font-bold text-primary">₦{Number(order.shipping_fee || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>

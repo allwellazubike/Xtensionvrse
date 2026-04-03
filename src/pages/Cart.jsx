@@ -18,19 +18,26 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handlePaymentSelect = async (method) => {
+  const handlePaymentSelect = async (method, shippingDetails) => {
     setIsCheckoutModalOpen(false);
+
+    // Calculate new total including dynamic shipping fee
+    const cleanState = shippingDetails.shipping_state.toLowerCase();
+    const shippingFee = cleanState === "lagos" ? 3000 : 5000;
+    const finalTotal = getCartTotal() + shippingFee;
+
     if (method === "bank_transfer") {
       try {
         const response = await axios.post((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/orders", {
           items: cart,
-          totalAmount: total,
-          paymentMethod: "bank_transfer",
-          userId: userInfo?.id || null, // Ensure user ID is saved with the order
+          totalAmount: finalTotal,
+          paymentMethod: method,
+          userId: userInfo?.id || null,
+          ...shippingDetails // Spreads customer details
         });
         const orderIdAlias = response.data.order.order_id_alias;
         navigate("/checkout/bank-transfer", {
-          state: { total, orderId: orderIdAlias },
+          state: { total: finalTotal, orderId: orderIdAlias },
         });
       } catch (error) {
         console.error("Error creating order:", error);

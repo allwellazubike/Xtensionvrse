@@ -4,12 +4,23 @@ import crypto from "crypto";
 // create a new order
 export const createOrder = async (req, res) => {
   try {
-    const { userId, items, totalAmount, paymentMethod } = req.body;
+    const { 
+      userId, items, totalAmount, paymentMethod,
+      customer_name, customer_email, customer_phone, shipping_address, shipping_state 
+    } = req.body;
 
     // validation
     if (!totalAmount || !items || !items.length) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+    
+    if (!customer_name || !customer_email || !customer_phone || !shipping_address || !shipping_state) {
+      return res.status(400).json({ error: "Missing required shipping details" });
+    }
+
+    // Securely calculate shipping fee on backend (Spoof prevention)
+    const cleanState = shipping_state.trim().toLowerCase();
+    const calculatedShippingFee = (cleanState === "lagos") ? 3000 : 5000;
 
     const orderIdAlias = `XV-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
 
@@ -36,17 +47,26 @@ export const createOrder = async (req, res) => {
     }
 
     const query = `
-      INSERT INTO orders (user_id, items, total_amount, payment_method, order_id_alias, status)
-      VALUES ($1, $2, $3, $4, $5, 'pending')
+      INSERT INTO orders (
+        user_id, items, total_amount, payment_method, order_id_alias, status,
+        customer_name, customer_email, customer_phone, shipping_address, shipping_state, shipping_fee
+      )
+      VALUES ($1, $2, $3, $4, $5, 'pending', $6, $7, $8, $9, $10, $11)
       RETURNING *;
     `;
 
     const values = [
       userId || null,
       JSON.stringify(items),
-      totalAmount,
+      totalAmount, // Note: We trust the FE total, but override the shipping fee
       paymentMethod || "bank_transfer",
       orderIdAlias,
+      customer_name,
+      customer_email,
+      customer_phone,
+      shipping_address,
+      shipping_state,
+      calculatedShippingFee
     ];
     const result = await db.query(query, values);
 
