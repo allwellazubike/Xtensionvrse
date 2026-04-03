@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Configure axios defaults
+  // configure axios defaults
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
