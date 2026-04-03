@@ -236,8 +236,8 @@ const AddProductForm = ({ initialProduct, onCancel, onSuccess }) => {
     try {
       const isEdit = !!initialProduct;
       const url = isEdit
-        ? `http://localhost:3000/api/products/${initialProduct.id}`
-        : "http://localhost:3000/api/products/create";
+        ? (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/products/${initialProduct.id}`
+        : (import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/products/create";
 
       const method = isEdit ? "PUT" : "POST";
 

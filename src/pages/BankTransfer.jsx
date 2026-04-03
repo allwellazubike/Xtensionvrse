@@ -22,7 +22,7 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
     const interval = setInterval(async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/orders/${orderId}`,
+          (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${orderId}`,
         );
         if (res.data.status === "confirmed") {
           setIsConfirmed(true);

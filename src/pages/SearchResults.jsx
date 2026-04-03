@@ -15,7 +15,7 @@ const SearchResults = ({ toggleDarkMode, darkMode }) => {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:3000/api/products?search=${query || ""}`,
+          (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/products?search=${query || ""}`,
         );
         if (!response.ok) {
           if (response.status === 404) {

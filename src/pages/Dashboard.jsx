@@ -35,7 +35,7 @@ const Dashboard = ({ toggleDarkMode, darkMode }) => {
   const fetchUserOrders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/orders/user/${userInfo.id}`,
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/user/${userInfo.id}`,
       );
       setOrders(response.data);
     } catch (error) {

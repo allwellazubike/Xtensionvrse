@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:3000/api/user/profile",
+          (import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/user/profile",
         );
         setUserInfo(data);
       } catch (error) {
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post("http://localhost:3000/api/user/login", {
+    const { data } = await axios.post((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/user/login", {
       email,
       password,
     });
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, phone) => {
-    const { data } = await axios.post("http://localhost:3000/api/user/create", {
+    const { data } = await axios.post((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/user/create", {
       name,
       email,
       password,
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:3000/api/user/logout");
+    await axios.post((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/user/logout");
     setUserInfo(null);
   };
 

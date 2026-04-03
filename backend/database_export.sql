@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS products (
   name text,
   badge_color text,
   description text,
-  specs ARRAY,
-  images ARRAY,
+  specs TEXT[],
+  images TEXT[],
   image text,
   alt text
 );

@@ -40,7 +40,7 @@ const UserDashboard = ({ toggleDarkMode, darkMode }) => {
       const userId = storedUser?.id || 1; // Fallback to ID 1 for testing if not found
 
       const response = await axios.get(
-        `http://localhost:3000/api/orders/user/${userId}`,
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/user/${userId}`,
       );
       setOrders(response.data);
       setLoading(false);

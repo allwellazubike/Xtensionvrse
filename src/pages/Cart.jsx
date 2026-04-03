@@ -19,7 +19,7 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
     setIsCheckoutModalOpen(false);
     if (method === "bank_transfer") {
       try {
-        const response = await axios.post("http://localhost:3000/api/orders", {
+        const response = await axios.post((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/orders", {
           items: cart,
           totalAmount: total,
           paymentMethod: "bank_transfer",

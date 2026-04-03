@@ -23,7 +23,7 @@ const AdminOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/orders");
+      const response = await axios.get((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/orders");
       setOrders(response.data);
       setLoading(false);
     } catch (error) {
@@ -35,7 +35,7 @@ const AdminOrders = () => {
   const handleConfirmOrder = async () => {
     try {
       await axios.put(
-        `http://localhost:3000/api/orders/${confirmation.orderId}/confirm`,
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${confirmation.orderId}/confirm`,
       );
       fetchOrders(); // Refresh list
       closeConfirmation();
@@ -48,7 +48,7 @@ const AdminOrders = () => {
   const handleDeclineOrder = async () => {
     try {
       await axios.put(
-        `http://localhost:3000/api/orders/${confirmation.orderId}/decline`,
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${confirmation.orderId}/decline`,
       );
       fetchOrders(); // Refresh list
       closeConfirmation();

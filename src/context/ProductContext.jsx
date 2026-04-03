@@ -12,7 +12,7 @@ export const ProductProvider = ({ children }) => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/api/products")
+            .get((import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api/products")
             // .get("https://g08cl0nl-3000.uks1.devtunnels.ms/api/products")
             .then((res) => {
                 setProducts(res.data); // products data in res
