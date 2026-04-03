@@ -1,5 +1,6 @@
 import db from "../config/db.js";
 import crypto from "crypto";
+import { sendOrderConfirmationEmail, sendOrderShippedEmail } from "../utils/emailService.js";
 
 // create a new order
 export const createOrder = async (req, res) => {
@@ -138,6 +139,11 @@ export const confirmOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
+    // Fire confirmation email asynchronously (do not block the HTTP response)
+    if (result.rows[0].customer_email) {
+      sendOrderConfirmationEmail(result.rows[0]).catch(err => console.error("Async Email Error:", err));
+    }
+
     res.json({
       message: "Order confirmed successfully",
       order: result.rows[0],
@@ -180,6 +186,11 @@ export const markOrderAsShipped = async (req, res) => {
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Fire shipped email asynchronously
+    if (result.rows[0].customer_email) {
+      sendOrderShippedEmail(result.rows[0]).catch(err => console.error("Async Email Error:", err));
     }
 
     res.json({

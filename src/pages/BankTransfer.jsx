@@ -18,29 +18,32 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
   const [receiptImage, setReceiptImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    if (!orderId) return;
+  const [isChecking, setIsChecking] = useState(false);
 
-    const interval = setInterval(async () => {
-      try {
-        const res = await axios.get(
-          (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${orderId}`,
-        );
-        if (res.data.status === "confirmed") {
-          setIsConfirmed(true);
-          setIsPaid(true);
-          clearInterval(interval);
-        } else if (res.data.status === "declined") {
-          setIsDeclined(true);
-          clearInterval(interval);
-        }
-      } catch (error) {
-        console.error("Polling error:", error);
+  // Manual status check replaces aggressive DB polling
+  const checkStatus = async () => {
+    setIsChecking(true);
+    try {
+      const res = await axios.get(
+        (import.meta.env.VITE_API_URL || "http://localhost:3000") + `/api/orders/${orderId}`
+      );
+      if (res.data.status === "confirmed" || res.data.status === "shipped") {
+        setIsConfirmed(true);
+        setIsPaid(true);
+        showToast("Payment has been confirmed!");
+      } else if (res.data.status === "declined" || res.data.status === "expired") {
+        setIsDeclined(true);
+        showToast("Order was declined.");
+      } else {
+        showToast("Still verifying. Please check again shortly.");
       }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [orderId]);
+    } catch (error) {
+      console.error("Status check error", error);
+      showToast("Could not fetch latest status.");
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   const bankDetails = {
     bankName: "Kuda Microfinance Bank",
@@ -97,17 +100,23 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
             </span>
             <span>Shipping</span>
           </div>
-          <div className="h-0.5 w-10 bg-gray-200 dark:bg-gray-700"></div>
-          <div className="flex items-center gap-2 text-primary">
-            <span className="flex items-center justify-center size-6 rounded-full bg-primary text-white">
-              2
+          <div className={`h-0.5 w-10 ${isPaid ? "bg-green-300" : "bg-gray-200 dark:bg-gray-700"} transition-colors duration-500`}></div>
+          <div className={`flex items-center gap-2 ${isPaid ? "text-green-600" : "text-primary"}`}>
+            <span className={`flex items-center justify-center size-6 rounded-full ${isPaid ? "bg-green-100 dark:bg-green-900 border border-current" : "bg-primary text-white"}`}>
+              {isPaid
+                ? <span className="material-symbols-outlined text-sm">check</span>
+                : <span>2</span>
+              }
             </span>
             <span>Payment</span>
           </div>
-          <div className="h-0.5 w-10 bg-gray-200 dark:bg-gray-700"></div>
-          <div className="flex items-center gap-2 text-gray-400">
-            <span className="flex items-center justify-center size-6 rounded-full border border-gray-300 dark:border-gray-600">
-              3
+          <div className={`h-0.5 w-10 ${isConfirmed ? "bg-green-300" : "bg-gray-200 dark:bg-gray-700"} transition-colors duration-500`}></div>
+          <div className={`flex items-center gap-2 ${isConfirmed ? "text-green-600" : "text-gray-400"}`}>
+            <span className={`flex items-center justify-center size-6 rounded-full ${isConfirmed ? "bg-green-100 dark:bg-green-900 border border-current" : "border border-gray-300 dark:border-gray-600"}`}>
+              {isConfirmed
+                ? <span className="material-symbols-outlined text-sm">check</span>
+                : <span>3</span>
+              }
             </span>
             <span>Confirmed</span>
           </div>
@@ -329,12 +338,27 @@ const BankTransfer = ({ toggleDarkMode, darkMode }) => {
               We have securely received your payment receipt! Our team is verifying your transfer right now.
             </p>
 
-            <Link
-              to="/"
-              className="text-gray-400 hover:text-[#181113] dark:hover:text-white text-sm font-semibold"
-            >
-              Return to Home
-            </Link>
+            <div className="flex flex-col items-center gap-4">
+              <button
+                onClick={checkStatus}
+                disabled={isChecking}
+                className="inline-flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-[#181113] dark:text-white px-8 py-3 w-fit rounded-full font-bold transition-all disabled:opacity-50"
+              >
+                {isChecking ? (
+                  <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <span className="material-symbols-outlined text-lg">refresh</span>
+                )}
+                <span>Check Status</span>
+              </button>
+
+              <Link
+                to="/"
+                className="text-gray-400 hover:text-[#181113] dark:hover:text-white text-sm font-semibold"
+              >
+                Return to Home
+              </Link>
+            </div>
           </div>
         )}
       </main>
