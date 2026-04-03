@@ -4,16 +4,36 @@ import crypto from "crypto";
 // create a new order
 export const createOrder = async (req, res) => {
   try {
-    const { userId, items, totalAmount, paymentMethod } =
-      req.body;
+    const { userId, items, totalAmount, paymentMethod } = req.body;
 
     // validation
-    if (!totalAmount || !items) {
+    if (!totalAmount || !items || !items.length) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // orderid generator
     const orderIdAlias = `XV-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
+
+    // Begin securely isolated transaction for stock decrementing
+    await db.query("BEGIN");
+
+    // Pre-check all items for stock integrity
+    for (const item of items) {
+      const stockRes = await db.query("SELECT stock FROM products WHERE id = $1 FOR UPDATE", [item.id]);
+      if (stockRes.rows.length === 0) {
+        await db.query("ROLLBACK");
+        return res.status(404).json({ error: `Product ${item.name} could not be found in our catalog.` });
+      }
+      const availableStock = stockRes.rows[0].stock;
+      if (availableStock < item.quantity) {
+        await db.query("ROLLBACK");
+        return res.status(400).json({ error: `Insufficient stock for ${item.name}. We only have ${availableStock} left in stock.` });
+      }
+    }
+
+    // Pass the checks, decrement the stock!
+    for (const item of items) {
+      await db.query("UPDATE products SET stock = stock - $1 WHERE id = $2", [item.quantity, item.id]);
+    }
 
     const query = `
       INSERT INTO orders (user_id, items, total_amount, payment_method, order_id_alias, status)
@@ -30,11 +50,15 @@ export const createOrder = async (req, res) => {
     ];
     const result = await db.query(query, values);
 
+    // Finalize the transaction
+    await db.query("COMMIT");
+
     res.status(201).json({
       message: "Order created successfully",
       order: result.rows[0],
     });
   } catch (error) {
+    await db.query("ROLLBACK");
     console.error("Error creating order:", error);
     res.status(500).json({ error: "Failed to create order" });
   }

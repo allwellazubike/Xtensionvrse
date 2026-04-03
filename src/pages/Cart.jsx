@@ -7,11 +7,12 @@ import { useAuth } from "../context/AuthContext";
 import CartItem from "../components/CartItem";
 import CheckoutModal from "../components/CheckoutModal";
 import { Link, useNavigate } from "react-router-dom";
-import { products } from "../data/products";
+import { useProducts } from "../context/ProductContext";
 
 const Cart = ({ toggleDarkMode, darkMode }) => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const { userInfo } = useAuth();
+  const { products } = useProducts();
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -31,7 +32,8 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
         });
       } catch (error) {
         console.error("Error creating order:", error);
-        alert("Failed to proceed to payment. Please try again.");
+        const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || "Failed to connect to the server.";
+        alert(`Payment Error: ${errorMessage}\n\nPlease try again or contact support if the issue persists.`);
       }
     } else {
       alert("Paystack integration coming soon!");

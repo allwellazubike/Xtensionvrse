@@ -20,6 +20,13 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
+      
+      const currentCartQuantity = existingItem ? existingItem.quantity : 0;
+      if (currentCartQuantity + quantity > product.stock) {
+        alert(`Sorry, we only have ${product.stock} of ${product.name} in stock!`);
+        return prevCart;
+      }
+
       if (existingItem) {
         return prevCart.map((item) =>
           item.id === product.id
@@ -43,6 +50,10 @@ export const CartProvider = ({ children }) => {
       return prevCart.map((item) => {
         if (item.id === productId) {
           const newQuantity = Math.max(1, item.quantity + delta);
+          if (newQuantity > item.stock) {
+            alert(`Sorry, we only have ${item.stock} left in stock!`);
+            return item;
+          }
           return { ...item, quantity: newQuantity };
         }
         return item;
