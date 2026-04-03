@@ -5,6 +5,16 @@ import AdminLayout from "../../components/admin/AdminLayout";
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredCustomers = customers.filter((customer) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      (customer.full_name && customer.full_name.toLowerCase().includes(query)) ||
+      (customer.email && customer.email.toLowerCase().includes(query)) ||
+      (customer.id && String(customer.id).includes(query))
+    );
+  });
 
   useEffect(() => {
     fetchCustomers();
@@ -71,7 +81,9 @@ const AdminCustomers = () => {
                 </span>
                 <input
                   type="text"
-                  placeholder="Search customers by name or email..."
+                  placeholder="Search customers by name, email, or ID..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full md:max-w-md pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-white/5 border border-[#e6dbdf] dark:border-[#4a2e36] rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none dark:text-white transition-all"
                 />
               </div>
@@ -79,9 +91,9 @@ const AdminCustomers = () => {
 
             {/* Table */}
             <div className="overflow-x-auto">
-              {customers.length === 0 ? (
+              {filteredCustomers.length === 0 ? (
                 <div className="p-10 text-center text-gray-500">
-                  No customers found.
+                  {customers.length === 0 ? "No customers registered." : "No customers found matching your search."}
                 </div>
               ) : (
                 <table className="w-full text-left">
@@ -102,7 +114,7 @@ const AdminCustomers = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#e6dbdf] dark:divide-[#4a2e36]">
-                    {customers.map((customer) => (
+                    {filteredCustomers.map((customer) => (
                       <tr
                         key={customer.id}
                         className="hover:bg-[#fbf9fa] dark:hover:bg-white/5 transition-colors"
