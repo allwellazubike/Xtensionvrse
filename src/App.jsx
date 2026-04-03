@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { ToastProvider } from "./context/ToastContext";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import SearchResultsPage from "./pages/SearchResults";
@@ -31,7 +30,6 @@ function App() {
 
   return (
     <AuthProvider>
-      <ToastProvider>
         <Routes>
           <Route
             path="/"
@@ -106,7 +104,6 @@ function App() {
             }
           />
         </Routes>
-      </ToastProvider>
     </AuthProvider>
   );
 }

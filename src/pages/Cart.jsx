@@ -8,8 +8,10 @@ import CartItem from "../components/CartItem";
 import CheckoutModal from "../components/CheckoutModal";
 import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
+import { useToast } from "../context/ToastContext";
 
 const Cart = ({ toggleDarkMode, darkMode }) => {
+  const { showToast } = useToast();
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const { userInfo } = useAuth();
   const { products } = useProducts();
@@ -33,10 +35,10 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
       } catch (error) {
         console.error("Error creating order:", error);
         const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || "Failed to connect to the server.";
-        alert(`Payment Error: ${errorMessage}\n\nPlease try again or contact support if the issue persists.`);
+        showToast(`Payment Error: ${errorMessage}`, "error");
       }
     } else {
-      alert("Paystack integration coming soon!");
+      showToast("Paystack integration coming soon!", "info");
     }
   };
 

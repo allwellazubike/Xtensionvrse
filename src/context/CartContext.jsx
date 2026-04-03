@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { useToast } from "./ToastContext";
 
 const CartContext = createContext();
 
@@ -7,6 +8,7 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
+  const { showToast } = useToast();
   const [cart, setCart] = useState(() => {
     // try to load from local storage if needed later, for now just memory or empty
     const savedCart = localStorage.getItem("cart");
@@ -23,7 +25,7 @@ export const CartProvider = ({ children }) => {
       
       const currentCartQuantity = existingItem ? existingItem.quantity : 0;
       if (currentCartQuantity + quantity > product.stock) {
-        alert(`Sorry, we only have ${product.stock} of ${product.name} in stock!`);
+        showToast(`Sorry, we only have ${product.stock} of ${product.name} in stock!`, "error");
         return prevCart;
       }
 
@@ -51,7 +53,7 @@ export const CartProvider = ({ children }) => {
         if (item.id === productId) {
           const newQuantity = Math.max(1, item.quantity + delta);
           if (newQuantity > item.stock) {
-            alert(`Sorry, we only have ${item.stock} left in stock!`);
+            showToast(`Sorry, we only have ${item.stock} left in stock!`, "error");
             return item;
           }
           return { ...item, quantity: newQuantity };
