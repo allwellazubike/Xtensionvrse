@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 const OrderDetailsModal = ({ order, isOpen, onClose }) => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   if (!isOpen || !order) return null;
 
   const items =
@@ -176,14 +177,37 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
               <h3 className="text-sm font-bold text-[#181113] dark:text-white mb-3 flex items-center gap-2">
                 <span className="material-symbols-outlined text-lg">receipt</span>
                 Payment Proof
+                <span className="text-xs text-gray-400 font-normal ml-auto">Tap to zoom</span>
               </h3>
               <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex justify-center">
                 <img 
                   src={order.receipt_url} 
                   alt="Payment Receipt" 
-                  className="max-h-96 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 object-contain"
+                  onClick={() => setLightboxOpen(true)}
+                  className="max-h-64 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 object-contain cursor-zoom-in hover:opacity-90 transition-opacity"
                 />
               </div>
+            </div>
+          )}
+
+          {/* Receipt Lightbox */}
+          {lightboxOpen && (
+            <div
+              className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+              onClick={() => setLightboxOpen(false)}
+            >
+              <button
+                className="absolute top-4 right-4 text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
+                onClick={() => setLightboxOpen(false)}
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+              <img
+                src={order.receipt_url}
+                alt="Payment Receipt Full"
+                className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
             </div>
           )}
         </div>
