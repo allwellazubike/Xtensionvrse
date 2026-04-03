@@ -20,13 +20,14 @@ const authUser = async (req, res) => {
     const user = result.rows[0];
 
     if (await verifyPassword(password, user.password_hash)) {
-      generateToken(res, user.id);
+      generateToken(res, user.id, user.role || "user");
 
       res.json({
         id: user.id,
         name: user.full_name,
         email: user.email,
         phone: user.phone,
+        role: user.role || "user",
       });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
@@ -61,13 +62,14 @@ const registerUser = async (req, res) => {
 
     const user = result.rows[0];
 
-    generateToken(res, user.id);
+    generateToken(res, user.id, user.role || "user");
 
     res.status(201).json({
       id: user.id,
       name: user.full_name,
       email: user.email,
       phone: user.phone,
+      role: user.role || "user",
     });
   } catch (error) {
     console.error(error);
@@ -96,6 +98,7 @@ const getUserProfile = async (req, res) => {
       name: req.user.full_name,
       email: req.user.email,
       phone: req.user.phone,
+      role: req.user.role || "user",
     };
     res.status(200).json(user);
   } catch (error) {

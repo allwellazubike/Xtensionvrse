@@ -10,6 +10,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminCustomers from "./pages/admin/AdminCustomers";
+import AdminRoute from "./components/admin/AdminRoute";
 
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
@@ -80,15 +81,15 @@ function App() {
             }
           />
 
-          {/* Admin Routes */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          {/* Admin Routes - Protected */}
+          <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route
             path="/admin/analytics"
             element={<Navigate to="/admin/dashboard" replace />}
           />
-          <Route path="/admin/products" element={<AdminProducts />} />
-          <Route path="/admin/orders" element={<AdminOrders />} />
-          <Route path="/admin/customers" element={<AdminCustomers />} />
+          <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
+          <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
+          <Route path="/admin/customers" element={<AdminRoute><AdminCustomers /></AdminRoute>} />
 
           {/* adding search results route if needed in future */}
           <Route path="/search" element={<SearchResultsPage />} />
