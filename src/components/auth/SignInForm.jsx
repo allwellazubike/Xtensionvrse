@@ -8,6 +8,7 @@ const SignInForm = () => {
   const location = useLocation();
   const { login } = useAuth();
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -40,6 +41,7 @@ const SignInForm = () => {
     }
 
     try {
+      setIsLoading(true);
       await login(formData.email, formData.password);
       const from = location.state?.from || "/dashboard";
       navigate(from);
@@ -49,9 +51,10 @@ const SignInForm = () => {
         err.response?.data?.message ||
           "Login failed. Please check your credentials.",
       );
+    } finally {
+      setIsLoading(false);
     }
 
-    // Reset form after submission
     setFormData({ email: "", password: "" });
   };
 
@@ -135,15 +138,23 @@ const SignInForm = () => {
           </div>
         </div>
         <button
-          className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-200 transform hover:-translate-y-0.5 mt-6"
+          className="group relative w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-transparent rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-200 transform hover:-translate-y-0.5 mt-6 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
           type="submit"
+          disabled={isLoading}
         >
-          <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-            <span className="material-symbols-outlined text-white/70 group-hover:text-white transition-colors text-[20px]">
-              login
-            </span>
-          </span>
-          Sign In
+          {isLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              Signing In...
+            </>
+          ) : (
+            <>
+              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                <span className="material-symbols-outlined text-white/70 group-hover:text-white transition-colors text-[20px]">login</span>
+              </span>
+              Sign In
+            </>
+          )}
         </button>
       </form>
     </div>

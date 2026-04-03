@@ -16,6 +16,7 @@ const SignUpForm = () => {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -56,6 +57,7 @@ const SignUpForm = () => {
     setError("");
 
     try {
+      setIsLoading(true);
       await register(
         formData.name,
         formData.email,
@@ -68,6 +70,8 @@ const SignUpForm = () => {
       setError(
         err.response?.data?.message || "Registration failed. Please try again.",
       );
+    } finally {
+      setIsLoading(false);
     }
 
     setFormData({
@@ -258,15 +262,23 @@ const SignUpForm = () => {
           </div>
         </div>
         <button
-          className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-200 transform hover:-translate-y-0.5"
+          className="group relative w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-transparent rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-200 transform hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
           type="submit"
+          disabled={isLoading}
         >
-          <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-            <span className="material-symbols-outlined text-white/70 group-hover:text-white transition-colors text-[20px]">
-              arrow_forward
-            </span>
-          </span>
-          Create Account
+          {isLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              Creating Account...
+            </>
+          ) : (
+            <>
+              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                <span className="material-symbols-outlined text-white/70 group-hover:text-white transition-colors text-[20px]">arrow_forward</span>
+              </span>
+              Create Account
+            </>
+          )}
         </button>
       </form>
     </div>

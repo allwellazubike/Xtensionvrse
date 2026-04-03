@@ -1,9 +1,18 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { userInfo, logout } = useAuth();
+  const firstName = userInfo?.name?.split(" ")[0] || "Admin";
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/auth");
+  };
   return (
     <>
       {/* Mobile Backdrop */}
@@ -115,21 +124,19 @@ const Sidebar = ({ isOpen, onClose }) => {
             </span>
           </Link>
           <div className="flex items-center gap-3 px-3 py-3 mt-2">
-            <div
-              className="bg-center bg-no-repeat bg-cover rounded-full size-8 bg-gray-200"
-              data-alt="Profile picture of admin user"
-              style={{
-                backgroundImage:
-                  'url("https://lh3.googleusercontent.com/aida-public/AB6AXuC3uFPHGE9sLzXznGB0QtdQqjbmgnAJdK2npwlThwAyISepAiiG8xe423tTbagqaLrmRiW3goXodxjChtDcr4C-0FewsVzgGz96Mk-8ljeXc-yI1vaDfl6SEz5lQm8_O8llEUjYFAC6Kv-AuCuFEc2H32qSwrxkfnjwmpDti8oGYhxvVTbmy031yUfZUMV2unFiOPyGq7wmqZRnLPNCbJYWJSBRLEFcnsxcXO3sBiXehW4DJE8vZo10Z0LDlL7SM4r9d2WdVmJoM-U")',
-              }}
-            ></div>
-            <div className="flex flex-col">
-              <p className="text-[#181113] dark:text-white text-sm font-medium leading-none">
-                Allwell
+            <div className="flex items-center justify-center size-8 rounded-full bg-primary/20 text-primary font-bold text-sm">
+              {firstName.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex flex-col flex-1 min-w-0">
+              <p className="text-[#181113] dark:text-white text-sm font-medium leading-none truncate">
+                {firstName}
               </p>
-              <p className="text-[#89616f] dark:text-white/50 text-xs mt-1">
+              <button 
+                onClick={handleLogout}
+                className="text-[#89616f] dark:text-white/50 text-xs mt-1 text-left hover:text-primary transition-colors"
+              >
                 Logout
-              </p>
+              </button>
             </div>
           </div>
         </div>
