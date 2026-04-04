@@ -20,7 +20,7 @@ const authUser = async (req, res) => {
     const user = result.rows[0];
 
     if (await verifyPassword(password, user.password_hash)) {
-      generateToken(res, user.id, user.role || "user");
+      const token = generateToken(user.id, user.role || "user");
 
       res.json({
         id: user.id,
@@ -28,6 +28,7 @@ const authUser = async (req, res) => {
         email: user.email,
         phone: user.phone,
         role: user.role || "user",
+        token,
       });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
@@ -62,7 +63,7 @@ const registerUser = async (req, res) => {
 
     const user = result.rows[0];
 
-    generateToken(res, user.id, user.role || "user");
+    const token = generateToken(user.id, user.role || "user");
 
     res.status(201).json({
       id: user.id,
@@ -70,6 +71,7 @@ const registerUser = async (req, res) => {
       email: user.email,
       phone: user.phone,
       role: user.role || "user",
+      token,
     });
   } catch (error) {
     console.error(error);
@@ -81,10 +83,8 @@ const registerUser = async (req, res) => {
 // @route   POST /api/user/logout
 // @access  Public
 const logoutUser = (req, res) => {
-  res.cookie("jwt", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
+  // Token lives in localStorage on the frontend — just return 200
+  // The frontend will remove it from localStorage on logout
   res.status(200).json({ message: "Logged out successfully" });
 };
 
