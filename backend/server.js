@@ -13,11 +13,14 @@ import cors from "cors";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import shippingRoutes from "./routes/shippingRoutes.js";
 import { startCronJobs } from "./utils/cronJobs.js";
+import { initShippingZones } from "./controllers/shippingController.js";
 
 const app = express();
 // Start background tasks
 startCronJobs();
+initShippingZones().catch(console.error);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173", 
@@ -33,6 +36,7 @@ app.use(cookieParser());
 app.use("/api/products", productRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/shipping", shippingRoutes);
 
 // // create user, push to new route
 // app.post("/api/user/create", async (req, res) => {

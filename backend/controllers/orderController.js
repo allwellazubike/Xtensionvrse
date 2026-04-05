@@ -33,9 +33,15 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ error: "Missing required shipping details" });
     }
 
-    // Securely calculate shipping fee on backend (Spoof prevention)
-    const cleanState = shipping_state.trim().toLowerCase();
-    const calculatedShippingFee = (cleanState === "lagos") ? 3000 : 5000;
+    // Look up shipping fee from the live shipping_zones table
+    const cleanState = shipping_state.trim();
+    const zoneRes = await db.query(
+      "SELECT price FROM shipping_zones WHERE LOWER(state) = LOWER($1) AND is_active = TRUE",
+      [cleanState]
+    );
+    const calculatedShippingFee = zoneRes.rows.length > 0
+      ? parseFloat(zoneRes.rows[0].price)
+      : 5000; // fallback if state not in zones
 
     const orderIdAlias = `XV-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
 
