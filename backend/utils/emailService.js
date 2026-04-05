@@ -88,3 +88,37 @@ export const sendOrderShippedEmail = async (order) => {
     throw error;
   }
 };
+
+export const sendOrderExpiredEmail = async (order) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return;
+
+  const transporter = createTransporter();
+
+  const mailOptions = {
+    from: `"Xtensionsvrse" <${process.env.EMAIL_USER}>`,
+    to: order.customer_email,
+    subject: `Your Order #${order.order_id_alias || order.id} Has Expired`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #e53e3e; text-align: center;">Order Expired ⏰</h2>
+        <p>Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
+        <p>Unfortunately, your order <strong>#${order.order_id_alias || order.id}</strong> has expired because we did not receive payment confirmation within 7 hours.</p>
+        <div style="background-color: #fff5f5; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #e53e3e;">
+          <p style="margin: 0;">Any reserved stock has been released back for other customers.</p>
+        </div>
+        <p>If you still want your items, simply visit our store and place a new order — we'd love to have you back!</p>
+        <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}" style="display: inline-block; background: #ee2b6c; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px;">Shop Again</a>
+        <br/><br/>
+        <p>The Xtensionsvrse Team</p>
+      </div>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("[EMAIL] Expiry email sent to:", order.customer_email);
+    return info;
+  } catch (error) {
+    console.error("[EMAIL] Error sending expiry email:", error);
+  }
+};

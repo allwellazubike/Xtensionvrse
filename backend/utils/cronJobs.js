@@ -1,4 +1,5 @@
 import db from "../config/db.js";
+import { sendOrderExpiredEmail } from "./emailService.js";
 
 export const startCronJobs = () => {
   // Run check every 1 hour
@@ -35,6 +36,12 @@ export const startCronJobs = () => {
 
         // Mark the order as expired
         await db.query("UPDATE orders SET status = 'expired' WHERE id = $1", [order.id]);
+
+        // Notify customer via email
+        if (order.customer_email) {
+          sendOrderExpiredEmail(order).catch(err => console.error("[CRON] Email error:", err));
+        }
+
         console.log(`[CRON] Expired order #${order.id} safely.`);
       }
     } catch (error) {
