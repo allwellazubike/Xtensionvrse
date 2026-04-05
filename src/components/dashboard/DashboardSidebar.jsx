@@ -71,6 +71,13 @@ const DashboardSidebar = ({
             Admin Panel
           </Link>
         )}
+        <Link
+          to="/"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-left text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors"
+        >
+          <span className="material-symbols-outlined">storefront</span>
+          Visit Store
+        </Link>
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium transition-colors"

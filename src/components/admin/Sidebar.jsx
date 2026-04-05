@@ -114,12 +114,23 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="p-4 border-t border-[#e6dbdf] dark:border-[#4a2e36]">
           <Link
             className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[#f4f0f2] dark:hover:bg-white/5 transition-colors group"
-            to="/admin/settings"
+            to="/"
           >
             <span className="material-symbols-outlined text-[#89616f] dark:text-white/60 group-hover:text-primary">
-              settings
+              storefront
             </span>
             <span className="text-[#181113] dark:text-white text-sm font-medium">
+              Visit Store
+            </span>
+          </Link>
+          <Link
+            className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors group ${isActive("/admin/settings") ? "bg-primary/10 text-primary" : "hover:bg-[#f4f0f2] dark:hover:bg-white/5"}`}
+            to="/admin/settings"
+          >
+            <span className={`material-symbols-outlined ${isActive("/admin/settings") ? "fill-1" : "text-[#89616f] dark:text-white/60 group-hover:text-primary"}`}>
+              settings
+            </span>
+            <span className={`text-sm ${isActive("/admin/settings") ? "font-bold" : "font-medium text-[#181113] dark:text-white"}`}>
               Settings
             </span>
           </Link>
