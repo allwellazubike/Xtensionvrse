@@ -19,7 +19,7 @@ export const sendOrderConfirmationEmail = async (order) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"Xtensions Vrs" <${process.env.EMAIL_USER}>`,
+    from: `"Xtensionsvrse" <${process.env.EMAIL_USER}>`,
     to: order.customer_email,
     subject: `Payment Confirmed - Order #${order.order_id_alias || order.id}`,
     html: `
@@ -35,7 +35,7 @@ export const sendOrderConfirmationEmail = async (order) => {
         <p>We'll notify you the moment it gets dispatched!</p>
         <br/>
         <p>Stay gorgeous,</p>
-        <p><strong>The Xtension Vrs Team</strong></p>
+        <p><strong>The Xtensionsvrse Team</strong></p>
       </div>
     `,
   };
@@ -59,7 +59,7 @@ export const sendOrderShippedEmail = async (order) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"Xtensions Vrs" <${process.env.EMAIL_USER}>`,
+    from: `"Xtensionsvrse" <${process.env.EMAIL_USER}>`,
     to: order.customer_email,
     subject: `Your Order #${order.order_id_alias || order.id} is on the way! 🚚`,
     html: `
@@ -74,7 +74,7 @@ export const sendOrderShippedEmail = async (order) => {
         <p>Thank you for shopping with us! If you have any questions, feel free to reply directly to this email.</p>
         <br/>
         <p>Best Regards,</p>
-        <p><strong>The Xtension Vrs Team</strong></p>
+        <p><strong>The Xtensionsvrse Team</strong></p>
       </div>
     `,
   };
