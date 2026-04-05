@@ -19,7 +19,7 @@ export const sendOrderConfirmationEmail = async (order) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"Xtension Vrs" <${process.env.EMAIL_USER}>`,
+    from: `"Xtensions Vrs" <${process.env.EMAIL_USER}>`,
     to: order.customer_email,
     subject: `Payment Confirmed - Order #${order.order_id_alias || order.id}`,
     html: `
@@ -59,7 +59,7 @@ export const sendOrderShippedEmail = async (order) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"Xtension Vrs" <${process.env.EMAIL_USER}>`,
+    from: `"Xtensions Vrs" <${process.env.EMAIL_USER}>`,
     to: order.customer_email,
     subject: `Your Order #${order.order_id_alias || order.id} is on the way! 🚚`,
     html: `
