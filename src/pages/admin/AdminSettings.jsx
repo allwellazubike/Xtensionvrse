@@ -4,6 +4,15 @@ import AdminLayout from "../../components/admin/AdminLayout";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+const ALL_NIGERIAN_STATES = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa",
+  "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti",
+  "Enugu", "FCT (Abuja)", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano",
+  "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger",
+  "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto",
+  "Taraba", "Yobe", "Zamfara",
+];
+
 const AdminSettings = () => {
   const [zones, setZones] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +39,12 @@ const AdminSettings = () => {
       setLoading(false);
     }
   };
+
+  // States not yet added
+  const availableStates = ALL_NIGERIAN_STATES.filter(
+    (s) => !zones.some((z) => z.state.toLowerCase() === s.toLowerCase())
+  );
+
 
   const handlePriceChange = (id, value) => {
     setZones((prev) =>
@@ -201,13 +216,16 @@ const AdminSettings = () => {
                 Add New State
               </h3>
               <form onSubmit={handleAddZone} className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  placeholder="State name (e.g. Kwara)"
+                <select
                   value={newState}
                   onChange={(e) => setNewState(e.target.value)}
                   className="flex-1 text-sm border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 bg-white dark:bg-gray-800 text-[#181113] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                />
+                >
+                  <option value="">Select a state...</option>
+                  {availableStates.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-400">₦</span>
                   <input
