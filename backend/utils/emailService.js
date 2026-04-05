@@ -122,3 +122,47 @@ export const sendOrderExpiredEmail = async (order) => {
     console.error("[EMAIL] Error sending expiry email:", error);
   }
 };
+
+export const sendOrderPlacedEmail = async (order) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return;
+
+  const transporter = createTransporter();
+
+  const mailOptions = {
+    from: `"Xtensionsvrse" <${process.env.EMAIL_USER}>`,
+    to: order.customer_email,
+    subject: `Order Received - #${order.order_id_alias || order.id}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #4CAF50; text-align: center;">We've Received Your Order!</h2>
+        <p>Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
+        <p>Thank you for shopping with Xtensionsvrse! We have received your order <strong>#${order.order_id_alias || order.id}</strong>.</p>
+        
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p style="margin: 0;"><strong>Total Amount:</strong> ₦${Number(order.total_amount).toLocaleString()}</p>
+          <p style="margin: 5px 0 0 0;"><strong>Payment Method:</strong> ${order.payment_method === 'bank_transfer' ? 'Bank Transfer' : order.payment_method}</p>
+        </div>
+
+        ${order.payment_method === 'bank_transfer' ? `
+        <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #ffeeba;">
+          <h4 style="margin-top: 0; color: #856404;">Action Required: Payment</h4>
+          <p style="margin-bottom: 0;">Since you chose Bank Transfer, please ensure you complete the payment and upload your receipt via the payment page. Your order will be processed once payment is confirmed.</p>
+        </div>
+        ` : ''}
+
+        <p>We'll send you another email as soon as your payment is confirmed.</p>
+        <br/>
+        <p>Stay gorgeous,</p>
+        <p><strong>The Xtensionsvrse Team</strong></p>
+      </div>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("[EMAIL] Order placed email sent to:", order.customer_email);
+    return info;
+  } catch (error) {
+    console.error("[EMAIL] Error sending order placed email:", error);
+  }
+};
