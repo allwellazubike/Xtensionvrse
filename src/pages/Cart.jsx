@@ -9,6 +9,7 @@ import CheckoutModal from "../components/CheckoutModal";
 import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
 import { useToast } from "../context/ToastContext";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const Cart = ({ toggleDarkMode, darkMode }) => {
   const { showToast } = useToast();
@@ -17,6 +18,8 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
   const { products } = useProducts();
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [estimatedShipping, setEstimatedShipping] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,6 +69,23 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
     }
   };
 
+  const handleRemoveClick = (productId) => {
+    const item = cart.find((i) => i.id === productId);
+    if (item) {
+      setItemToDelete(item);
+      setIsDeleteModalOpen(true);
+    }
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      removeFromCart(itemToDelete.id);
+      showToast(`${itemToDelete.name} removed from cart`, "info");
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
+    }
+  };
+
   const subtotal = getCartTotal();
   // Dynamic shipping estimate - fetched from the real backend average
   const shipping = estimatedShipping;
@@ -109,7 +129,7 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
                     key={item.id}
                     item={item}
                     onUpdateQuantity={updateQuantity}
-                    onRemove={removeFromCart}
+                    onRemove={handleRemoveClick}
                   />
                 ))}
               </div>
@@ -259,6 +279,17 @@ const Cart = ({ toggleDarkMode, darkMode }) => {
           isOpen={isCheckoutModalOpen}
           onClose={() => setIsCheckoutModalOpen(false)}
           onSelectPayment={handlePaymentSelect}
+        />
+
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={confirmDelete}
+          title="Remove Item"
+          message={`Are you sure you want to remove "${itemToDelete?.name}" from your cart?`}
+          actionLabel="Remove"
+          isDestructive={true}
         />
       </div>
     </div>

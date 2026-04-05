@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AdminLayout from "../../components/admin/AdminLayout";
 import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
-import ConfirmationModal from "../../components/admin/ConfirmationModal";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -237,7 +237,7 @@ const AdminOrders = () => {
                         </span>
                       </td>
                       <td className="p-4 text-sm text-gray-500">
-                        {new Date(order.created_at).toLocaleDateString()}
+                        {order.created_at ? new Date(order.created_at).toLocaleDateString() : "Pending Date"}
                       </td>
                       <td className="p-4 flex gap-2">
                         {/* View */}

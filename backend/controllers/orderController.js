@@ -3,6 +3,7 @@ import crypto from "crypto";
 import {
   sendOrderConfirmationEmail,
   sendOrderShippedEmail,
+  sendOrderPlacedEmail,
 } from "../utils/emailService.js";
 
 // Get dynamic avg shipping estimate (no hardcoded values)
@@ -129,6 +130,13 @@ export const createOrder = async (req, res) => {
       message: "Order created successfully",
       order: result.rows[0],
     });
+
+    // Fire placement confirmation email (non-blocking)
+    if (customer_email) {
+      sendOrderPlacedEmail(result.rows[0]).catch((err) =>
+        console.error("[EMAIL] Order placement email error:", err),
+      );
+    }
   } catch (error) {
     await db.query("ROLLBACK");
     console.error("Error creating order:", error);
