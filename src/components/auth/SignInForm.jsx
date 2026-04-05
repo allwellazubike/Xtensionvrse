@@ -10,6 +10,7 @@ const SignInForm = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [noAccountPopup, setNoAccountPopup] = useState(false);
+  const [wrongPasswordPopup, setWrongPasswordPopup] = useState(false);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -50,11 +51,12 @@ const SignInForm = () => {
       console.error(err);
       const status = err.response?.status;
       if (status === 404) {
-        // No account found — show the special popup
         setNoAccountPopup(true);
+      } else if (status === 401) {
+        setWrongPasswordPopup(true);
       } else {
         setError(
-          err.response?.data?.message || "Login failed. Please check your credentials."
+          err.response?.data?.message || "Login failed. Please try again."
         );
       }
     } finally {
@@ -66,6 +68,36 @@ const SignInForm = () => {
 
   return (
     <div id="sign-in-form" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+
+      {/* Wrong Password Popup */}
+      {wrongPasswordPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setWrongPasswordPopup(false)}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div
+            className="relative bg-white dark:bg-[#1e1215] rounded-2xl shadow-2xl p-7 max-w-sm w-full text-center border border-gray-100 dark:border-gray-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="material-symbols-outlined text-red-500 text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+            </div>
+            <h2 className="text-lg font-bold text-[#181113] dark:text-white mb-2">Incorrect Password</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              The password you entered doesn't match our records. Please double-check and try again.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setWrongPasswordPopup(false)}
+                className="w-full py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary-dark transition-colors"
+              >
+                Try Again
+              </button>
+              <a href="#" className="w-full py-3 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-primary transition-colors">
+                Forgot Password?
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* No Account Found Popup */}
       {noAccountPopup && (

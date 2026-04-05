@@ -1,12 +1,15 @@
 import db from "../config/db.js";
 import crypto from "crypto";
-import { sendOrderConfirmationEmail, sendOrderShippedEmail } from "../utils/emailService.js";
+import {
+  sendOrderConfirmationEmail,
+  sendOrderShippedEmail,
+} from "../utils/emailService.js";
 
 // Get dynamic avg shipping estimate (no hardcoded values)
 export const getShippingEstimate = async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT AVG(shipping_fee) as avg_fee FROM orders WHERE shipping_fee > 0"
+      "SELECT AVG(shipping_fee) as avg_fee FROM orders WHERE shipping_fee > 0",
     );
     const avgFee = Math.round(parseFloat(result.rows[0].avg_fee) || 4000);
     res.json({ estimatedShipping: avgFee });
@@ -19,29 +22,43 @@ export const getShippingEstimate = async (req, res) => {
 // create a new order
 export const createOrder = async (req, res) => {
   try {
-    const { 
-      userId, items, totalAmount, paymentMethod,
-      customer_name, customer_email, customer_phone, shipping_address, shipping_state 
+    const {
+      userId,
+      items,
+      totalAmount,
+      paymentMethod,
+      customer_name,
+      customer_email,
+      customer_phone,
+      shipping_address,
+      shipping_state,
     } = req.body;
 
     // validation
     if (!totalAmount || !items || !items.length) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    
-    if (!customer_name || !customer_email || !customer_phone || !shipping_address || !shipping_state) {
-      return res.status(400).json({ error: "Missing required shipping details" });
+
+    if (
+      !customer_name ||
+      !customer_email ||
+      !customer_phone ||
+      !shipping_address ||
+      !shipping_state
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Missing required shipping details" });
     }
 
     // Look up shipping fee from the live shipping_zones table
     const cleanState = shipping_state.trim();
     const zoneRes = await db.query(
       "SELECT price FROM shipping_zones WHERE LOWER(state) = LOWER($1) AND is_active = TRUE",
-      [cleanState]
+      [cleanState],
     );
-    const calculatedShippingFee = zoneRes.rows.length > 0
-      ? parseFloat(zoneRes.rows[0].price)
-      : 5000; // fallback if state not in zones
+    const calculatedShippingFee =
+      zoneRes.rows.length > 0 ? parseFloat(zoneRes.rows[0].price) : 5000; // fallback if state not in zones
 
     const orderIdAlias = `XV-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
 
@@ -50,21 +67,35 @@ export const createOrder = async (req, res) => {
 
     // Pre-check all items for stock integrity
     for (const item of items) {
-      const stockRes = await db.query("SELECT stock FROM products WHERE id = $1 FOR UPDATE", [item.id]);
+      const stockRes = await db.query(
+        "SELECT stock FROM products WHERE id = $1 FOR UPDATE",
+        [item.id],
+      );
       if (stockRes.rows.length === 0) {
         await db.query("ROLLBACK");
-        return res.status(404).json({ error: `Product ${item.name} could not be found in our catalog.` });
+        return res
+          .status(404)
+          .json({
+            error: `Product ${item.name} could not be found in our catalog.`,
+          });
       }
       const availableStock = stockRes.rows[0].stock;
       if (availableStock < item.quantity) {
         await db.query("ROLLBACK");
-        return res.status(400).json({ error: `Insufficient stock for ${item.name}. We only have ${availableStock} left in stock.` });
+        return res
+          .status(400)
+          .json({
+            error: `Insufficient stock for ${item.name}. We only have ${availableStock} left in stock.`,
+          });
       }
     }
 
     // Pass the checks, decrement the stock!
     for (const item of items) {
-      await db.query("UPDATE products SET stock = stock - $1 WHERE id = $2", [item.quantity, item.id]);
+      await db.query("UPDATE products SET stock = stock - $1 WHERE id = $2", [
+        item.quantity,
+        item.id,
+      ]);
     }
 
     const query = `
@@ -87,7 +118,7 @@ export const createOrder = async (req, res) => {
       customer_phone,
       shipping_address,
       shipping_state,
-      calculatedShippingFee
+      calculatedShippingFee,
     ];
     const result = await db.query(query, values);
 
@@ -121,8 +152,6 @@ export const getAllOrders = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
-
-
 
 // Get single order by ID or Alias
 export const getOrderById = async (req, res) => {
@@ -161,7 +190,9 @@ export const confirmOrder = async (req, res) => {
 
     // Fire confirmation email asynchronously (do not block the HTTP response)
     if (result.rows[0].customer_email) {
-      sendOrderConfirmationEmail(result.rows[0]).catch(err => console.error("Async Email Error:", err));
+      sendOrderConfirmationEmail(result.rows[0]).catch((err) =>
+        console.error("Async Email Error:", err),
+      );
     }
 
     res.json({
@@ -210,7 +241,9 @@ export const markOrderAsShipped = async (req, res) => {
 
     // Fire shipped email asynchronously
     if (result.rows[0].customer_email) {
-      sendOrderShippedEmail(result.rows[0]).catch(err => console.error("Async Email Error:", err));
+      sendOrderShippedEmail(result.rows[0]).catch((err) =>
+        console.error("Async Email Error:", err),
+      );
     }
 
     res.json({
@@ -235,7 +268,8 @@ export const uploadReceipt = async (req, res) => {
     const receiptUrl = req.file.path; // Cloudinary URL created by Multer automatically
 
     // Support both serial ID and order_id_alias (e.g., XV-1234)
-    const query = "UPDATE orders SET receipt_url = $1 WHERE id::text = $2 OR order_id_alias = $2 RETURNING *";
+    const query =
+      "UPDATE orders SET receipt_url = $1 WHERE id::text = $2 OR order_id_alias = $2 RETURNING *";
     const result = await db.query(query, [receiptUrl, id]);
 
     if (result.rows.length === 0) {
