@@ -14,7 +14,7 @@ const authUser = async (req, res) => {
     ]);
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(404).json({ message: "No account found with that email address." });
     }
 
     const user = result.rows[0];

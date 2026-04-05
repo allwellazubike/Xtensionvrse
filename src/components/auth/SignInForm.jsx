@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const SignInForm = () => {
@@ -9,6 +9,7 @@ const SignInForm = () => {
   const { login } = useAuth();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [noAccountPopup, setNoAccountPopup] = useState(false);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -47,10 +48,15 @@ const SignInForm = () => {
       navigate(from);
     } catch (err) {
       console.error(err);
-      setError(
-        err.response?.data?.message ||
-          "Login failed. Please check your credentials.",
-      );
+      const status = err.response?.status;
+      if (status === 404) {
+        // No account found — show the special popup
+        setNoAccountPopup(true);
+      } else {
+        setError(
+          err.response?.data?.message || "Login failed. Please check your credentials."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -59,10 +65,43 @@ const SignInForm = () => {
   };
 
   return (
-    <div
-      id="sign-in-form"
-      className="animate-in fade-in slide-in-from-bottom-2 duration-300"
-    >
+    <div id="sign-in-form" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+
+      {/* No Account Found Popup */}
+      {noAccountPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setNoAccountPopup(false)}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div
+            className="relative bg-white dark:bg-[#1e1215] rounded-2xl shadow-2xl p-7 max-w-sm w-full text-center border border-gray-100 dark:border-gray-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Icon */}
+            <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>person_off</span>
+            </div>
+            <h2 className="text-lg font-bold text-[#181113] dark:text-white mb-2">No Account Found</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              We couldn't find an account with that email address. Would you like to create one?
+            </p>
+            <div className="flex flex-col gap-3">
+              <Link
+                to="/auth"
+                state={{ mode: "signup" }}
+                onClick={() => setNoAccountPopup(false)}
+                className="w-full py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary-dark transition-colors"
+              >
+                Create an Account
+              </Link>
+              <button
+                onClick={() => setNoAccountPopup(false)}
+                className="w-full py-3 text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              >
+                Try a Different Email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="text-center mb-6">
         <h1 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
           Welcome Back
