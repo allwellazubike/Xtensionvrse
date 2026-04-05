@@ -243,7 +243,7 @@ const AdminOrders = () => {
                         {/* View */}
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 p-2 rounded-full transition-colors"
+                          className="w-8 h-8 flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 rounded-full transition-colors"
                           title="View Details"
                         >
                           <span className="material-symbols-outlined text-sm">visibility</span>
@@ -254,14 +254,14 @@ const AdminOrders = () => {
                           <>
                             <button
                               onClick={() => openConfirmation("confirm", order.id)}
-                              className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 p-2 rounded-full transition-colors"
+                              className="w-8 h-8 flex items-center justify-center bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 rounded-full transition-colors"
                               title="Confirm Order"
                             >
                               <span className="material-symbols-outlined text-sm">check</span>
                             </button>
                             <button
                               onClick={() => openConfirmation("decline", order.id)}
-                              className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 p-2 rounded-full transition-colors"
+                              className="w-8 h-8 flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 rounded-full transition-colors"
                               title="Decline Order"
                             >
                               <span className="material-symbols-outlined text-sm">close</span>
@@ -273,7 +273,7 @@ const AdminOrders = () => {
                         {order.status === "confirmed" && (
                           <button
                             onClick={() => openConfirmation("ship", order.id)}
-                            className="bg-purple-50 text-purple-600 hover:bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 p-2 rounded-full transition-colors"
+                            className="w-8 h-8 flex items-center justify-center bg-purple-50 text-purple-600 hover:bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 rounded-full transition-colors"
                             title="Mark as Shipped"
                           >
                             <span className="material-symbols-outlined text-sm">local_shipping</span>

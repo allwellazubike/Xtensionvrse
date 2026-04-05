@@ -102,10 +102,10 @@ const ProductTable = ({ onEdit }) => {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button onClick={() => onEdit(product)} className="p-1.5 hover:bg-black/5 rounded-lg">
+                    <button onClick={() => onEdit(product)} className="w-8 h-8 flex items-center justify-center bg-gray-50 hover:bg-gray-100 dark:bg-white/5 dark:hover:bg-white/10 text-gray-600 dark:text-white/70 rounded-full transition-colors" title="Edit product">
                       <span className="material-symbols-outlined text-[20px]">edit</span>
                     </button>
-                    <button onClick={() => initiateDelete(product)} className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg">
+                    <button onClick={() => initiateDelete(product)} className="w-8 h-8 flex items-center justify-center bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-500 rounded-full transition-colors" title="Delete product">
                       <span className="material-symbols-outlined text-[20px]">delete</span>
                     </button>
                   </div>

@@ -127,7 +127,7 @@ const AdminSettings = () => {
           <div className="bg-white dark:bg-background-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-8">
             {/* Header */}
             <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-xl">
+              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-primary">local_shipping</span>
               </div>
               <div>
